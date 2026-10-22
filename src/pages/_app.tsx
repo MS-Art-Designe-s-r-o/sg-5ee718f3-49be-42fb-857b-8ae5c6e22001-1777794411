@@ -1,11 +1,27 @@
 import "@/styles/globals.css";
 import Script from 'next/script'
 import type { AppProps } from "next/app";
+import { useEffect } from "react";
 import { ThemeProvider } from "@/contexts/ThemeProvider";
 import { CookieConsent } from "@/components/CookieConsent";
 import { Toaster } from "@/components/ui/toaster";
 
 export default function App({ Component, pageProps }: AppProps) {
+  // Track clicks on any tel: link as GA4 "contact_phone" (imported to Google Ads)
+  useEffect(() => {
+    const onClick = (e: MouseEvent) => {
+      const target = e.target as Element | null;
+      const link = target?.closest?.('a[href^="tel:"]') as HTMLAnchorElement | null;
+      if (!link) return;
+      const w = window as unknown as { gtag?: (...args: unknown[]) => void };
+      if (typeof w.gtag === "function") {
+        w.gtag("event", "contact_phone", { link_url: link.href });
+      }
+    };
+    document.addEventListener("click", onClick, true);
+    return () => document.removeEventListener("click", onClick, true);
+  }, []);
+
   return (
     <ThemeProvider>
       <Script
