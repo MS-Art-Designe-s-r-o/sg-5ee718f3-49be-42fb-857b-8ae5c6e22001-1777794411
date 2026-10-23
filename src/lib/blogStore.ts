@@ -11,32 +11,47 @@ import { promises as fs } from "fs";
 import path from "path";
 import { randomUUID } from "crypto";
 
+export type BlogFaq = { q: string; a: string };
+
 export type BlogPost = {
   id: string;
   slug: string;
   title: string;
   excerpt?: string;
+  /** Obsah: markdown (format "markdown") alebo čistý text s odstavcami (staré príspevky). */
   content: string;
+  format?: "markdown" | "text";
+  /** URL obrázka — externá https:// alebo lokálna /blog/obrazky/<súbor>. */
   image?: string;
+  imageAlt?: string;
   category?: string;
   author?: string;
+  metaTitle?: string;
+  faq?: BlogFaq[];
   /** Dátum publikovania (ISO). Podľa neho sa radí — najnovší prvý. */
   date: string;
   /** Čas vytvorenia na serveri (ISO). */
   createdAt: string;
+  updatedAt?: string;
 };
 
 export type NewBlogPost = {
   title: string;
   content: string;
   excerpt?: string;
+  format?: "markdown" | "text";
   image?: string;
+  imageAlt?: string;
   category?: string;
   author?: string;
+  metaTitle?: string;
+  faq?: BlogFaq[];
   date?: string;
 };
 
-function dataFile(): string {
+export type BlogPostPatch = Partial<Omit<NewBlogPost, "date">> & { date?: string };
+
+export function dataFile(): string {
   return process.env.BLOG_DATA_FILE || path.join(process.cwd(), "data", "blog-posts.json");
 }
 
@@ -63,15 +78,21 @@ async function writeAll(posts: BlogPost[]): Promise<void> {
   await fs.rename(tmp, file); // atomický zápis
 }
 
-function slugify(input: string): string {
+export function slugify(input: string): string {
   return input
     .normalize("NFD")
-    .replace(/[̀-ͯ]/g, "") // odstráni diakritiku
+    .replace(/[\u0300-\u036f]/g, "") // odstráni diakritiku
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
     .slice(0, 80) || "prispevok";
 }
+
+const clean = (v?: string) => (typeof v === "string" ? v.trim() || undefined : undefined);
+const cleanFaq = (f?: BlogFaq[]) => {
+  const out = (f || []).map((x) => ({ q: x.q.trim(), a: x.a.trim() })).filter((x) => x.q && x.a);
+  return out.length ? out : undefined;
+};
 
 /** Všetky príspevky, najnovší prvý. */
 export async function listPosts(): Promise<BlogPost[]> {
@@ -79,7 +100,11 @@ export async function listPosts(): Promise<BlogPost[]> {
   return posts.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 }
 
-/** Pridá nový príspevok a vráti ho. Serializované voči súbežným zápisom. */
+export async function getPost(idOrSlug: string): Promise<BlogPost | null> {
+  const posts = await readAll();
+  return posts.find((p) => p.slug === idOrSlug || p.id === idOrSlug) || null;
+}
+
 export async function addPost(input: NewBlogPost): Promise<BlogPost> {
   const run = writeChain.then(async () => {
     const posts = await readAll();
@@ -93,15 +118,43 @@ export async function addPost(input: NewBlogPost): Promise<BlogPost> {
       slug,
       title: input.title.trim(),
       content: input.content.trim(),
-      excerpt: input.excerpt?.trim() || undefined,
-      image: input.image?.trim() || undefined,
-      category: input.category?.trim() || undefined,
-      author: input.author?.trim() || undefined,
+      format: input.format || "text",
+      excerpt: clean(input.excerpt),
+      image: clean(input.image),
+      imageAlt: clean(input.imageAlt),
+      category: clean(input.category),
+      author: clean(input.author),
+      metaTitle: clean(input.metaTitle),
+      faq: cleanFaq(input.faq),
       date: input.date ? new Date(input.date).toISOString() : now,
       createdAt: now,
     };
     await writeAll([post, ...posts]);
     return post;
+  });
+  writeChain = run.catch(() => {});
+  return run;
+}
+
+/** Čiastočná úprava príspevku (slug ostáva — stabilná URL). Vráti null, ak neexistuje. */
+export async function updatePost(idOrSlug: string, patch: BlogPostPatch): Promise<BlogPost | null> {
+  const run = writeChain.then(async () => {
+    const posts = await readAll();
+    const i = posts.findIndex((p) => p.id === idOrSlug || p.slug === idOrSlug);
+    if (i < 0) return null;
+    const cur = posts[i];
+    const next: BlogPost = { ...cur, updatedAt: new Date().toISOString() };
+    if (patch.title !== undefined) next.title = patch.title.trim();
+    if (patch.content !== undefined) next.content = patch.content.trim();
+    if (patch.format !== undefined) next.format = patch.format;
+    for (const k of ["excerpt", "image", "imageAlt", "category", "author", "metaTitle"] as const) {
+      if (patch[k] !== undefined) next[k] = clean(patch[k]);
+    }
+    if (patch.faq !== undefined) next.faq = cleanFaq(patch.faq);
+    if (patch.date !== undefined) next.date = new Date(patch.date).toISOString();
+    posts[i] = next;
+    await writeAll(posts);
+    return next;
   });
   writeChain = run.catch(() => {});
   return run;

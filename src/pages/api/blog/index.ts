@@ -1,6 +1,8 @@
 // Blog API:
 //   GET  /api/blog        → verejný zoznam príspevkov (najnovší prvý)
 //   POST /api/blog        → vytvorí príspevok (len s platným Bearer tokenom — Šefko)
+//     polia: title, content, format ("markdown"|"text"), excerpt, image (URL) alebo imageData (base64 JPG/PNG/WebP ≤ 5 MB),
+//     imageAlt, category, author, metaTitle, faq [{q,a}], date
 //
 // Príklad publikovania (Šefko):
 //   curl -X POST https://e-taxike.sk/api/blog \
@@ -9,20 +11,14 @@
 //     -d '{"title":"Nadpis","content":"Text príspevku...","excerpt":"Krátky úvod","category":"Novinky","author":"E-TAXI Košice","image":"https://.../obrazok.jpg"}'
 
 import type { NextApiRequest, NextApiResponse } from "next";
-import { z } from "zod";
 import { withErrorHandler } from "@/lib/apiHelpers";
 import { checkBlogToken } from "@/lib/blogAuth";
-import { listPosts, addPost, type NewBlogPost } from "@/lib/blogStore";
+import { listPosts, addPost, slugify, type NewBlogPost } from "@/lib/blogStore";
+import { createSchema } from "@/lib/blogSchema";
+import { saveImageBase64, ImageError } from "@/lib/blogImages";
 
-const createSchema = z.object({
-  title: z.string().min(3, "Nadpis musí mať aspoň 3 znaky").max(200),
-  content: z.string().min(1, "Obsah nesmie byť prázdny").max(50000),
-  excerpt: z.string().max(500).optional(),
-  image: z.string().url("Obrázok musí byť platná URL").max(1000).optional(),
-  category: z.string().max(100).optional(),
-  author: z.string().max(120).optional(),
-  date: z.string().datetime({ offset: true }).optional(),
-});
+// Limit tela (base64 obrázok 5 MB ≈ 6,7 MB textu) — musí byť literál kvôli Next.js.
+export const config = { api: { bodyParser: { sizeLimit: "8mb" } } };
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === "GET") {
@@ -39,10 +35,18 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (!parsed.success) {
       return res.status(400).json({ message: "Neplatné údaje", errors: parsed.error.flatten() });
     }
+    const { imageData, ...data } = parsed.data;
+    if (imageData) {
+      try {
+        data.image = await saveImageBase64(imageData, slugify(data.title));
+      } catch (e) {
+        if (e instanceof ImageError) return res.status(400).json({ message: e.message });
+        throw e;
+      }
+    }
 
-    // zod runtime zaručil title/content — asercia na presný vstupný typ.
-    const post = await addPost(parsed.data as NewBlogPost);
-    return res.status(201).json({ post });
+    const post = await addPost(data as NewBlogPost);
+    return res.status(201).json({ post, url: `/blog/${post.slug}` });
   }
 
   res.setHeader("Allow", "GET, POST");

@@ -33,6 +33,10 @@ const nextConfig = {
       },
     ],
   },
+  // Obrázky blogu sú na disku (data/blog-images) — verejná URL mimo /api/ (robots.txt blokuje /api/).
+  async rewrites() {
+    return [{ source: "/blog/obrazky/:file", destination: "/api/blog/image/:file" }];
+  },
   async headers() {
     return [
       {

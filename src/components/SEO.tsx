@@ -10,6 +10,8 @@ export interface SEOProps {
   url?: string;
   type?: string;
   keywords?: string;
+  /** Stránka existuje len v slovenčine (blog) — bez hreflang alternatív pre ostatné jazyky. */
+  singleLocale?: boolean;
 }
 
 export function SEOElements() {
@@ -27,7 +29,7 @@ export function SEOElements() {
   );
 }
 
-export function SEO({ title, description, image = `${SITE_URL}/og-image.png`, url, keywords }: SEOProps) {
+export function SEO({ title, description, image = `${SITE_URL}/og-image.png`, url, type = "website", keywords, singleLocale }: SEOProps) {
   const { t, locale } = useTranslation();
   const router = useRouter();
 
@@ -56,7 +58,7 @@ export function SEO({ title, description, image = `${SITE_URL}/og-image.png`, ur
       <meta name="ICBM" content="48.7164, 21.2611" />
 
       {/* Open Graph / Facebook */}
-      <meta property="og:type" content="website" />
+      <meta property="og:type" content={type} />
       <meta property="og:url" content={canonical} />
       <meta property="og:title" content={seoTitle} />
       <meta property="og:description" content={seoDescription} />
@@ -73,10 +75,9 @@ export function SEO({ title, description, image = `${SITE_URL}/og-image.png`, ur
 
       {/* Jazykové alternatívy */}
       <link rel="canonical" href={canonical} />
-      {locales.map((l) => (
-        <link key={l} rel="alternate" hrefLang={l} href={localizedUrl(path, l)} />
-      ))}
-      <link rel="alternate" hrefLang="x-default" href={localizedUrl(path, defaultLocale)} />
+      {!singleLocale &&
+        locales.map((l) => <link key={l} rel="alternate" hrefLang={l} href={localizedUrl(path, l)} />)}
+      {!singleLocale && <link rel="alternate" hrefLang="x-default" href={localizedUrl(path, defaultLocale)} />}
 
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     </Head>
