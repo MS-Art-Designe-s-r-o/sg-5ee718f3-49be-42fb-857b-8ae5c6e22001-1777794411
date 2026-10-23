@@ -103,7 +103,7 @@ export default function BlogPostPage({ post, related, minutes }: Props) {
       <Header />
 
       <main className="pt-24 pb-20">
-        <section className="bg-gradient-to-br from-[#282462] to-[#3b3690] text-white pt-12 pb-28">
+        <section className={`bg-gradient-to-br from-[#282462] to-[#3b3690] text-white pt-12 ${post.image ? "pb-28" : "pb-12"}`}>
           <div className="container mx-auto px-4 max-w-5xl">
             <nav aria-label="Navigácia" className="flex items-center gap-1 text-sm text-white/70 mb-6 flex-wrap">
               <Link href="/" className="hover:text-white">Domov</Link>
@@ -122,7 +122,7 @@ export default function BlogPostPage({ post, related, minutes }: Props) {
           </div>
         </section>
 
-        <div className="container mx-auto px-4 max-w-5xl -mt-20">
+        <div className={`container mx-auto px-4 max-w-5xl relative ${post.image ? "-mt-20" : "mt-10"}`}>
           {post.image && (
             <figure className="mb-10">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -168,7 +168,7 @@ export default function BlogPostPage({ post, related, minutes }: Props) {
               <div className="mt-12">{cta}</div>
             </article>
 
-            <aside className="hidden lg:block sticky top-28 space-y-6">
+            <aside className="hidden lg:block sticky top-28 space-y-6 self-start">
               {toc.length >= 2 && (
                 <nav aria-label="Obsah článku" className="rounded-xl border border-border bg-card p-5 shadow-sm">
                   <p className="flex items-center gap-2 font-semibold text-[#282462] dark:text-white mb-3"><ListOrdered className="w-5 h-5" />Obsah článku</p>
@@ -178,7 +178,7 @@ export default function BlogPostPage({ post, related, minutes }: Props) {
                   </ol>
                 </nav>
               )}
-              <div className="rounded-xl bg-accent/15 border border-accent/40 p-5">
+              <div className="rounded-xl bg-card border border-accent/60 border-l-4 border-l-accent shadow-sm p-5">
                 <p className="font-semibold mb-1">Taxi nonstop</p>
                 <a href={t.common.phoneHref} className="flex items-center gap-2 text-xl font-bold text-[#282462] dark:text-white hover:text-primary"><Phone className="w-5 h-5" />{t.common.phone}</a>
               </div>

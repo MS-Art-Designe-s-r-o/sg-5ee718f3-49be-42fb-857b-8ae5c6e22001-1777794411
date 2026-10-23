@@ -60,11 +60,30 @@ const cells = (l: string) => l.replace(/^\||\|$/g, "").split("|").map((c) => c.t
 export function parseBlocks(md: string, format: "markdown" | "text" = "markdown", title?: string): Block[] {
   const lines = md.replace(/\r\n?/g, "\n").split("\n");
   if (format === "text") {
-    return md
-      .split(/\n{2,}/)
-      .map((p) => p.trim())
-      .filter(Boolean)
-      .map((p) => ({ t: "p", lines: p.split("\n") }) as Block);
+    // Staré textové príspevky: zahodiť prvý odstavec zhodný s nadpisom, krátke riadky bez bodky pred odstavcom → H2.
+    const norm = (x: string) => x.trim().replace(/[.:!?]+$/, "").toLowerCase();
+    const paras = md.split(/\n{2,}/).map((x) => x.trim()).filter(Boolean);
+    if (title && paras.length && norm(paras[0]) === norm(title)) paras.shift();
+    const out: Block[] = [];
+    const used = new Set<string>();
+    paras.forEach((para, i) => {
+      const ls = para.split("\n");
+      const first = ls[0].trim();
+      const isHead = (l: string) => l.length >= 3 && l.length <= 110 && !/[.,;:!…]$/.test(l) && !/^[-•*]/.test(l) && /^\p{Lu}|^\d/u.test(l);
+      if (ls.length === 1 && isHead(first) && i < paras.length - 1) {
+        let id = headingId(first); while (used.has(id)) id += "-2"; used.add(id);
+        out.push({ t: "h", level: 2, text: first, id });
+        return;
+      }
+      if (ls.length > 1 && isHead(first) && first.length <= 90) {
+        let id = headingId(first); while (used.has(id)) id += "-2"; used.add(id);
+        out.push({ t: "h", level: 2, text: first, id });
+        ls.shift();
+      }
+      if (ls.every((l) => /^[-•*]\s+/.test(l.trim()))) out.push({ t: "ul", items: ls.map((l) => l.trim().replace(/^[-•*]\s+/, "")) });
+      else out.push({ t: "p", lines: ls });
+    });
+    return out;
   }
   const blocks: Block[] = [];
   const used = new Set<string>();
