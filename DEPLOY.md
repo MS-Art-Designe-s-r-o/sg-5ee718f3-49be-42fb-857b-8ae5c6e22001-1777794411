@@ -51,9 +51,50 @@ V **Setup Node.js App** → sekcia **Environment variables** pridajte:
 | `SMTP_USER` | `dispecing@e-taxike.sk` |
 | `SMTP_PASS` | heslo k e-mailovej schránke |
 | `NEXT_PUBLIC_SITE_URL` | `https://e-taxike.sk` |
+| `BLOG_API_TOKEN` | tajný token na publikovanie blogu (Šefko) — `openssl rand -hex 24` |
+| `GOOGLE_PLACES_API_KEY` | API kľúč z Google Cloud (Places API) pre živé recenzie |
+| `GOOGLE_PLACE_ID` | (voliteľné) Place ID firmy; bez neho sa dohľadá podľa názvu |
 
 > **Pozor:** premenné `NEXT_PUBLIC_*` sa zapekajú do kódu počas `npm run build`.
 > Ak ich zmeníte, treba spustiť build znova.
+
+## 4b. Blog — publikovanie príspevkov cez API (AI agent Šefko)
+
+Príspevky sa pridávajú cez zabezpečené API, **bez zmeny kódu**. Najnovší je vždy prvý;
+doterajšie príspevky (Soro blog) ostávajú zobrazené pod novými.
+
+- **Pridanie príspevku** (Šefko):
+  ```bash
+  curl -X POST https://e-taxike.sk/api/blog \
+    -H "Authorization: Bearer $BLOG_API_TOKEN" \
+    -H "Content-Type: application/json" \
+    -d '{
+      "title": "Nadpis príspevku",
+      "content": "Text. Odstavce oddeľte prázdnym riadkom.",
+      "excerpt": "Krátky úvod (voliteľné)",
+      "category": "Novinky",
+      "author": "E-TAXI Košice",
+      "image": "https://.../obrazok.jpg"
+    }'
+  ```
+  Povinné je len `title` a `content`; ostatné sú voliteľné. `date` (ISO) je voliteľné —
+  default je čas pridania.
+- **Zoznam** (verejný): `GET https://e-taxike.sk/api/blog`
+- **Zmazanie**: `DELETE https://e-taxike.sk/api/blog/<id>` s rovnakým Bearer tokenom.
+
+Príspevky sú uložené v `~/etaxi-web/data/blog-posts.json` (mimo gitu aj buildu — prežijú
+`git pull` aj `npm run build`). Žiadny reštart netreba — nový príspevok sa zobrazí hneď.
+
+## 4c. Google recenzie (živý rating, počet a ~5 recenzií)
+
+1. V [Google Cloud Console](https://console.cloud.google.com/) vytvorte projekt, povoľte
+   **Places API** a vytvorte **API kľúč** (odporúčané obmedziť na Places API).
+2. Kľúč vložte do premennej `GOOGLE_PLACES_API_KEY` v Setup Node.js App a dajte **Restart**.
+3. Web potom na stránke recenzií zobrazí živý rating, počet a cca 5 reálnych recenzií.
+   Bez kľúča sa použijú statické recenzie (web funguje ďalej).
+
+> Pozn.: Google cez API poskytne len cca 5 recenzií (limit Googlu), ale rating a počet
+> sú presné a živé. Výsledok sa cachuje 6 h, takže prevádzka ostáva v bezplatnom pásme.
 
 ## 5. Spustenie a test
 

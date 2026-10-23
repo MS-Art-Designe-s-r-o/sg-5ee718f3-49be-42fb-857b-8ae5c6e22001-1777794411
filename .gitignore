@@ -31,6 +31,9 @@ yarn-error.log*
 .env.local
 .env
 
+# blog data (príspevky publikované cez /api/blog — žijú na serveri, nie v gite)
+/data/
+
 # vercel
 .vercel
 
