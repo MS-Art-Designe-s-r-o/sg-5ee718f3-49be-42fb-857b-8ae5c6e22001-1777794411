@@ -15,6 +15,7 @@ const updateSchema = z.object({
   spz: z.string().min(1).optional(),
   druhPohonu: druhPohonu.optional(),
   poplatokZaSmenu: z.coerce.number().min(0).optional(),
+  poplatokZa24h: z.coerce.number().min(0).optional(),
   lizing: z.coerce.number().min(0).optional(),
   poistenie: z.coerce.number().min(0).optional(),
   sukromne: z.boolean().optional(),
@@ -24,7 +25,7 @@ const updateSchema = z.object({
 
 type VehicleRow = {
   id: number; nazov: string; znacka: string; model: string; farba: string;
-  spz: string; druhPohonu: string; poplatokZaSmenu: number; lizing: number; poistenie: number;
+  spz: string; druhPohonu: string; poplatokZaSmenu: number; poplatokZa24h: number; lizing: number; poistenie: number;
   sukromne: number; casVymeny: string | null; aktivne: number;
 };
 
@@ -38,6 +39,7 @@ function mapVehicle(v: VehicleRow) {
   return {
     ...v,
     poplatokZaSmenu: Number(v.poplatokZaSmenu),
+    poplatokZa24h: Number(v.poplatokZa24h),
     lizing: Number(v.lizing),
     poistenie: Number(v.poistenie),
     sukromne: v.sukromne === 1,
@@ -64,6 +66,7 @@ export default withErrorHandler(
       if (body.spz !== undefined) add("spz", body.spz.toUpperCase().trim());
       if (body.druhPohonu !== undefined) add("druhPohonu", body.druhPohonu);
       if (body.poplatokZaSmenu !== undefined) add("poplatokZaSmenu", body.poplatokZaSmenu);
+      if (body.poplatokZa24h !== undefined) add("poplatokZa24h", body.poplatokZa24h);
       if (body.lizing !== undefined) add("lizing", body.lizing);
       if (body.poistenie !== undefined) add("poistenie", body.poistenie);
       if (body.sukromne !== undefined) add("sukromne", body.sukromne ? 1 : 0);

@@ -15,6 +15,7 @@ const createSchema = z.object({
   spz: z.string().min(1),
   druhPohonu,
   poplatokZaSmenu: z.coerce.number().min(0).default(0),
+  poplatokZa24h: z.coerce.number().min(0).default(0),
   lizing: z.coerce.number().min(0).default(0),
   poistenie: z.coerce.number().min(0).default(0),
   sukromne: z.boolean().default(false),
@@ -24,7 +25,7 @@ const createSchema = z.object({
 
 type VehicleRow = {
   id: number; nazov: string; znacka: string; model: string; farba: string;
-  spz: string; druhPohonu: string; poplatokZaSmenu: number; lizing: number; poistenie: number;
+  spz: string; druhPohonu: string; poplatokZaSmenu: number; poplatokZa24h: number; lizing: number; poistenie: number;
   sukromne: number; casVymeny: string | null; aktivne: number;
 };
 
@@ -32,6 +33,7 @@ function mapVehicle(v: VehicleRow) {
   return {
     ...v,
     poplatokZaSmenu: Number(v.poplatokZaSmenu),
+    poplatokZa24h: Number(v.poplatokZa24h),
     lizing: Number(v.lizing),
     poistenie: Number(v.poistenie),
     sukromne: v.sukromne === 1,
@@ -56,11 +58,11 @@ export default withErrorHandler(
       const body = parseBody(req, res, createSchema);
       if (!body) return;
       const r = await execute(
-        "INSERT INTO `Vehicle` (`nazov`,`znacka`,`model`,`farba`,`spz`,`druhPohonu`,`poplatokZaSmenu`,`lizing`,`poistenie`,`sukromne`,`casVymeny`,`aktivne`,`createdAt`,`updatedAt`) " +
-          "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,NOW(3),NOW(3))",
+        "INSERT INTO `Vehicle` (`nazov`,`znacka`,`model`,`farba`,`spz`,`druhPohonu`,`poplatokZaSmenu`,`poplatokZa24h`,`lizing`,`poistenie`,`sukromne`,`casVymeny`,`aktivne`,`createdAt`,`updatedAt`) " +
+          "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,NOW(3),NOW(3))",
         [
           body.nazov, body.znacka, body.model, body.farba,
-          body.spz.toUpperCase().trim(), body.druhPohonu, body.poplatokZaSmenu,
+          body.spz.toUpperCase().trim(), body.druhPohonu, body.poplatokZaSmenu, body.poplatokZa24h,
           body.lizing, body.poistenie, body.sukromne ? 1 : 0, normCas(body.casVymeny), body.aktivne ? 1 : 0,
         ]
       );

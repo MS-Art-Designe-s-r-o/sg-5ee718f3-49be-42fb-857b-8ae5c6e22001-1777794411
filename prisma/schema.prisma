@@ -101,7 +101,8 @@ model Vehicle {
   farba          String
   spz            String     @unique
   druhPohonu     DruhPohonu
-  poplatokZaSmenu Decimal   @db.Decimal(10, 2) @default(0.00) // predvolený poplatok za smenu na tomto vozidle
+  poplatokZaSmenu Decimal   @db.Decimal(10, 2) @default(0.00) // predvolený poplatok za (12h) smenu na tomto vozidle
+  poplatokZa24h  Decimal    @db.Decimal(10, 2) @default(0.00) // poplatok za 24h prenájom
   lizing         Decimal    @db.Decimal(10, 2) @default(0.00) // mesačný lízing — prenáša sa do výdavkov
   poistenie      Decimal    @db.Decimal(10, 2) @default(0.00) // mesačné poistenie — prenáša sa do výdavkov
   sukromne       Boolean    @default(false) // súkromné vozidlo — neponúka sa medzi voľnými smenami
@@ -256,4 +257,14 @@ model ExpenseOccurrence {
 
   @@unique([expenseId, datum])
   @@index([expenseId])
+}
+
+/// Uložený vlastný rotačný vzor smien (reťazec kódov D/N/V/H; dĺžka = cyklus).
+model ShiftPattern {
+  id          Int      @id @default(autoincrement())
+  nazov       String
+  dni         String   // napr. "DNVHVVV..." (kódy D/N/V/H)
+  createdById Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }

@@ -6,7 +6,7 @@ import { PortalLayout } from "@/components/portal/PortalLayout";
 import { apiFetch, formatEur, formatDate, DAY_NAMES } from "@/lib/portalClient";
 import { isoWeekParts, isoWeekDateRange } from "@/lib/fees";
 import { blockCoversSlot, ROZSAH_LABEL } from "@/lib/vehicleBlocks";
-import { SHIFT_PATTERNS } from "@/lib/shiftPatterns";
+import { SHIFT_PATTERNS, parsePatternDni, type PatternCode } from "@/lib/shiftPatterns";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,7 +17,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useToast } from "@/hooks/use-toast";
 
 type Driver = { id: number; meno: string; priezvisko: string; volaciZnak: string | null };
-type Vehicle = { id: number; nazov: string; spz: string; poplatokZaSmenu: number };
+type Vehicle = { id: number; nazov: string; spz: string; poplatokZaSmenu: number; poplatokZa24h: number };
 type Shift = {
   id: number; driverId: number; datum: string; typ: "DENNA" | "NOCNA" | "VOLNO" | "H24";
   vehicleId: number | null; poplatokZaSmenu: number | null; poplatokUhradeny: boolean;
@@ -48,6 +48,7 @@ export default function SmenyPage() {
   const [blocks, setBlocks] = useState<Block[]>([]);
   const [edit, setEdit] = useState<{ driver: Driver; datum: string; shift?: Shift } | null>(null);
   const [genOpen, setGenOpen] = useState(false);
+  const [patternsOpen, setPatternsOpen] = useState(false);
   const [blockFor, setBlockFor] = useState<Vehicle | null>(null);
 
   const { dni } = isoWeekDateRange(rok, tyzden);
@@ -94,6 +95,7 @@ export default function SmenyPage() {
         <div><Label>ISO týždeň</Label><Input type="number" min={1} max={53} className="w-24" value={tyzden} onChange={(e) => setTyzden(Number(e.target.value))} /></div>
         <Badge variant="secondary" className="mb-2">Týždeň {tyzden}/{rok}</Badge>
         <Button className="mb-2" onClick={() => setGenOpen(true)}>Generovať rozpis podľa vzoru</Button>
+        <Button className="mb-2" variant="outline" onClick={() => setPatternsOpen(true)}>Vlastné vzory</Button>
         <span className="text-xs text-muted-foreground mb-2">D = denná · N = nočná · V = voľno. Kliknite na bunku pre úpravu.</span>
       </div>
 
@@ -245,6 +247,14 @@ export default function SmenyPage() {
           onError={(m) => toast({ title: "Chyba", description: m, variant: "destructive" })}
         />
       )}
+
+      {patternsOpen && (
+        <PatternEditorDialog
+          onClose={() => setPatternsOpen(false)}
+          onError={(m) => toast({ title: "Chyba", description: m, variant: "destructive" })}
+          onSaved={() => toast({ title: "Vzor uložený" })}
+        />
+      )}
     </PortalLayout>
   );
 }
@@ -338,11 +348,17 @@ function GeneratorDialog({
 }) {
   const [driverId, setDriverId] = useState<string>(drivers[0] ? String(drivers[0].id) : "");
   const [patternKey, setPatternKey] = useState<string>(SHIFT_PATTERNS[0].key);
+  const [customPatterns, setCustomPatterns] = useState<{ id: number; nazov: string; dni: string }[]>([]);
   const [vehicleId, setVehicleId] = useState<string>("none");
   const [startDate, setStartDate] = useState<string>(defaultStart);
   const [weeks, setWeeks] = useState<number>(4);
   const [overwrite, setOverwrite] = useState<boolean>(true);
   const [busy, setBusy] = useState(false);
+
+  useEffect(() => {
+    apiFetch<{ patterns: { id: number; nazov: string; dni: string }[] }>("/api/portal/shift-patterns")
+      .then((d) => setCustomPatterns(d.patterns)).catch(() => {});
+  }, []);
 
   async function generate() {
     if (!driverId) { onError("Vyberte vodiča."); return; }
@@ -367,7 +383,9 @@ function GeneratorDialog({
     }
   }
 
-  const pattern = SHIFT_PATTERNS.find((p) => p.key === patternKey);
+  const builtin = SHIFT_PATTERNS.find((p) => p.key === patternKey);
+  const custom = customPatterns.find((p) => `c${p.id}` === patternKey);
+  const dniPreview: PatternCode[] = builtin ? builtin.dni : custom ? parsePatternDni(custom.dni) : [];
 
   return (
     <Dialog open onOpenChange={(o) => !o && onClose()}>
@@ -397,11 +415,14 @@ function GeneratorDialog({
                 {SHIFT_PATTERNS.map((p) => (
                   <SelectItem key={p.key} value={p.key}>{p.label}</SelectItem>
                 ))}
+                {customPatterns.map((p) => (
+                  <SelectItem key={p.id} value={`c${p.id}`}>{p.nazov} (vlastný)</SelectItem>
+                ))}
               </SelectContent>
             </Select>
-            {pattern && (
+            {dniPreview.length > 0 && (
               <div className="text-[11px] text-muted-foreground mt-1 font-mono">
-                1. týždeň: {pattern.dni.slice(0, 7).join(" ")}
+                1. týždeň: {dniPreview.slice(0, 7).join(" ")}
               </div>
             )}
           </div>
@@ -451,9 +472,10 @@ function ShiftEditor({
   const [poplatok, setPoplatok] = useState<string>(shift?.poplatokZaSmenu != null ? String(shift.poplatokZaSmenu) : "");
   const [uhradeny, setUhradeny] = useState<boolean>(shift?.poplatokUhradeny ?? false);
 
-  function vehDefaultFee(id: string) {
+  function vehDefaultFee(id: string, t: Shift["typ"]) {
     const v = vehicles.find((x) => String(x.id) === id);
-    return v ? String(v.poplatokZaSmenu) : "";
+    if (!v) return "";
+    return String(t === "H24" ? v.poplatokZa24h : v.poplatokZaSmenu);
   }
 
   async function save() {
@@ -498,7 +520,7 @@ function ShiftEditor({
         <div className="space-y-3">
           <div>
             <Label>Typ smeny</Label>
-            <Select value={typ} onValueChange={(v) => setTyp(v as Shift["typ"])}>
+            <Select value={typ} onValueChange={(v) => { const nt = v as Shift["typ"]; setTyp(nt); if (nt !== "VOLNO" && vehicleId !== "none") setPoplatok(vehDefaultFee(vehicleId, nt)); }}>
               <SelectTrigger><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="DENNA">Denná (D)</SelectItem>
@@ -512,7 +534,7 @@ function ShiftEditor({
             <>
               <div>
                 <Label>Vozidlo</Label>
-                <Select value={vehicleId} onValueChange={(v) => { setVehicleId(v); if (poplatok === "") setPoplatok(vehDefaultFee(v)); }}>
+                <Select value={vehicleId} onValueChange={(v) => { setVehicleId(v); if (v !== "none") setPoplatok(vehDefaultFee(v, typ)); }}>
                   <SelectTrigger><SelectValue placeholder="—" /></SelectTrigger>
                   <SelectContent>
                     <SelectItem value="none">— žiadne —</SelectItem>
@@ -534,6 +556,123 @@ function ShiftEditor({
         <DialogFooter className="justify-between">
           {shift?.id ? <Button variant="ghost" className="text-red-600" onClick={remove}>Zmazať</Button> : <span />}
           <Button onClick={save}>Uložiť</Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+// ── Editor vlastných rotačných vzorov (uložia sa a objavia v generátore) ──────
+const PE_NEXT: Record<PatternCode, PatternCode> = { D: "N", N: "H", H: "V", V: "D" };
+const PE_LABEL: Record<PatternCode, string> = { D: "D", N: "N", H: "24", V: "V" };
+const PE_CLS: Record<PatternCode, string> = {
+  D: "bg-amber-100 text-amber-800",
+  N: "bg-indigo-100 text-indigo-800",
+  H: "bg-emerald-100 text-emerald-800",
+  V: "bg-gray-100 text-gray-500",
+};
+
+function PatternEditorDialog({
+  onClose, onSaved, onError,
+}: {
+  onClose: () => void; onSaved: () => void; onError: (m: string) => void;
+}) {
+  const [list, setList] = useState<{ id: number; nazov: string; dni: string }[]>([]);
+  const [nazov, setNazov] = useState("");
+  const [dlzka, setDlzka] = useState(7);
+  const [dni, setDni] = useState<PatternCode[]>(Array(7).fill("D") as PatternCode[]);
+  const [busy, setBusy] = useState(false);
+
+  const reload = useCallback(() => {
+    apiFetch<{ patterns: { id: number; nazov: string; dni: string }[] }>("/api/portal/shift-patterns")
+      .then((d) => setList(d.patterns)).catch(() => {});
+  }, []);
+  useEffect(() => { reload(); }, [reload]);
+
+  function setLength(n: number) {
+    setDlzka(n);
+    setDni((prev) => {
+      const next = prev.slice(0, n);
+      while (next.length < n) next.push("D");
+      return next;
+    });
+  }
+  function cycle(i: number) {
+    setDni((prev) => prev.map((c, j) => (j === i ? PE_NEXT[c] : c)));
+  }
+
+  async function save() {
+    if (!nazov.trim()) { onError("Zadajte názov vzoru."); return; }
+    setBusy(true);
+    try {
+      await apiFetch("/api/portal/shift-patterns", {
+        method: "POST",
+        body: JSON.stringify({ nazov: nazov.trim(), dni: dni.join("") }),
+      });
+      setNazov("");
+      reload();
+      onSaved();
+    } catch (e) {
+      onError(e instanceof Error ? e.message : "Uloženie zlyhalo");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function remove(id: number) {
+    try { await apiFetch(`/api/portal/shift-patterns/${id}`, { method: "DELETE" }); reload(); }
+    catch (e) { onError(e instanceof Error ? e.message : "Mazanie zlyhalo"); }
+  }
+
+  return (
+    <Dialog open onOpenChange={(o) => !o && onClose()}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Vlastné vzory smien</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <Label>Nový vzor</Label>
+            <Input placeholder="Názov vzoru (napr. Môj 2-týždňový)" value={nazov} onChange={(e) => setNazov(e.target.value)} />
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">Dĺžka cyklu:</span>
+              <Select value={String(dlzka)} onValueChange={(v) => setLength(Number(v))}>
+                <SelectTrigger className="w-28 h-8"><SelectValue /></SelectTrigger>
+                <SelectContent>{[7, 14, 21, 28].map((n) => <SelectItem key={n} value={String(n)}>{n} dní</SelectItem>)}</SelectContent>
+              </Select>
+              <span className="text-xs text-muted-foreground">Klik na deň mení D → N → 24 → V</span>
+            </div>
+            <div className="flex flex-wrap gap-1">
+              {dni.map((c, i) => (
+                <button key={i} type="button" onClick={() => cycle(i)}
+                  className={`w-10 rounded text-center text-sm py-1 ${PE_CLS[c]} hover:ring-2 ring-[#282462]/40`}
+                  title={`Deň ${i + 1} (${DAY_NAMES[i % 7]})`}>
+                  <div className="text-[9px] leading-none text-muted-foreground">{DAY_NAMES[i % 7]}</div>
+                  <div className="font-bold leading-tight">{PE_LABEL[c]}</div>
+                </button>
+              ))}
+            </div>
+            <Button onClick={save} disabled={busy} className="mt-1">{busy ? "Ukladám…" : "Uložiť vzor"}</Button>
+          </div>
+
+          <div>
+            <Label>Uložené vzory</Label>
+            {list.length === 0 ? (
+              <p className="text-sm text-muted-foreground mt-1">Zatiaľ žiadne vlastné vzory.</p>
+            ) : (
+              <div className="space-y-1 mt-1 max-h-52 overflow-y-auto">
+                {list.map((p) => (
+                  <div key={p.id} className="flex items-center justify-between gap-2 border-b py-1 text-sm">
+                    <span><span className="font-medium">{p.nazov}</span> <span className="font-mono text-muted-foreground text-xs">{parsePatternDni(p.dni).map((c) => PE_LABEL[c]).join(" ")}</span></span>
+                    <Button size="sm" variant="ghost" className="text-red-600" onClick={() => remove(p.id)}>Zmazať</Button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+        <DialogFooter>
+          <Button variant="outline" onClick={onClose}>Zavrieť</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
