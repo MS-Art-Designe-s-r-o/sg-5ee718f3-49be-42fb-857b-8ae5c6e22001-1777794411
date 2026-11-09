@@ -238,3 +238,62 @@ export type AuditLogRow = {
   /** JSON stĺpec — mysql2 ho vracia rozparsovaný (MariaDB: LONGTEXT => string). */
   meta: unknown;
 };
+
+// ── Typy riadkov zmlúv (tabuľky z migrácie 0011) ───────────────────────────────
+
+export type TypZmluvy = "NAJOM" | "DISPECING";
+export type NajomneJednotka = "ZMENA" | "DEN" | "TYZDEN" | "MESIAC";
+export type StavZmluvy = "NAVRH" | "VYGENEROVANA" | "PODPISANA" | "UKONCENA" | "NAHRADENA";
+
+export type ContractTemplateRow = {
+  id: number;
+  typ: TypZmluvy;
+  nazov: string;
+  verzia: number;
+  suborPath: string;
+  sha256: string;
+  platnaOd: string;
+  aktivna: number;
+  /** Generovaný stĺpec IF(aktivna, typ, NULL) — len na čítanie. */
+  aktivnaTyp: TypZmluvy | null;
+  /** JSON stĺpec — mysql2 ho vracia rozparsovaný (MariaDB: LONGTEXT => string). */
+  tagy: unknown;
+  createdById: number | null;
+  createdAt: string;
+};
+
+export type ContractRow = {
+  id: number;
+  cislo: string;
+  verzia: number;
+  nahradzaId: number | null;
+  typ: TypZmluvy;
+  driverId: number;
+  fleetId: number | null;
+  vehicleId: number | null;
+  templateId: number;
+  datumUzavretia: string;
+  platnostOd: string;
+  platnostDo: string | null;
+  najomneSuma: number | null;
+  najomneJednotka: NajomneJednotka;
+  najomne24h: number | null;
+  kaucia: number | null;
+  spoluucast: number | null;
+  stavKmOdovzdanie: number | null;
+  provizia: number | null;
+  poplatokRegistracny: number | null;
+  stav: StavZmluvy;
+  podpisanaDna: string | null;
+  ukoncenaDna: string | null;
+  docxPath: string;
+  pdfPath: string | null;
+  snapshotEnc: string;
+  snapshotSha256: string;
+  onedriveItemId: string | null;
+  onedriveSyncedAt: string | null;
+  onedriveError: string | null;
+  createdById: number | null;
+  createdAt: string;
+  updatedAt: string;
+};

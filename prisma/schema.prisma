@@ -58,6 +58,26 @@ enum VlastnikTyp {
   FLOTILA
 }
 
+enum TypZmluvy {
+  NAJOM
+  DISPECING
+}
+
+enum NajomneJednotka {
+  ZMENA
+  DEN
+  TYZDEN
+  MESIAC
+}
+
+enum StavZmluvy {
+  NAVRH
+  VYGENEROVANA
+  PODPISANA
+  UKONCENA
+  NAHRADENA
+}
+
 enum DriverStav {
   AKTIVNY
   POZASTAVENY
@@ -99,6 +119,7 @@ model User {
   revenues        Revenue[]  @relation("DriverRevenues")
   createdRevenues Revenue[]  @relation("RevenueCreator")
   driverProfile   DriverProfile?
+  contracts       Contract[] @relation("ContractDriver")
   auditLogs       AuditLog[]
 
   @@index([aktivny])
@@ -155,6 +176,7 @@ model Vehicle {
   shifts   Shift[]
   expenses Expense[]
   blocks   VehicleBlock[]
+  contracts Contract[]
 
   @@index([aktivne])
   @@index([vlastnikFleetId])
@@ -354,6 +376,7 @@ model Fleet {
   agreements FleetAgreement[]
   drivers    DriverProfile[]
   vehicles   Vehicle[]
+  contracts  Contract[]
 
   @@index([aktivna])
 }
@@ -426,4 +449,87 @@ model AuditLog {
   @@index([entity, entityId])
   @@index([userId, at])
   @@index([at])
+}
+
+/// Šablóna zmluvy (DOCX na disku, v DB relatívna cesta + SHA-256).
+/// `aktivnaTyp` je generovaný STORED stĺpec IF(aktivna, typ, NULL) s UNIQUE
+/// (najviac jedna aktívna šablóna na typ) — vytvorený ručne v migrácii 0011.
+model ContractTemplate {
+  id          Int        @id @default(autoincrement())
+  typ         TypZmluvy
+  nazov       String
+  verzia      Int
+  suborPath   String     @db.VarChar(500)
+  sha256      String     @db.Char(64)
+  platnaOd    DateTime   @db.Date
+  aktivna     Boolean    @default(false)
+  aktivnaTyp  Unsupported("VARCHAR(10)")? @unique
+  tagy        Json?
+  createdById Int?
+  createdAt   DateTime   @default(now())
+
+  contracts Contract[]
+
+  @@unique([typ, verzia])
+}
+
+/// Číselník poradových čísel zmlúv (NZ-RRRR-NNN / DS-RRRR-NNN).
+model ContractSequence {
+  prefix   String @db.VarChar(4)
+  rok      Int    @db.SmallInt
+  posledne Int    @default(0)
+
+  @@id([prefix, rok])
+}
+
+/// Zmluva (nájomná alebo dispečerská). Vygenerovaný dokument sa neprerenderuje;
+/// platí šifrovaný snapshot údajov. Regenerácia = nový riadok (verzia + 1).
+model Contract {
+  id                  Int             @id @default(autoincrement())
+  cislo               String          @db.VarChar(20)
+  verzia              Int             @default(1)
+  nahradza            Contract?       @relation("ContractNahradza", fields: [nahradzaId], references: [id], onDelete: SetNull)
+  nahradzaId          Int?
+  nahradeneVerzie     Contract[]      @relation("ContractNahradza")
+  typ                 TypZmluvy
+  driver              User            @relation("ContractDriver", fields: [driverId], references: [id], onDelete: Restrict)
+  driverId            Int
+  fleet               Fleet?          @relation(fields: [fleetId], references: [id], onDelete: SetNull)
+  fleetId             Int?
+  vehicle             Vehicle?        @relation(fields: [vehicleId], references: [id], onDelete: SetNull)
+  vehicleId           Int?
+  template            ContractTemplate @relation(fields: [templateId], references: [id], onDelete: Restrict)
+  templateId          Int
+  datumUzavretia      DateTime        @db.Date
+  platnostOd          DateTime        @db.Date
+  platnostDo          DateTime?       @db.Date
+  najomneSuma         Decimal?        @db.Decimal(10, 2)
+  najomneJednotka     NajomneJednotka @default(ZMENA)
+  najomne24h          Decimal?        @db.Decimal(10, 2)
+  kaucia              Decimal?        @db.Decimal(10, 2)
+  spoluucast          Decimal?        @db.Decimal(10, 2)
+  stavKmOdovzdanie    Int?
+  provizia            Decimal?        @db.Decimal(5, 2)
+  poplatokRegistracny Decimal?        @db.Decimal(10, 2)
+  stav                StavZmluvy      @default(NAVRH)
+  podpisanaDna        DateTime?       @db.Date
+  ukoncenaDna         DateTime?       @db.Date
+  docxPath            String          @db.VarChar(500)
+  pdfPath             String?         @db.VarChar(500)
+  snapshotEnc         String          @db.MediumText
+  snapshotSha256      String          @db.Char(64)
+  onedriveItemId      String?
+  onedriveSyncedAt    DateTime?
+  onedriveError       String?         @db.VarChar(500)
+  createdById         Int?
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @default(now()) @updatedAt
+
+  @@unique([cislo, verzia])
+  @@index([driverId])
+  @@index([vehicleId, stav])
+  @@index([typ, stav])
+  @@index([nahradzaId])
+  @@index([fleetId])
+  @@index([templateId])
 }
