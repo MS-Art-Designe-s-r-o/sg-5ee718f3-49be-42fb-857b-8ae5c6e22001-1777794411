@@ -3,7 +3,7 @@
 // STORAGE_DIR (default ~/etaxi-storage). Priečinky 0700, súbory 0600, súbory sa
 // nešifrujú (docs/zmluvy-navrh.md). V DB sa ukladá len RELATÍVNA cesta; pri
 // čítaní sa vždy overí, že výsledná cesta leží vnútri koreňa (path traversal).
-import { constants as fsConstants, createReadStream, mkdirSync, type ReadStream } from "node:fs";
+import { constants as fsConstants, createReadStream, mkdirSync, realpathSync, type ReadStream } from "node:fs";
 import { promises as fs } from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -28,11 +28,36 @@ function fsError(e: unknown): PublicError {
   return new PublicError(`Operácia so súborom zlyhala (${safe}).`, 500);
 }
 
-/** Koreň úložiska (absolútna cesta); vytvorí ho s právami 0700, ak neexistuje. */
+const isInside = (child: string, parent: string) => child === parent || child.startsWith(parent + path.sep);
+
+/** Priečinky, ktoré Next.js servíruje (public/) alebo prepisuje pri builde (.next/). */
+function forbiddenRoots(): string[] {
+  const out: string[] = [];
+  for (const d of ["public", ".next"]) {
+    const abs = path.resolve(process.cwd(), d);
+    out.push(abs);
+    try {
+      out.push(realpathSync(abs));
+    } catch {
+      /* neexistuje */
+    }
+  }
+  return out;
+}
+
+/**
+ * Koreň úložiska (absolútna cesta); vytvorí ho s právami 0700, ak neexistuje.
+ * STORAGE_DIR vo vnútri public/ alebo .next/ (aj cez symlink) → PublicError 500.
+ */
 export function storageRoot(): string {
   const env = (process.env.STORAGE_DIR ?? "").trim();
   const root = path.resolve(env || path.join(os.homedir(), "etaxi-storage"));
+  const bad = () => new PublicError("Úložisko zmlúv (STORAGE_DIR) nesmie byť v priečinku public/ ani .next/.", 500);
+  const forbidden = forbiddenRoots();
+  if (forbidden.some((f) => isInside(root, f))) throw bad();
   mkdirSync(root, { recursive: true, mode: DIR_MODE });
+  const real = realpathSync(root);
+  if (forbidden.some((f) => isInside(real, f))) throw bad();
   return root;
 }
 

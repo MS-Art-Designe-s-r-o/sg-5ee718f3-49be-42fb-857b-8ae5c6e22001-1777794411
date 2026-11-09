@@ -105,3 +105,16 @@ test("writeNewFile neprepíše existujúci súbor (pridá _2)", async () => {
   assert.equal(statSync(resolveSafe(second)).mode & 0o777, 0o600);
   assert.deepEqual(readdirSync(path.dirname(resolveSafe(rel))).filter((f) => f.endsWith(".tmp")), []);
 });
+
+test("storageRoot odmietne STORAGE_DIR v public/ alebo .next/", () => {
+  const ok = process.env.STORAGE_DIR;
+  try {
+    for (const bad of ["public/etaxi", ".next/cache/x", "public"]) {
+      process.env.STORAGE_DIR = path.join(process.cwd(), bad);
+      assert.throws(() => storageRoot(), (e: unknown) => e instanceof PublicError && /public/.test(e.message), bad);
+    }
+    assert.equal(existsSync(path.join(process.cwd(), "public", "etaxi")), false);
+  } finally {
+    process.env.STORAGE_DIR = ok;
+  }
+});
