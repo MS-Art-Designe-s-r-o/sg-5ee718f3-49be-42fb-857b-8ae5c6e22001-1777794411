@@ -95,6 +95,25 @@ const vodicPO: SnapshotVodic = {
   firmaStatutar: "Druhý Vymyslený",
 };
 
+// SZČO (fyzická osoba – podnikateľ) s vlastnou koncesiou.
+const vodicSZCO: SnapshotVodic = {
+  ...vodicFO,
+  userId: 3,
+  meno: "Tretí",
+  priezvisko: "Podnikavý",
+  rezim: "VLASTNA_KONCESIA",
+  stranaTyp: "FYZICKA_OSOBA",
+  firmaObchodneMeno: "Tretí Podnikavý – TAXI",
+  firmaIco: "55667788",
+  firmaDic: "1055667788",
+  firmaIcDph: null,
+  firmaSidlo: "Podnikateľská 4, 040 01 Košice",
+  firmaZapisanyV: "Živnostenský register OÚ Košice, č. 000-00000",
+  cisloKoncesie: "KONC-SZCO-01",
+  koncesiaPlatnostDo: "2029-06-30",
+  firmaStatutar: null,
+};
+
 const vozidlo: SnapshotSource["vozidlo"] = {
   id: 5,
   nazov: "Auto 5",
@@ -123,7 +142,7 @@ const input: SnapshotSource["input"] = {
   datumUzavretia: "2026-02-01",
   platnostOd: "2026-02-01",
   platnostDo: null,
-  najomneSuma: 60,
+  najomneSuma: 1234.5,
   najomneJednotka: "ZMENA",
   najomne24h: 110,
   kaucia: 300,
@@ -160,6 +179,8 @@ async function main() {
     ["PO-koncesia", najom, src("NAJOM", vodicPO, false, "NZ-2026-003")],
     ["FO-flotila", disp, src("DISPECING", vodicFO, true, "DS-2026-001")],
     ["PO-koncesia", disp, src("DISPECING", vodicPO, false, "DS-2026-002")],
+    ["SZCO-koncesia", najom, src("NAJOM", vodicSZCO, false, "NZ-2026-004")],
+    ["SZCO-koncesia", disp, src("DISPECING", vodicSZCO, false, "DS-2026-003")],
   ];
   await fs.mkdir(out, { recursive: true });
   for (const [nazov, tpl, s] of varianty) {
