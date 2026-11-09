@@ -13,6 +13,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { DriverProfileDialog } from "@/components/portal/DriverProfileDialog";
+import { DriverContractsList } from "@/components/portal/DriverContractsList";
 import { GenerateContractDialog } from "@/components/portal/GenerateContractDialog";
 import { useToast } from "@/hooks/use-toast";
 
@@ -47,6 +48,8 @@ export default function VodiciPage() {
   const [unpaid, setUnpaid] = useState<Unpaid | null>(null);
   const [profileUser, setProfileUser] = useState<User | null>(null);
   const [contractUser, setContractUser] = useState<User | null>(null);
+  const [listUser, setListUser] = useState<User | null>(null);
+  const [justGenerated, setJustGenerated] = useState(false);
 
   function openUnpaid(u: User) {
     setUnpaid(null);
@@ -209,6 +212,7 @@ export default function VodiciPage() {
                     <>
                       <Button size="sm" variant="ghost" onClick={() => setProfileUser(u)}>Profil / zmluvné údaje</Button>
                       <Button size="sm" variant="ghost" onClick={() => setContractUser(u)}>Generovať zmluvu</Button>
+                      <Button size="sm" variant="ghost" onClick={() => setListUser(u)}>Zmluvy</Button>
                     </>
                   )}
                   <Button size="sm" variant="ghost" onClick={() => openEdit(u)}>Upraviť</Button>
@@ -278,8 +282,19 @@ export default function VodiciPage() {
       )}
 
       {contractUser && (
-        <GenerateContractDialog key={contractUser.id} driver={contractUser} onClose={() => setContractUser(null)} />
+        <GenerateContractDialog
+          key={contractUser.id}
+          driver={contractUser}
+          onGenerated={() => setJustGenerated(true)}
+          onClose={() => {
+            // Po vygenerovaní otvoríme zoznam zmlúv vodiča (obnovený).
+            if (justGenerated) setListUser(contractUser);
+            setJustGenerated(false);
+            setContractUser(null);
+          }}
+        />
       )}
+      {listUser && <DriverContractsList key={listUser.id} driver={listUser} onClose={() => setListUser(null)} />}
     </PortalLayout>
   );
 }

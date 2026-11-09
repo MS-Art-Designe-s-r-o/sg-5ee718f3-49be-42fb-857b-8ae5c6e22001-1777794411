@@ -32,14 +32,14 @@ type Options = {
   predvolene: { provizia: number; poplatokRegistracny: number };
 };
 
-type Missing = { pole: string; label: string; odkaz: string | null };
-type Warning = { pole: string; text: string };
+export type ContractMissing = { pole: string; label: string; odkaz: string | null };
+export type ContractWarning = { pole: string; text: string };
 type Section = { nazov: string; polozky: { label: string; hodnota: string }[] };
-type Preview = { chybajuce: Missing[]; varovania: Warning[]; nahlad: { sekcie: Section[] } };
+type Preview = { chybajuce: ContractMissing[]; varovania: ContractWarning[]; nahlad: { sekcie: Section[] } };
 
 export type GeneratedContract = {
   id: number; cislo: string; verzia: number; hasDocx: boolean; hasPdf: boolean;
-  pdfVarovanie?: string; varovania: Warning[];
+  pdfVarovanie?: string; varovania: ContractWarning[];
 };
 
 const TYP_LABELS: Record<Typ, string> = { NAJOM: "Nájom vozidla", DISPECING: "Dispečerské služby" };
@@ -62,7 +62,7 @@ const moneyOrNull = (v: string) => (v.trim() === "" ? null : parseDecimal(v));
 const strOrNull = (v: string) => (v.trim() === "" ? null : v.trim());
 
 /** Zoznam chýbajúcich údajov (červený) a varovaní (žltý). */
-function Problems({ chybajuce, varovania }: { chybajuce: Missing[]; varovania: Warning[] }) {
+export function ContractProblems({ chybajuce, varovania }: { chybajuce: ContractMissing[]; varovania: ContractWarning[] }) {
   return (
     <>
       {chybajuce.length > 0 && (
@@ -255,8 +255,8 @@ export function GenerateContractDialog({
     } catch (e) {
       if (e instanceof ApiError && e.status === 422 && Array.isArray(e.data.chybajuce)) {
         setPreview((p) => ({
-          chybajuce: e.data.chybajuce as Missing[],
-          varovania: Array.isArray(e.data.varovania) ? (e.data.varovania as Warning[]) : [],
+          chybajuce: e.data.chybajuce as ContractMissing[],
+          varovania: Array.isArray(e.data.varovania) ? (e.data.varovania as ContractWarning[]) : [],
           nahlad: p?.nahlad ?? { sekcie: [] },
         }));
         setGenError("Zmluvu nie je možné vygenerovať — chýbajú povinné údaje.");
@@ -289,7 +289,7 @@ export function GenerateContractDialog({
             {result.pdfVarovanie && (
               <div className="rounded-md border border-amber-300 bg-amber-50 p-3 text-amber-900">{result.pdfVarovanie}</div>
             )}
-            <Problems chybajuce={[]} varovania={result.varovania} />
+            <ContractProblems chybajuce={[]} varovania={result.varovania} />
             <div className="flex flex-wrap gap-2">
               {result.hasDocx && <Button onClick={() => download(result.id, "docx")}>Stiahnuť DOCX</Button>}
               {result.hasPdf && <Button variant="outline" onClick={() => download(result.id, "pdf")}>Stiahnuť PDF</Button>}
@@ -464,7 +464,7 @@ export function GenerateContractDialog({
                 {genError && (
                   <div className="rounded-md border border-red-300 bg-red-50 p-3 text-red-800">{genError}</div>
                 )}
-                {preview && <Problems chybajuce={chybajuce} varovania={varovania} />}
+                {preview && <ContractProblems chybajuce={chybajuce} varovania={varovania} />}
 
                 {preview && (
                   <div className="max-h-[45vh] overflow-y-auto space-y-3 rounded-md border bg-white p-3">
