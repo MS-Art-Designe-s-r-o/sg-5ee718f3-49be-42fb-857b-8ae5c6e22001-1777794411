@@ -16,11 +16,14 @@ export type CurrentUser = {
 export class ApiError extends Error {
   status: number;
   polia: string[];
-  constructor(message: string, status: number, polia: string[] = []) {
+  /** Telo chybovej odpovede (napr. `chybajuce`, `chyby`, `varovania` pri zmluvách). */
+  data: Record<string, unknown>;
+  constructor(message: string, status: number, polia: string[] = [], data: Record<string, unknown> = {}) {
     super(message);
     this.name = "ApiError";
     this.status = status;
     this.polia = polia;
+    this.data = data;
   }
 }
 
@@ -55,7 +58,8 @@ export async function apiFetch<T = unknown>(
     const polia = [d.polia, d.chybajucePolia]
       .flatMap((x) => (Array.isArray(x) ? x : []))
       .filter((x): x is string => typeof x === "string");
-    throw new ApiError(d.message || `Chyba ${res.status}`, res.status, polia);
+    const body = data && typeof data === "object" ? (data as Record<string, unknown>) : {};
+    throw new ApiError(d.message || `Chyba ${res.status}`, res.status, polia, body);
   }
   return data as T;
 }
