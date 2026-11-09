@@ -41,7 +41,8 @@ export async function sendPasswordSetupEmail(params: {
     : "Boli ste pozvaní do portálu E-TAXI Košice. Nastavte si heslo pre prístup.";
 
   if (!transporter) {
-    console.log(`\n📧 [SMTP nenastavené] Odkaz na heslo pre ${params.to}:\n${link}\n`);
+    // Bez e-mailu a odkazu v logu (osobné údaje / token); odkaz sa vracia volajúcemu v odpovedi API.
+    console.warn("[SMTP nenastavené] E-mail s odkazom na heslo sa neodoslal.");
     return { sent: false, link };
   }
 

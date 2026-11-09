@@ -189,6 +189,78 @@ Potom **Setup Node.js App → Restart**.
 > **Seed** používa priamy `mysql2`, nie Prisma engine — funguje aj pod prísnym NPROC
 > limitom (kde Prisma engine padal na `PANIC: timer has gone away`).
 
+## C2. Šifrovanie osobných údajov (modul zmlúv)
+
+Rodné číslo, číslo OP a snapshot zmluvy sa v DB ukladajú zašifrované (AES-256-GCM).
+V **Setup Node.js App → Environment variables** nastavte:
+
+| Premenná | Popis |
+|---|---|
+| `FIELD_ENC_KEYS` | zoznam kľúčov `k1:<base64 32 B>` (pri rotácii `k1:…,k2:…`) |
+| `FIELD_ENC_ACTIVE` | id kľúča na nové šifrovanie (napr. `k1`) |
+| `FIELD_HMAC_KEY` | HMAC kľúč pre index rodného čísla (base64, aspoň 32 B) |
+
+Kľúč vygenerujete príkazom
+`node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"`.
+
+> **Kľúče sa nesmú stratiť.** Bez nich sa zašifrované údaje už nikdy nedajú prečítať
+> (ani obnovou zálohy DB). Uložte ich **mimo servera** (správca hesiel / trezor),
+> nie do repozitára ani do zálohy spolu s databázou.
+>
+> Bez nastavených kľúčov portál beží ďalej, len uloženie/zobrazenie RČ a OP a
+> generovanie zmlúv vráti chybu „Šifrovanie osobných údajov nie je nakonfigurované".
+
+**Rotácia kľúča:** pridajte nový kľúč (`FIELD_ENC_KEYS=k1:…,k2:…`), nastavte
+`FIELD_ENC_ACTIVE=k2` a reštartujte aplikáciu. Potom prešifrujte existujúce údaje:
+```bash
+npx tsx scripts/reencrypt.ts           # DRY-RUN: len počty záznamov so starým kľúčom
+npx tsx scripts/reencrypt.ts --apply   # prešifruje (po riadkoch v transakcii)
+```
+Starý kľúč odoberte z `FIELD_ENC_KEYS` až keď dry-run hlási 0 záznamov.
+`FIELD_HMAC_KEY` sa nerotuje (zmena by znehodnotila index duplicít).
+
+## C3. Generovanie zmlúv (DOCX) — úložisko súborov a PDF
+
+Modul zmlúv používa nové balíky **`docxtemplater`** a **`pizzip`** (čisté JS, bez
+natívnych častí). Po `git pull` preto na serveri spustite **`npm install`**
+(inak build/štart zlyhá na chýbajúcom module).
+
+| Premenná | Popis |
+|---|---|
+| `STORAGE_DIR` | priečinok na šablóny a vygenerované zmluvy, napr. `/home/USER/etaxi-storage` (default `~/etaxi-storage`) |
+| `PDF_CONVERTER` | `none` (default) alebo `gotenberg` |
+| `GOTENBERG_URL` | (len pri `gotenberg`) adresa služby, napr. `https://pdf.example.sk` |
+| `GOTENBERG_USER` / `GOTENBERG_PASS` | (voliteľné) basic auth ku Gotenbergu |
+
+> **`STORAGE_DIR` musí byť MIMO priečinka aplikácie a mimo `public/`** (súbory sa
+> nesmú dať stiahnuť priamo cez web ani prepísať nasadením). Priečinky sa vytvárajú
+> s právami `0700`, súbory `0600`; súbory na disku sa nešifrujú — zálohujte ich
+> spolu s DB, ale mimo verejných priečinkov. Sťahovanie ide len cez portál
+> (MAJITEĽ, audit, `Cache-Control: no-store`).
+
+Fáza 1 generuje len **DOCX**. PDF je dostupné až po nastavení `PDF_CONVERTER=gotenberg`
+s bežiacou službou Gotenberg (LibreOffice priamo na cPanel sa nepoužíva). Bez nej
+portál pri požiadavke na PDF vráti DOCX a upozornenie „PDF nie je na serveri dostupné".
+
+Ukážkové šablóny so značkami sú v `tests/fixtures/` (nahrajte ich v portáli ako
+šablóny a aktivujte). Ručná kontrola bez DB:
+```bash
+npx tsx scripts/sample-generate.ts /tmp/ukazky-zmluv
+```
+
+## C4. Retencia (GDPR)
+
+Skript `scripts/gdpr-retention.ts` raz za čas (napr. ročne) odstráni údaje, ktoré už netreba držať:
+zmaže záznamy `AuditLog` staršie ako 5 rokov a anonymizuje profil vodiča (RČ, OP, dátum
+narodenia, pobyt, doklady, IBAN, firemné polia), ak jeho posledná zmluva skončila pred viac ako
+5 rokmi a nemá žiadnu aktívnu zmluvu. Samotné zmluvy sa nemenia. Skript vypisuje len počty.
+```bash
+npx tsx scripts/gdpr-retention.ts            # DRY-RUN (default): len počty
+npx tsx scripts/gdpr-retention.ts --apply    # vykoná zmazanie / anonymizáciu
+```
+Potrebuje `DATABASE_URL`. Cron sa zatiaľ nenastavuje — spúšťa sa ručne; pred `--apply`
+vždy skontrolujte výstup dry-runu a majte čerstvú zálohu DB.
+
 ## D. Výpočet poplatkov
 
 - Poplatok za aplikáciu podľa týždennej tržby (pásma: 0–50→0 €, 51–100→5 €,

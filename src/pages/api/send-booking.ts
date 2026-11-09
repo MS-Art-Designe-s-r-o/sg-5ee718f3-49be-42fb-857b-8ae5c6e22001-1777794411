@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import nodemailer from "nodemailer";
 import { getDictionary } from "@/locales";
+import { describeError } from "@/lib/safeLog";
 
 type BookingData = {
   pickup: string;
@@ -42,29 +43,13 @@ export default async function handler(
     if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
       console.error("⚠️ SMTP configuration missing. Please set SMTP_HOST, SMTP_USER, and SMTP_PASS in .env.local");
       
-      // Development fallback - log to console
-      const consoleLog = `
-📧 EMAIL NOTIFICATION (SMTP not configured)
-────────────────────────────────────────
-From: ${process.env.SMTP_USER || "dispecing@e-taxike.sk"}
-To: ${process.env.SMTP_USER || "dispecing@e-taxike.sk"}
-────────────────────────────────────────
-📍 Miesto vyzdvihnutia: ${pickup}
-📍 Cieľ: ${destination}
-🕐 Dátum a čas: ${new Date(datetime).toLocaleString("sk-SK")}
-👥 Počet pasažierov: ${passengersText}${luggage ? `\n🧳 Batožina: ${luggage}` : ""}${flightNumber ? `\n✈️ Číslo letu: ${flightNumber}` : ""}${note ? `\n📝 Poznámka: ${note}` : ""}
-📞 Telefón: ${phone}
-📧 Email: ${email}
-${priceEstimateOnly ? "💰 Iba cenová kalkulácia (bez objednávky)" : ""}
-────────────────────────────────────────
-      `.trim();
-      
-      console.log(consoleLog);
+      // Bez zápisu osobných údajov objednávky (telefón, e-mail, adresy) do logu.
+
 
       return res.status(200).json({ 
         message: "Objednávka prijatá. Pre aktiváciu emailov nastavte SMTP_HOST, SMTP_USER a SMTP_PASS v .env.local",
         success: true,
-        note: "SMTP nie je nakonfigurované - skontrolujte konzolu servera"
+        note: "SMTP nie je nakonfigurované"
       });
     }
 
@@ -320,7 +305,7 @@ ${t.bookingEmail.sign}
       html: customerEmailHtml,
     });
 
-    console.log(`✅ Confirmation email sent to customer: ${email}`);
+    console.log("✅ Confirmation email sent to customer");
 
     return res.status(200).json({ 
       message: "Vaša objednávka bola prijatá. O jej spracovaní Vás budeme informovať",
@@ -328,7 +313,7 @@ ${t.bookingEmail.sign}
     });
 
   } catch (error) {
-    console.error("❌ Error sending booking email:", error);
+    console.error(`❌ Error sending booking email: ${describeError(error, { withMessage: false })}`);
     const t = getDictionary(req.body?.locale);
     return res.status(500).json({
       message: t.bookingForm.alerts.errorFallback,
