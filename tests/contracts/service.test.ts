@@ -1,3 +1,4 @@
+import { createHash, createHmac } from "node:crypto";
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -163,6 +164,7 @@ function world(
       encrypted.push({ aad, plain });
       return `enc:${aad}`;
     },
+    digest: (json) => createHmac("sha256", "test-kluc").update("snapshot:").update(json).digest("hex"),
     audit: async (entry) => void audits.push(entry),
     pdf: opts.pdf ?? new NoneConverter(),
     today: () => "2026-02-01",
@@ -197,6 +199,8 @@ test("generateContract: úspech — číslo, súbor, šifrovaný snapshot, UPDAT
   const upd = w.sql.find((s) => s.sql.startsWith("UPDATE `Contract` SET `docxPath`"));
   assert.deepEqual(upd?.params.slice(0, 2), [EXPECTED_DOCX, `enc:snapshot:${r.id}`]);
   assert.match(String(upd?.params[2]), /^[0-9a-f]{64}$/);
+  // odtlačok nie je holý SHA-256 snapshotu (RČ by sa dalo hádať)
+  assert.notEqual(upd?.params[2], createHash("sha256").update(w.encrypted[0].plain, "utf8").digest("hex"));
 
   // Dokument obsahuje číslo a údaje.
   const t = docxText(w.files.get(EXPECTED_DOCX)!);

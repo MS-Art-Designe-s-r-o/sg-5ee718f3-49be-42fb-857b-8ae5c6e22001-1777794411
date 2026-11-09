@@ -155,6 +155,15 @@ export function blindIndex(normalizedValue: string): string {
   return createHmac("sha256", loadHmacKey()).update(String(normalizedValue), "utf8").digest("hex");
 }
 
+/**
+ * Odtlačok snapshotu zmluvy (Contract.snapshotSha256): HMAC-SHA256 kľúčom
+ * FIELD_HMAC_KEY s doménovým oddelením „snapshot:“. Obyčajný SHA-256 nad JSON
+ * s RČ/OP by sa dal pri znalosti ostatných údajov uhádnuť hrubou silou.
+ */
+export function snapshotDigest(json: string): string {
+  return createHmac("sha256", loadHmacKey()).update("snapshot:", "utf8").update(String(json), "utf8").digest("hex");
+}
+
 // Maska rodného čísla v tvare „******/**NN" (len posledné 2 číslice).
 export function maskRodneCislo(plain: string): string {
   const digits = String(plain ?? "").replace(/\D/g, "");

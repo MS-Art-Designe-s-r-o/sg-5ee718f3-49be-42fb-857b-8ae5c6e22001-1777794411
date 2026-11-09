@@ -156,3 +156,22 @@ test("describeError nevypíše hodnoty z DB chyby", () => {
   assert.ok(!describeError(new Error("SMTP <x@example.invalid>"), { withMessage: false }).includes("example"));
   assert.equal(describeError("text"), "nechybová hodnota (string)");
 });
+
+test("snapshotDigest: HMAC závislý od kľúča, nie holý SHA-256", async () => {
+  const { snapshotDigest } = await import("../src/lib/crypto/fieldCrypto");
+  const { createHash, randomBytes } = await import("node:crypto");
+  const prev = process.env.FIELD_HMAC_KEY;
+  try {
+    process.env.FIELD_HMAC_KEY = randomBytes(32).toString("base64");
+    const a = snapshotDigest('{"rc":"9001010009"}');
+    assert.match(a, /^[0-9a-f]{64}$/);
+    assert.notEqual(a, createHash("sha256").update('{"rc":"9001010009"}').digest("hex"));
+    process.env.FIELD_HMAC_KEY = randomBytes(32).toString("base64");
+    assert.notEqual(snapshotDigest('{"rc":"9001010009"}'), a);
+    delete process.env.FIELD_HMAC_KEY;
+    assert.throws(() => snapshotDigest("{}"));
+  } finally {
+    if (prev === undefined) delete process.env.FIELD_HMAC_KEY;
+    else process.env.FIELD_HMAC_KEY = prev;
+  }
+});

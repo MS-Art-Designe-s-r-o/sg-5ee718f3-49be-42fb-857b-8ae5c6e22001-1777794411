@@ -11,12 +11,11 @@
 //
 // Všetky závislosti (DB, šablóny, úložisko, šifrovanie, audit, PDF) sú
 // injektované cez ServiceDeps — testy podstrčia falošné implementácie.
-import { createHash } from "node:crypto";
 import { z } from "zod";
 import { withTransaction, type ContractRow, type ContractTemplateRow, type StavZmluvy, type TypZmluvy } from "@/lib/db";
 import { PublicError } from "@/lib/safeLog";
 import { writeAudit, type AuditEntry } from "@/lib/audit";
-import { encryptField, maskGeneric, maskRodneCislo } from "@/lib/crypto/fieldCrypto";
+import { encryptField, maskGeneric, maskRodneCislo, snapshotDigest } from "@/lib/crypto/fieldCrypto";
 import { isRealDate } from "@/lib/subjectFields";
 import { connExecutor, poolExecutor, queryFirst, type Executor } from "./executor";
 import { allocateContractNumber, CONTRACT_PREFIX } from "./numbering";
@@ -127,6 +126,8 @@ export type ServiceDeps = {
   writeFile: (relPath: string, buf: Buffer) => Promise<string>;
   removeFile: (relPath: string) => Promise<void>;
   encrypt: (plain: string, aad: string) => string;
+  /** Kľúčovaný odtlačok snapshotu (HMAC), nie holý SHA-256 nad osobnými údajmi. */
+  digest: (json: string) => string;
   audit: (entry: AuditEntry, tx: Executor) => Promise<void>;
   pdf: PdfConverter;
   /** Dnešný dátum 'YYYY-MM-DD'. */
@@ -144,6 +145,7 @@ export function defaultDeps(): ServiceDeps {
     writeFile: writeNewFile,
     removeFile: removeStored,
     encrypt: encryptField,
+    digest: snapshotDigest,
     audit: (entry, tx) => writeAudit(entry, tx),
     pdf: getPdfConverter(),
     today: () => todayIso(),
@@ -227,8 +229,6 @@ export type GenerateResult = {
   varovania: ValidationWarning[];
 };
 
-const sha256 = (s: string) => createHash("sha256").update(s, "utf8").digest("hex");
-
 type ProduceArgs = {
   src: SnapshotSource;
   cislo: string | null;
@@ -293,6 +293,7 @@ async function produce(
   const snapshot = createSnapshot({ ...src, meta: { ...src.meta, cislo, verzia: a.verzia } });
   const json = JSON.stringify(snapshot);
   const snapshotEnc = deps.encrypt(json, `snapshot:${id}`);
+  const snapshotHash = deps.digest(json);
 
   const docx = deps.render(await deps.readFile(tpl.suborPath), snapshot.znacky);
   const rel = `${contractDir(src.vodic?.priezvisko, src.vodic?.meno)}/${contractFileName({
@@ -308,7 +309,7 @@ async function produce(
 
   await tx.execute(
     "UPDATE `Contract` SET `docxPath` = ?, `snapshotEnc` = ?, `snapshotSha256` = ?, `stav` = 'VYGENEROVANA', `templateId` = ? WHERE `id` = ?",
-    [docxPath, snapshotEnc, sha256(json), tpl.id, id]
+    [docxPath, snapshotEnc, snapshotHash, tpl.id, id]
   );
   return { id, cislo, docxPath, templateId: tpl.id };
 }
