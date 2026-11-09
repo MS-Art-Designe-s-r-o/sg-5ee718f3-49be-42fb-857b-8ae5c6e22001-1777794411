@@ -1,9 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
-import { query, execute, type SqlParam } from "@/lib/db";
+import { query, queryOne, execute, type SqlParam } from "@/lib/db";
 import { withAuth } from "@/lib/auth";
 import { parseBody, withErrorHandler } from "@/lib/apiHelpers";
 import { syncVehicleExpenses } from "@/lib/vehicleExpenses";
+import {
+  vehicleContractFields,
+  pickContractValues,
+  mapVehicleContract,
+  type VehicleContractRow,
+} from "@/lib/vehicleContract";
 
 const druhPohonu = z.enum(["ELEKTRO", "HYBRID", "BENZIN", "DIESEL", "LPG", "CNG"]);
 
@@ -21,13 +27,14 @@ const updateSchema = z.object({
   sukromne: z.boolean().optional(),
   casVymeny: z.string().nullable().optional(),
   aktivne: z.boolean().optional(),
+  ...vehicleContractFields,
 });
 
 type VehicleRow = {
   id: number; nazov: string; znacka: string; model: string; farba: string;
   spz: string; druhPohonu: string; poplatokZaSmenu: number; poplatokZa24h: number; lizing: number; poistenie: number;
   sukromne: number; casVymeny: string | null; aktivne: number;
-};
+} & VehicleContractRow;
 
 function normCas(v: string | null | undefined): string | null {
   if (!v) return null;
@@ -44,6 +51,7 @@ function mapVehicle(v: VehicleRow) {
     poistenie: Number(v.poistenie),
     sukromne: v.sukromne === 1,
     aktivne: v.aktivne === 1,
+    ...mapVehicleContract(v),
   };
 }
 
@@ -72,6 +80,17 @@ export default withErrorHandler(
       if (body.sukromne !== undefined) add("sukromne", body.sukromne ? 1 : 0);
       if (body.casVymeny !== undefined) add("casVymeny", normCas(body.casVymeny));
       if (body.aktivne !== undefined) add("aktivne", body.aktivne ? 1 : 0);
+      // Zmluvné údaje: len poslané polia (undefined = nemeniť, null/"" = vymazať).
+      const contract = pickContractValues(body);
+      for (const c of contract) add(c.col, c.val);
+      const vinVal = contract.find((c) => c.col === "vin")?.val;
+      if (typeof vinVal === "string") {
+        const dup = await queryOne<{ id: number }>(
+          "SELECT `id` FROM `Vehicle` WHERE `vin` = ? AND `id` <> ? LIMIT 1",
+          [vinVal, id]
+        );
+        if (dup) return res.status(409).json({ message: "Vozidlo s týmto VIN už existuje" });
+      }
 
       if (sets.length) {
         sets.push("`updatedAt` = NOW(3)");

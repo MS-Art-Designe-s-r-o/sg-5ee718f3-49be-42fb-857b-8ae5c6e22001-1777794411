@@ -53,6 +53,11 @@ enum RozsahBloku {
   NOCNA
 }
 
+enum VlastnikTyp {
+  ETAXI
+  FLOTILA
+}
+
 enum DriverStav {
   AKTIVNY
   POZASTAVENY
@@ -126,6 +131,24 @@ model Vehicle {
   sukromne       Boolean    @default(false) // súkromné vozidlo — neponúka sa medzi voľnými smenami
   casVymeny      String?    // čas výmeny denná↔nočná, napr. "18:00"
   aktivne        Boolean    @default(true)
+  // Zmluvné údaje (migrácia 0010) — predvolené hodnoty pre modál zmluvy
+  vin                 String?       @unique @db.VarChar(17)
+  rokVyroby           Int?          @db.SmallInt
+  cisloTp             String?       @db.VarChar(30) // číslo technického preukazu
+  datumPrvejEvidencie DateTime?     @db.Date
+  vlastnikTyp         VlastnikTyp   @default(ETAXI)
+  vlastnikFleet       Fleet?        @relation(fields: [vlastnikFleetId], references: [id], onDelete: SetNull)
+  vlastnikFleetId     Int?
+  poistovna           String?
+  pzpCislo            String?       @db.VarChar(50)
+  pzpPlatnostDo       DateTime?     @db.Date
+  havCislo            String?       @db.VarChar(50)
+  havPlatnostDo       DateTime?     @db.Date
+  stkPlatnostDo       DateTime?     @db.Date
+  ekPlatnostDo        DateTime?     @db.Date
+  stavKm              Int?
+  kaucia              Decimal?      @db.Decimal(10, 2)
+  spoluucast          Decimal?      @db.Decimal(10, 2)
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
 
@@ -134,6 +157,7 @@ model Vehicle {
   blocks   VehicleBlock[]
 
   @@index([aktivne])
+  @@index([vlastnikFleetId])
 }
 
 /// Časové blokovanie vozidla (nedostupné / servis) — v tomto období sa naň
@@ -329,6 +353,7 @@ model Fleet {
 
   agreements FleetAgreement[]
   drivers    DriverProfile[]
+  vehicles   Vehicle[]
 
   @@index([aktivna])
 }
