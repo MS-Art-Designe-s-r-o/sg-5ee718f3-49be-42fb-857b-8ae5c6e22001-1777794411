@@ -1,6 +1,7 @@
 // Spoločné pomôcky pre API handlery.
 import type { NextApiRequest, NextApiResponse } from "next";
 import { ZodError, type ZodTypeAny, type z } from "zod";
+import { describeError, PublicError } from "@/lib/safeLog";
 
 export function getClientIp(req: NextApiRequest): string | undefined {
   const fwd = req.headers["x-forwarded-for"];
@@ -52,7 +53,11 @@ export function serialize<T>(value: T): T {
   return value;
 }
 
-/** Zaobalí handler try/catch — 500 pri neočakávanej chybe. */
+/**
+ * Zaobalí handler try/catch — 500 pri neočakávanej chybe.
+ * Loguje len bezpečný popis chyby (describeError: bez SQL, hodnôt a osobných údajov).
+ * PublicError má pevný text, ktorý sa smie poslať klientovi aj so svojím statusom.
+ */
 export function withErrorHandler(
   handler: (req: NextApiRequest, res: NextApiResponse) => unknown | Promise<unknown>
 ) {
@@ -60,9 +65,13 @@ export function withErrorHandler(
     try {
       return await handler(req, res);
     } catch (err) {
-      console.error("API error:", err);
+      console.error(`API error [${req.method} ${req.url?.split("?")[0] ?? ""}]: ${describeError(err)}`);
       if (!res.headersSent) {
-        res.status(500).json({ message: "Interná chyba servera" });
+        if (err instanceof PublicError) {
+          res.status(err.status).json({ message: err.message });
+        } else {
+          res.status(500).json({ message: "Interná chyba servera" });
+        }
       }
     }
   };

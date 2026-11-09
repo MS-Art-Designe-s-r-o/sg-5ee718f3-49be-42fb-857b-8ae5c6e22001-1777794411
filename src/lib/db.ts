@@ -6,6 +6,7 @@
 // Prisma sa naďalej používa IBA na migrácie schémy (prisma migrate deploy),
 // nie za behu aplikácie.
 import mysql from "mysql2/promise";
+import { describeError } from "./safeLog";
 
 /** Prípustné typy SQL parametrov (náhrada za any[] v dopytoch). */
 export type SqlParam = string | number | boolean | Date | null | undefined;
@@ -68,7 +69,8 @@ export async function querySafe<T = Record<string, unknown>>(
   try {
     return await query<T>(sql, params);
   } catch (e) {
-    console.error("querySafe: dopyt zlyhal, vraciam []:", e instanceof Error ? e.message : e);
+    // Bez e.message — mysql2 doň vkladá hodnoty z dopytu (osobné údaje).
+    console.error(`querySafe: dopyt zlyhal, vraciam []: ${describeError(e)}`);
     return [];
   }
 }

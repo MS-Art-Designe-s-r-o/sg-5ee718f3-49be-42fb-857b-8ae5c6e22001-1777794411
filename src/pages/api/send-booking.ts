@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import nodemailer from "nodemailer";
 import { getDictionary } from "@/locales";
+import { describeError } from "@/lib/safeLog";
 
 type BookingData = {
   pickup: string;
@@ -320,7 +321,7 @@ ${t.bookingEmail.sign}
       html: customerEmailHtml,
     });
 
-    console.log(`✅ Confirmation email sent to customer: ${email}`);
+    console.log("✅ Confirmation email sent to customer");
 
     return res.status(200).json({ 
       message: "Vaša objednávka bola prijatá. O jej spracovaní Vás budeme informovať",
@@ -328,7 +329,7 @@ ${t.bookingEmail.sign}
     });
 
   } catch (error) {
-    console.error("❌ Error sending booking email:", error);
+    console.error(`❌ Error sending booking email: ${describeError(error, { withMessage: false })}`);
     const t = getDictionary(req.body?.locale);
     return res.status(500).json({
       message: t.bookingForm.alerts.errorFallback,

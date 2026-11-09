@@ -189,6 +189,36 @@ Potom **Setup Node.js App → Restart**.
 > **Seed** používa priamy `mysql2`, nie Prisma engine — funguje aj pod prísnym NPROC
 > limitom (kde Prisma engine padal na `PANIC: timer has gone away`).
 
+## C2. Šifrovanie osobných údajov (modul zmlúv)
+
+Rodné číslo, číslo OP a snapshot zmluvy sa v DB ukladajú zašifrované (AES-256-GCM).
+V **Setup Node.js App → Environment variables** nastavte:
+
+| Premenná | Popis |
+|---|---|
+| `FIELD_ENC_KEYS` | zoznam kľúčov `k1:<base64 32 B>` (pri rotácii `k1:…,k2:…`) |
+| `FIELD_ENC_ACTIVE` | id kľúča na nové šifrovanie (napr. `k1`) |
+| `FIELD_HMAC_KEY` | HMAC kľúč pre index rodného čísla (base64, aspoň 32 B) |
+
+Kľúč vygenerujete príkazom
+`node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"`.
+
+> **Kľúče sa nesmú stratiť.** Bez nich sa zašifrované údaje už nikdy nedajú prečítať
+> (ani obnovou zálohy DB). Uložte ich **mimo servera** (správca hesiel / trezor),
+> nie do repozitára ani do zálohy spolu s databázou.
+>
+> Bez nastavených kľúčov portál beží ďalej, len uloženie/zobrazenie RČ a OP a
+> generovanie zmlúv vráti chybu „Šifrovanie osobných údajov nie je nakonfigurované".
+
+**Rotácia kľúča:** pridajte nový kľúč (`FIELD_ENC_KEYS=k1:…,k2:…`), nastavte
+`FIELD_ENC_ACTIVE=k2` a reštartujte aplikáciu. Potom prešifrujte existujúce údaje:
+```bash
+npx tsx scripts/reencrypt.ts           # DRY-RUN: len počty záznamov so starým kľúčom
+npx tsx scripts/reencrypt.ts --apply   # prešifruje (po riadkoch v transakcii)
+```
+Starý kľúč odoberte z `FIELD_ENC_KEYS` až keď dry-run hlási 0 záznamov.
+`FIELD_HMAC_KEY` sa nerotuje (zmena by znehodnotila index duplicít).
+
 ## D. Výpočet poplatkov
 
 - Poplatok za aplikáciu podľa týždennej tržby (pásma: 0–50→0 €, 51–100→5 €,
