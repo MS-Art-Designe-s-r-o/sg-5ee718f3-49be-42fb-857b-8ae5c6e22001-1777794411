@@ -53,6 +53,22 @@ enum RozsahBloku {
   NOCNA
 }
 
+enum DriverStav {
+  AKTIVNY
+  POZASTAVENY
+  UKONCENY
+}
+
+enum DriverRezim {
+  VO_FLOTILE
+  VLASTNA_KONCESIA
+}
+
+enum StranaTyp {
+  FYZICKA_OSOBA
+  PRAVNICKA_OSOBA
+}
+
 /// Prihlasovací účet aj osoba (vodič / dispečer / majiteľ).
 model User {
   id                          Int        @id @default(autoincrement())
@@ -77,6 +93,8 @@ model User {
   createdShifts   Shift[]    @relation("ShiftCreator")
   revenues        Revenue[]  @relation("DriverRevenues")
   createdRevenues Revenue[]  @relation("RevenueCreator")
+  driverProfile   DriverProfile?
+  auditLogs       AuditLog[]
 
   @@index([aktivny])
 }
@@ -267,4 +285,120 @@ model ShiftPattern {
   createdById Int?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+// ── Modul zmlúv (návrh: docs/zmluvy-navrh.md) ──────────────────────────────────
+
+/// Údaje prevádzkovateľa (E-TAXI). Vždy práve jeden riadok s id = 1.
+model CompanyProfile {
+  id              Int      @id @default(1)
+  obchodneMeno    String
+  ico             String?  @db.VarChar(20)
+  dic             String?  @db.VarChar(20)
+  icDph           String?  @db.VarChar(20)
+  sidlo           String?  @db.VarChar(255)
+  zapisanyV       String?  @db.VarChar(255) // obchodný register
+  statutar        String?
+  statutarFunkcia String?
+  iban            String?  @db.VarChar(34)
+  email           String?
+  telefon         String?  @db.VarChar(50)
+  web             String?
+  updatedAt       DateTime @default(now()) @updatedAt
+}
+
+/// Flotila — externý prevádzkovateľ vozidiel.
+model Fleet {
+  id             Int      @id @default(autoincrement())
+  obchodneMeno   String
+  ico            String?  @unique @db.VarChar(20)
+  dic            String?  @db.VarChar(20)
+  icDph          String?  @db.VarChar(20)
+  sidlo          String?  @db.VarChar(255)
+  zapisanyV      String?  @db.VarChar(255)
+  statutar       String?
+  cisloKoncesie  String?  @db.VarChar(50)
+  iban           String?  @db.VarChar(34)
+  kontaktMeno    String?
+  kontaktTelefon String?  @db.VarChar(50)
+  kontaktEmail   String?
+  poznamka       String?  @db.VarChar(500)
+  aktivna        Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now()) @updatedAt
+
+  agreements FleetAgreement[]
+  drivers    DriverProfile[]
+
+  @@index([aktivna])
+}
+
+/// Dohoda medzi E-TAXI a flotilou.
+model FleetAgreement {
+  id             Int       @id @default(autoincrement())
+  fleet          Fleet     @relation(fields: [fleetId], references: [id], onDelete: Cascade)
+  fleetId        Int
+  cislo          String    @db.VarChar(60)
+  datumUzavretia DateTime  @db.Date
+  platnostOd     DateTime  @db.Date
+  platnostDo     DateTime? @db.Date
+  poznamka       String?   @db.VarChar(500)
+
+  @@index([fleetId])
+}
+
+/// Profil vodiča (osobné a zmluvné údaje, 1:1 s User). Rodné číslo a číslo OP
+/// sú šifrované aplikačne (AES-256-GCM), rodneCisloBidx = HMAC blind index
+/// len na detekciu duplicity.
+model DriverProfile {
+  user               User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId             Int          @id
+  titulPred          String?      @db.VarChar(50)
+  titulZa            String?      @db.VarChar(50)
+  datumNarodenia     DateTime?    @db.Date
+  rodneCisloEnc      String?      @db.VarChar(255)
+  rodneCisloBidx     String?      @unique @db.Char(64)
+  cisloOpEnc         String?      @db.VarChar(255)
+  trvalyPobyt        String?      @db.VarChar(255)
+  cisloVp            String?      @db.VarChar(50)
+  cisloPvt           String?      @db.VarChar(50)
+  pvtPlatnostDo      DateTime?    @db.Date
+  iban               String?      @db.VarChar(34)
+  stav               DriverStav   @default(AKTIVNY)
+  fleet              Fleet?       @relation(fields: [fleetId], references: [id], onDelete: SetNull)
+  fleetId            Int?
+  rezim              DriverRezim?
+  stranaTyp          StranaTyp?
+  firmaObchodneMeno  String?
+  firmaIco           String?      @db.VarChar(20)
+  firmaDic           String?      @db.VarChar(20)
+  firmaIcDph         String?      @db.VarChar(20)
+  firmaSidlo         String?      @db.VarChar(255)
+  firmaZapisanyV     String?      @db.VarChar(255)
+  cisloKoncesie      String?      @db.VarChar(50)
+  koncesiaPlatnostDo DateTime?    @db.Date
+  firmaStatutar      String?
+  anonymizedAt       DateTime?
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @default(now()) @updatedAt
+
+  @@index([fleetId])
+  @@index([stav])
+}
+
+/// Audit log (len INSERT; retencia 5 rokov rieši skript).
+model AuditLog {
+  id       BigInt   @id @default(autoincrement())
+  at       DateTime @default(now())
+  user     User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId   Int?
+  action   String   @db.VarChar(40)
+  entity   String   @db.VarChar(30)
+  entityId Int?
+  ip       String?  @db.VarChar(45)
+  meta     Json?
+
+  @@index([entity, entityId])
+  @@index([userId, at])
+  @@index([at])
 }

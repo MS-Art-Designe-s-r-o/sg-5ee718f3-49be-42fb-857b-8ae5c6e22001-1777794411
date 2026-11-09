@@ -150,3 +150,91 @@ export async function getUserRoles(userId: number): Promise<Role[]> {
   );
   return rows.map((r) => r.role);
 }
+
+// ── Typy riadkov modulu zmlúv (tabuľky z migrácie 0009) ────────────────────────
+// DATE/DATETIME prichádzajú ako reťazce (dateStrings), DECIMAL ako number.
+
+export type DriverStav = "AKTIVNY" | "POZASTAVENY" | "UKONCENY";
+export type DriverRezim = "VO_FLOTILE" | "VLASTNA_KONCESIA";
+export type StranaTyp = "FYZICKA_OSOBA" | "PRAVNICKA_OSOBA";
+
+export type CompanyProfileRow = {
+  id: number;
+  obchodneMeno: string;
+  ico: string | null;
+  dic: string | null;
+  icDph: string | null;
+  sidlo: string | null;
+  zapisanyV: string | null;
+  statutar: string | null;
+  statutarFunkcia: string | null;
+  iban: string | null;
+  email: string | null;
+  telefon: string | null;
+  web: string | null;
+  updatedAt: string;
+};
+
+export type FleetRow = {
+  id: number;
+  obchodneMeno: string;
+  ico: string | null;
+  dic: string | null;
+  icDph: string | null;
+  sidlo: string | null;
+  zapisanyV: string | null;
+  statutar: string | null;
+  cisloKoncesie: string | null;
+  iban: string | null;
+  kontaktMeno: string | null;
+  kontaktTelefon: string | null;
+  kontaktEmail: string | null;
+  poznamka: string | null;
+  aktivna: number;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type DriverProfileRow = {
+  userId: number;
+  titulPred: string | null;
+  titulZa: string | null;
+  datumNarodenia: string | null;
+  rodneCisloEnc: string | null;
+  rodneCisloBidx: string | null;
+  cisloOpEnc: string | null;
+  trvalyPobyt: string | null;
+  cisloVp: string | null;
+  cisloPvt: string | null;
+  pvtPlatnostDo: string | null;
+  iban: string | null;
+  stav: DriverStav;
+  fleetId: number | null;
+  rezim: DriverRezim | null;
+  stranaTyp: StranaTyp | null;
+  firmaObchodneMeno: string | null;
+  firmaIco: string | null;
+  firmaDic: string | null;
+  firmaIcDph: string | null;
+  firmaSidlo: string | null;
+  firmaZapisanyV: string | null;
+  cisloKoncesie: string | null;
+  koncesiaPlatnostDo: string | null;
+  firmaStatutar: string | null;
+  anonymizedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type AuditLogRow = {
+  /** BIGINT — mysql2 ho vracia ako number (resp. string pri veľmi veľkých hodnotách). */
+  id: number | string;
+  at: string;
+  userId: number | null;
+  action: string;
+  entity: string;
+  entityId: number | null;
+  ip: string | null;
+  /** JSON stĺpec — mysql2 ho vracia rozparsovaný (MariaDB: LONGTEXT => string). */
+  meta: unknown;
+};
