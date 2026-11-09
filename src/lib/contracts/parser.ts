@@ -7,6 +7,9 @@
 
 export type ScopeParser = { get(scope: unknown): unknown };
 
+/** Kľúče, ktoré sa nikdy nečítajú (ani ako vlastné vlastnosti, napr. po JSON.parse). */
+const FORBIDDEN = new Set(["__proto__", "constructor", "prototype"]);
+
 export function scopeParser(tag: string): ScopeParser {
   const t = String(tag ?? "").trim();
   if (t === "." || t === "this") return { get: (scope) => scope };
@@ -16,7 +19,7 @@ export function scopeParser(tag: string): ScopeParser {
       let cur: unknown = scope;
       for (const key of path) {
         if (cur === null || typeof cur !== "object" || Array.isArray(cur)) return undefined;
-        if (!Object.prototype.hasOwnProperty.call(cur, key)) return undefined;
+        if (FORBIDDEN.has(key) || !Object.prototype.hasOwnProperty.call(cur, key)) return undefined;
         cur = (cur as Record<string, unknown>)[key];
       }
       return cur;
