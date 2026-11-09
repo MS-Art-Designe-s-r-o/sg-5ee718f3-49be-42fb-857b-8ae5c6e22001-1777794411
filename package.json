@@ -12,7 +12,7 @@
     "lint": "next lint",
     "prisma:migrate": "prisma migrate deploy",
     "seed": "tsx prisma/seed.ts",
-    "test": "node --test --import tsx tests/*.test.ts",
+    "test": "node --test --import tsx tests/*.test.ts tests/contracts/*.test.ts",
     "test:fees": "node --test --import tsx tests/fees.test.ts"
   },
   "prisma": {
