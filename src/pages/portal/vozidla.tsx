@@ -22,12 +22,12 @@ import { useToast } from "@/hooks/use-toast";
 
 type Vehicle = {
   id: number; nazov: string; znacka: string; model: string; farba: string;
-  spz: string; druhPohonu: string; poplatokZaSmenu: number; lizing: number; poistenie: number;
+  spz: string; druhPohonu: string; poplatokZaSmenu: number; poplatokZa24h: number; lizing: number; poistenie: number;
   sukromne: boolean; casVymeny: string | null; aktivne: boolean;
 };
 
 const POHONY = ["ELEKTRO", "HYBRID", "BENZIN", "DIESEL", "LPG", "CNG"];
-const empty = { nazov: "", znacka: "", model: "", farba: "", spz: "", druhPohonu: "ELEKTRO", poplatokZaSmenu: "0", lizing: "0", poistenie: "0", sukromne: false, casVymeny: "", aktivne: true };
+const empty = { nazov: "", znacka: "", model: "", farba: "", spz: "", druhPohonu: "ELEKTRO", poplatokZaSmenu: "0", poplatokZa24h: "0", lizing: "0", poistenie: "0", sukromne: false, casVymeny: "", aktivne: true };
 
 export default function VozidlaPage() {
   const { toast } = useToast();
@@ -47,7 +47,7 @@ export default function VozidlaPage() {
     setForm({
       nazov: v.nazov, znacka: v.znacka, model: v.model, farba: v.farba, spz: v.spz,
       druhPohonu: v.druhPohonu,
-      poplatokZaSmenu: String(v.poplatokZaSmenu), lizing: String(v.lizing), poistenie: String(v.poistenie),
+      poplatokZaSmenu: String(v.poplatokZaSmenu), poplatokZa24h: String(v.poplatokZa24h), lizing: String(v.lizing), poistenie: String(v.poistenie),
       sukromne: v.sukromne, casVymeny: v.casVymeny ?? "", aktivne: v.aktivne,
     });
     setOpen(true);
@@ -57,6 +57,7 @@ export default function VozidlaPage() {
     const payload = {
       ...form,
       poplatokZaSmenu: parseDecimal(form.poplatokZaSmenu),
+      poplatokZa24h: parseDecimal(form.poplatokZa24h),
       lizing: parseDecimal(form.lizing),
       poistenie: parseDecimal(form.poistenie),
     };
@@ -105,7 +106,8 @@ export default function VozidlaPage() {
                   <SelectContent>{POHONY.map((p) => <SelectItem key={p} value={p}>{p}</SelectItem>)}</SelectContent>
                 </Select>
               </div>
-              <div><Label>Poplatok za smenu (€)</Label><Input type="text" inputMode="decimal" placeholder="0,00" value={form.poplatokZaSmenu} onChange={(e) => setForm({ ...form, poplatokZaSmenu: sanitizeDecimalInput(e.target.value) })} /></div>
+              <div><Label>Poplatok za smenu (12h) (€)</Label><Input type="text" inputMode="decimal" placeholder="0,00" value={form.poplatokZaSmenu} onChange={(e) => setForm({ ...form, poplatokZaSmenu: sanitizeDecimalInput(e.target.value) })} /></div>
+              <div><Label>Poplatok za 24h prenájom (€)</Label><Input type="text" inputMode="decimal" placeholder="0,00" value={form.poplatokZa24h} onChange={(e) => setForm({ ...form, poplatokZa24h: sanitizeDecimalInput(e.target.value) })} /></div>
               <div><Label>Čas výmeny (D↔N)</Label><Input type="time" value={form.casVymeny} onChange={(e) => setForm({ ...form, casVymeny: e.target.value })} /></div>
               <div><Label>Lízing / mesiac (€)</Label><Input type="text" inputMode="decimal" placeholder="0,00" value={form.lizing} onChange={(e) => setForm({ ...form, lizing: sanitizeDecimalInput(e.target.value) })} /></div>
               <div><Label>Poistenie / mesiac (€)</Label><Input type="text" inputMode="decimal" placeholder="0,00" value={form.poistenie} onChange={(e) => setForm({ ...form, poistenie: sanitizeDecimalInput(e.target.value) })} /></div>
@@ -126,7 +128,7 @@ export default function VozidlaPage() {
             <TableRow>
               <TableHead>Názov</TableHead><TableHead>Značka / Model</TableHead>
               <TableHead>Farba</TableHead><TableHead>ŠPZ</TableHead>
-              <TableHead>Pohon</TableHead><TableHead>Poplatok/smena</TableHead>
+              <TableHead>Pohon</TableHead><TableHead>Poplatok/smena</TableHead><TableHead>Poplatok/24h</TableHead>
               <TableHead>Čas výmeny</TableHead><TableHead>Stav</TableHead><TableHead></TableHead>
             </TableRow>
           </TableHeader>
@@ -139,6 +141,7 @@ export default function VozidlaPage() {
                 <TableCell>{v.spz}</TableCell>
                 <TableCell>{v.druhPohonu}</TableCell>
                 <TableCell>{formatEur(v.poplatokZaSmenu)}</TableCell>
+                <TableCell>{formatEur(v.poplatokZa24h)}</TableCell>
                 <TableCell>{v.casVymeny || "—"}</TableCell>
                 <TableCell>
                   <div className="flex flex-wrap gap-1">
@@ -152,7 +155,7 @@ export default function VozidlaPage() {
                 </TableCell>
               </TableRow>
             ))}
-            {list.length === 0 && <TableRow><TableCell colSpan={9} className="text-center text-muted-foreground py-6">Zatiaľ žiadne vozidlá.</TableCell></TableRow>}
+            {list.length === 0 && <TableRow><TableCell colSpan={10} className="text-center text-muted-foreground py-6">Zatiaľ žiadne vozidlá.</TableCell></TableRow>}
           </TableBody>
         </Table>
       </div>

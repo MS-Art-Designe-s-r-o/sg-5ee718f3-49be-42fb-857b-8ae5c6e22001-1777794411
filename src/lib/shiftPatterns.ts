@@ -1,27 +1,37 @@
 // Rotačné vzory smien podľa Google tabuľky E-TAXI Košice (rozpis pre 4 vodičov
-// na firemné vozidlo). Každý vzor je 28-dňový (4-týždňový) cyklus, ktorý sa
-// opakuje. D = denná, N = nočná, V = voľno.
-//
-// Vzory zodpovedajú stĺpcom "Vodič 1–4" v tabuľke — každý deň je práve jeden
-// vodič na dennej a jeden na nočnej, dvaja majú voľno.
+// na firemné vozidlo). Vstavané vzory sú 28-dňové (4-týždňové) cykly; vlastné
+// uložené vzory môžu mať ľubovoľnú dĺžku. D = denná, N = nočná, V = voľno,
+// H = 24-hodinová (obsadí dennú aj nočnú).
 
-export type PatternCode = "D" | "N" | "V";
-export type TypSmeny = "DENNA" | "NOCNA" | "VOLNO";
+export type PatternCode = "D" | "N" | "V" | "H";
+export type TypSmeny = "DENNA" | "NOCNA" | "VOLNO" | "H24";
 
 export const CODE_TO_TYP: Record<PatternCode, TypSmeny> = {
   D: "DENNA",
   N: "NOCNA",
   V: "VOLNO",
+  H: "H24",
 };
 
+const VALID_CODES = new Set(["D", "N", "V", "H"]);
+
+/** Reťazec kódov → pole PatternCode (ignoruje medzery a neznáme znaky). */
+export function parsePatternDni(s: string): PatternCode[] {
+  return s
+    .toUpperCase()
+    .replace(/\s+/g, "")
+    .split("")
+    .filter((c) => VALID_CODES.has(c)) as PatternCode[];
+}
+
 function toArr(s: string): PatternCode[] {
-  return s.replace(/\s+/g, "").split("") as PatternCode[];
+  return parsePatternDni(s);
 }
 
 export type ShiftPattern = {
   key: string;
   label: string;
-  dni: PatternCode[]; // 28 dní
+  dni: PatternCode[];
 };
 
 // Zdroj: hárok "Rozpis smien" (od pondelka).
@@ -46,13 +56,20 @@ export const SHIFT_PATTERNS: ShiftPattern[] = [
     label: "Vzor 4 (Po: Voľno → Str/Štv denná)",
     dni: toArr("VVDDVVV NNVVDDD VVNNVVV DDVVNNN"),
   },
+  {
+    key: "H24",
+    label: "24 hodín — každý deň",
+    dni: toArr("HHHHHHH"),
+  },
 ];
 
 export function getPattern(key: string): ShiftPattern | undefined {
   return SHIFT_PATTERNS.find((p) => p.key === key);
 }
 
-/** Kód smeny pre daný deň (index od začiatku obdobia) podľa vzoru (cyklus 28 dní). */
+/** Kód smeny pre daný deň (index od začiatku obdobia) podľa vzoru (cyklus = dĺžka vzoru). */
 export function patternCodeForDay(pattern: ShiftPattern, dayIndex: number): PatternCode {
-  return pattern.dni[((dayIndex % 28) + 28) % 28];
+  const n = pattern.dni.length;
+  if (n === 0) return "V";
+  return pattern.dni[((dayIndex % n) + n) % n];
 }
