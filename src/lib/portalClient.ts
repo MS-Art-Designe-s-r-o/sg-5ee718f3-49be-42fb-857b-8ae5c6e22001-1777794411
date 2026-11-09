@@ -12,6 +12,18 @@ export type CurrentUser = {
   registracnyPoplatokUhradeny: boolean;
 };
 
+/** Chyba API s doplnkovými údajmi (stav a NÁZVY neplatných/chýbajúcich polí, nikdy hodnoty). */
+export class ApiError extends Error {
+  status: number;
+  polia: string[];
+  constructor(message: string, status: number, polia: string[] = []) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+    this.polia = polia;
+  }
+}
+
 export async function apiFetch<T = unknown>(
   url: string,
   options: RequestInit = {}
@@ -39,7 +51,11 @@ export async function apiFetch<T = unknown>(
   clearTimeout(timeout);
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
-    throw new Error((data as { message?: string }).message || `Chyba ${res.status}`);
+    const d = data as { message?: string; polia?: unknown; chybajucePolia?: unknown };
+    const polia = [d.polia, d.chybajucePolia]
+      .flatMap((x) => (Array.isArray(x) ? x : []))
+      .filter((x): x is string => typeof x === "string");
+    throw new ApiError(d.message || `Chyba ${res.status}`, res.status, polia);
   }
   return data as T;
 }
