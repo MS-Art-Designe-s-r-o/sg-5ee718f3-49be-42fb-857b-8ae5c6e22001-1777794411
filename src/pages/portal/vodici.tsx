@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
+import { DriverProfileDialog } from "@/components/portal/DriverProfileDialog";
 import { useToast } from "@/hooks/use-toast";
 
 type User = {
@@ -41,6 +42,7 @@ export default function VodiciPage() {
   const [editing, setEditing] = useState<User | null>(null);
   const [form, setForm] = useState<typeof emptyForm>(emptyForm);
   const [unpaid, setUnpaid] = useState<Unpaid | null>(null);
+  const [profileUser, setProfileUser] = useState<User | null>(null);
 
   function openUnpaid(u: User) {
     setUnpaid(null);
@@ -185,6 +187,9 @@ export default function VodiciPage() {
                   {u.mustSetPassword ? <Badge variant="secondary">Čaká na heslo</Badge> : u.aktivny ? <Badge className="bg-green-600">Aktívny</Badge> : <Badge variant="secondary">Neaktívny</Badge>}
                 </TableCell>
                 <TableCell className="text-right whitespace-nowrap">
+                  {u.roles.includes("VODIC") && (
+                    <Button size="sm" variant="ghost" onClick={() => setProfileUser(u)}>Profil / zmluvné údaje</Button>
+                  )}
                   <Button size="sm" variant="ghost" onClick={() => openEdit(u)}>Upraviť</Button>
                   <Button size="sm" variant="ghost" onClick={() => resend(u)}>Pozvánka</Button>
                   <Button size="sm" variant="ghost" className="text-red-600" onClick={() => remove(u)}>Zmazať</Button>
@@ -246,6 +251,10 @@ export default function VodiciPage() {
           )}
         </DialogContent>
       </Dialog>
+
+      {profileUser && (
+        <DriverProfileDialog key={profileUser.id} driver={profileUser} onClose={() => setProfileUser(null)} />
+      )}
     </PortalLayout>
   );
 }
