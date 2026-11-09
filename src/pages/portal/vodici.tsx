@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { PortalLayout } from "@/components/portal/PortalLayout";
 import { apiFetch, formatEur, formatDate, ROLE_LABELS, type Role } from "@/lib/portalClient";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { DriverProfileDialog } from "@/components/portal/DriverProfileDialog";
+import { GenerateContractDialog } from "@/components/portal/GenerateContractDialog";
 import { useToast } from "@/hooks/use-toast";
 
 type User = {
@@ -37,12 +39,14 @@ const emptyForm = {
 
 export default function VodiciPage() {
   const { toast } = useToast();
+  const router = useRouter();
   const [list, setList] = useState<User[]>([]);
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<User | null>(null);
   const [form, setForm] = useState<typeof emptyForm>(emptyForm);
   const [unpaid, setUnpaid] = useState<Unpaid | null>(null);
   const [profileUser, setProfileUser] = useState<User | null>(null);
+  const [contractUser, setContractUser] = useState<User | null>(null);
 
   function openUnpaid(u: User) {
     setUnpaid(null);
@@ -55,6 +59,20 @@ export default function VodiciPage() {
     apiFetch<{ users: User[] }>("/api/portal/users").then((d) => setList(d.users));
   }
   useEffect(load, []);
+
+  // Odkaz z validácie zmluvy: ?profil=<userId> otvorí kartu vodiča; parameter potom z URL odstránime.
+  useEffect(() => {
+    if (!router.isReady || list.length === 0) return;
+    const raw = router.query.profil;
+    if (raw === undefined) return;
+    const id = Number(Array.isArray(raw) ? raw[0] : raw);
+    const u = list.find((x) => x.id === id);
+    if (u) setProfileUser(u);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { profil: _profil, ...rest } = router.query;
+    router.replace({ pathname: router.pathname, query: rest }, undefined, { shallow: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router.isReady, router.query.profil, list]);
 
   function openNew() { setEditing(null); setForm(emptyForm); setOpen(true); }
   function openEdit(u: User) {
@@ -188,7 +206,10 @@ export default function VodiciPage() {
                 </TableCell>
                 <TableCell className="text-right whitespace-nowrap">
                   {u.roles.includes("VODIC") && (
-                    <Button size="sm" variant="ghost" onClick={() => setProfileUser(u)}>Profil / zmluvné údaje</Button>
+                    <>
+                      <Button size="sm" variant="ghost" onClick={() => setProfileUser(u)}>Profil / zmluvné údaje</Button>
+                      <Button size="sm" variant="ghost" onClick={() => setContractUser(u)}>Generovať zmluvu</Button>
+                    </>
                   )}
                   <Button size="sm" variant="ghost" onClick={() => openEdit(u)}>Upraviť</Button>
                   <Button size="sm" variant="ghost" onClick={() => resend(u)}>Pozvánka</Button>
@@ -254,6 +275,10 @@ export default function VodiciPage() {
 
       {profileUser && (
         <DriverProfileDialog key={profileUser.id} driver={profileUser} onClose={() => setProfileUser(null)} />
+      )}
+
+      {contractUser && (
+        <GenerateContractDialog key={contractUser.id} driver={contractUser} onClose={() => setContractUser(null)} />
       )}
     </PortalLayout>
   );

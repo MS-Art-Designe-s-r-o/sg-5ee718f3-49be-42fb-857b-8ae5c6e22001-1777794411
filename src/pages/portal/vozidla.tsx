@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { PortalLayout } from "@/components/portal/PortalLayout";
 import { apiFetch, formatEur, parseDecimal, sanitizeDecimalInput } from "@/lib/portalClient";
 import { Button } from "@/components/ui/button";
@@ -54,6 +55,7 @@ const numOrNull = (v: string) => (v.trim() === "" ? null : parseDecimal(v));
 
 export default function VozidlaPage() {
   const { toast } = useToast();
+  const router = useRouter();
   const [list, setList] = useState<Vehicle[]>([]);
   const [open, setOpen] = useState(false);
   const [editing, setEditing] = useState<Vehicle | null>(null);
@@ -71,6 +73,20 @@ export default function VozidlaPage() {
       .then((d) => setFleets(Array.isArray(d.fleets) ? d.fleets : []))
       .catch(() => setFleets([]));
   }, []);
+
+  // Odkaz z validácie zmluvy: ?edit=<id> otvorí dialóg úpravy vozidla; parameter potom z URL odstránime.
+  useEffect(() => {
+    if (!router.isReady || list.length === 0) return;
+    const raw = router.query.edit;
+    if (raw === undefined) return;
+    const id = Number(Array.isArray(raw) ? raw[0] : raw);
+    const v = list.find((x) => x.id === id);
+    if (v) openEdit(v);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { edit: _edit, ...rest } = router.query;
+    router.replace({ pathname: router.pathname, query: rest }, undefined, { shallow: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router.isReady, router.query.edit, list]);
 
   function openNew() { setEditing(null); setForm(empty); setOpen(true); }
   function openEdit(v: Vehicle) {
