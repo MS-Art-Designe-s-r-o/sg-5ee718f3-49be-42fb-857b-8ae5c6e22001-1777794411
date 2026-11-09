@@ -17,6 +17,17 @@ const MAX_SEGMENT = 80;
 
 const MSG_BAD_PATH = "Neplatná cesta k súboru.";
 
+/**
+ * Chyby node:fs majú v texte celú cestu (s menom vodiča) — navonok aj do logu
+ * pustíme len kód chyby. PublicError prepustí bez zmeny.
+ */
+function fsError(e: unknown): PublicError {
+  if (e instanceof PublicError) return e;
+  const code = (e as { code?: unknown } | null)?.code;
+  const safe = typeof code === "string" && /^[A-Z0-9_]{1,20}$/.test(code) ? code : "UNKNOWN";
+  return new PublicError(`Operácia so súborom zlyhala (${safe}).`, 500);
+}
+
 /** Koreň úložiska (absolútna cesta); vytvorí ho s právami 0700, ak neexistuje. */
 export function storageRoot(): string {
   const env = (process.env.STORAGE_DIR ?? "").trim();
@@ -115,14 +126,14 @@ function tmpName(abs: string): string {
  */
 export async function writeFileAtomic(relPath: string, buf: Buffer): Promise<string> {
   const abs = resolveSafe(relPath);
-  await fs.mkdir(path.dirname(abs), { recursive: true, mode: DIR_MODE });
   const tmp = tmpName(abs);
   try {
+    await fs.mkdir(path.dirname(abs), { recursive: true, mode: DIR_MODE });
     await fs.writeFile(tmp, buf, { mode: FILE_MODE, flag: "wx" });
     await fs.rename(tmp, abs);
   } catch (e) {
     await fs.rm(tmp, { force: true }).catch(() => undefined);
-    throw e;
+    throw fsError(e);
   }
   return relPath;
 }
@@ -137,9 +148,14 @@ const isExists = (e: unknown) => (e as { code?: unknown } | null)?.code === "EEX
  */
 export async function writeNewFile(relPath: string, buf: Buffer, maxAttempts = 50): Promise<string> {
   const first = resolveSafe(relPath);
-  await fs.mkdir(path.dirname(first), { recursive: true, mode: DIR_MODE });
   const tmp = tmpName(first);
-  await fs.writeFile(tmp, buf, { mode: FILE_MODE, flag: "wx" });
+  try {
+    await fs.mkdir(path.dirname(first), { recursive: true, mode: DIR_MODE });
+    await fs.writeFile(tmp, buf, { mode: FILE_MODE, flag: "wx" });
+  } catch (e) {
+    await fs.rm(tmp, { force: true }).catch(() => undefined);
+    throw fsError(e);
+  }
   try {
     const ext = path.posix.extname(relPath);
     const base = relPath.slice(0, relPath.length - ext.length);
@@ -160,10 +176,10 @@ export async function writeNewFile(relPath: string, buf: Buffer, maxAttempts = 5
             return candidate;
           } catch (e2) {
             if (isExists(e2)) continue;
-            throw e2;
+            throw fsError(e2);
           }
         }
-        throw e;
+        throw fsError(e);
       }
     }
     throw new PublicError("Súbor sa nepodarilo uložiť (príliš veľa súborov s rovnakým názvom).");
@@ -179,7 +195,7 @@ export async function readStored(relPath: string): Promise<Buffer> {
     return await fs.readFile(abs);
   } catch (e) {
     if ((e as { code?: unknown } | null)?.code === "ENOENT") throw new PublicError("Súbor sa nenašiel.", 404);
-    throw e;
+    throw fsError(e);
   }
 }
 
@@ -202,5 +218,9 @@ export function openStoredStream(relPath: string): ReadStream {
 /** Zmaže súbor (neexistujúci ignoruje). */
 export async function removeStored(relPath: string): Promise<void> {
   const abs = resolveSafe(relPath);
-  await fs.rm(abs, { force: true });
+  try {
+    await fs.rm(abs, { force: true });
+  } catch (e) {
+    throw fsError(e);
+  }
 }
