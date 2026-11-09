@@ -15,7 +15,7 @@ import { z } from "zod";
 import { withTransaction, type ContractRow, type ContractTemplateRow, type StavZmluvy, type TypZmluvy } from "@/lib/db";
 import { PublicError } from "@/lib/safeLog";
 import { writeAudit, type AuditEntry } from "@/lib/audit";
-import { encryptField, maskGeneric, maskRodneCislo, snapshotDigest } from "@/lib/crypto/fieldCrypto";
+import { decryptField, encryptField, maskGeneric, maskRodneCislo, snapshotDigest } from "@/lib/crypto/fieldCrypto";
 import { isRealDate } from "@/lib/subjectFields";
 import { connExecutor, poolExecutor, queryFirst, type Executor } from "./executor";
 import { allocateContractNumber, CONTRACT_PREFIX } from "./numbering";
@@ -126,6 +126,8 @@ export type ServiceDeps = {
   writeFile: (relPath: string, buf: Buffer) => Promise<string>;
   removeFile: (relPath: string) => Promise<void>;
   encrypt: (plain: string, aad: string) => string;
+  /** Dešifrovanie snapshotu (regenerácia preberá miesto podpisu, ktoré nemá stĺpec). */
+  decrypt?: (token: string, aad: string) => string;
   /** Kľúčovaný odtlačok snapshotu (HMAC), nie holý SHA-256 nad osobnými údajmi. */
   digest: (json: string) => string;
   audit: (entry: AuditEntry, tx: Executor) => Promise<void>;
@@ -145,6 +147,7 @@ export function defaultDeps(): ServiceDeps {
     writeFile: writeNewFile,
     removeFile: removeStored,
     encrypt: encryptField,
+    decrypt: decryptField,
     digest: snapshotDigest,
     audit: (entry, tx) => writeAudit(entry, tx),
     pdf: getPdfConverter(),
@@ -395,6 +398,17 @@ export async function regenerateContract(
 
   const d = (v: string | null) => (v ? String(v).slice(0, 10) : null);
   const n = (v: unknown) => (v === null || v === undefined ? null : Number(v));
+  // Miesto podpisu nemá stĺpec — je len v pôvodnom snapshote (inak by sa vrátilo na predvolené).
+  let miestoPodpisu: string | null = null;
+  if (deps.decrypt && old.snapshotEnc) {
+    try {
+      const snap = JSON.parse(deps.decrypt(old.snapshotEnc, `snapshot:${old.id}`)) as { input?: { miestoPodpisu?: unknown } };
+      const m = snap?.input?.miestoPodpisu;
+      if (typeof m === "string" && m.trim()) miestoPodpisu = m.trim().slice(0, 100);
+    } catch {
+      /* nečitateľný snapshot → predvolené miesto podpisu */
+    }
+  }
   const req: ContractRequest = {
     typ: old.typ,
     driverId: old.driverId,
@@ -410,6 +424,7 @@ export async function regenerateContract(
     stavKmOdovzdanie: n(old.stavKmOdovzdanie),
     provizia: n(old.provizia),
     poplatokRegistracny: n(old.poplatokRegistracny),
+    miestoPodpisu,
     formaty: opts.formaty,
   };
   const src = await loadOrThrow(deps, req);

@@ -367,3 +367,23 @@ test("previewContract: RČ a OP len maskované, sekcie z dát šablóny", async 
   assert.ok(!r.nahlad.sekcie.some((s) => s.nazov === "Flotila"));
   assert.equal(w.tx.commits, 0);
 });
+
+test("regenerateContract: miesto podpisu sa prevezme z pôvodného snapshotu", async () => {
+  const w = world({ oldContract: { ...OLD, snapshotEnc: "tok" } });
+  w.deps.decrypt = (token, aad) => {
+    assert.equal(token, "tok");
+    assert.equal(aad, "snapshot:55");
+    return JSON.stringify({ input: { miestoPodpisu: "Prešove" } });
+  };
+  await regenerateContract(w.deps, 55, { userId: 1, ip: null });
+  const snap = JSON.parse(w.encrypted[0].plain);
+  assert.equal(snap.input.miestoPodpisu, "Prešove");
+  assert.equal(snap.znacky.zmluva.miesto_podpisu, "Prešove");
+  // nečitateľný snapshot → predvolené
+  const w2 = world({ oldContract: { ...OLD, snapshotEnc: "zly" } });
+  w2.deps.decrypt = () => {
+    throw new Error("x");
+  };
+  await regenerateContract(w2.deps, 55, { userId: 1, ip: null });
+  assert.equal(JSON.parse(w2.encrypted[0].plain).znacky.zmluva.miesto_podpisu, "Košiciach");
+});
