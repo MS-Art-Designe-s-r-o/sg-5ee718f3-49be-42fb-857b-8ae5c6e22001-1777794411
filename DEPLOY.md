@@ -219,6 +219,35 @@ npx tsx scripts/reencrypt.ts --apply   # prešifruje (po riadkoch v transakcii)
 Starý kľúč odoberte z `FIELD_ENC_KEYS` až keď dry-run hlási 0 záznamov.
 `FIELD_HMAC_KEY` sa nerotuje (zmena by znehodnotila index duplicít).
 
+## C3. Generovanie zmlúv (DOCX) — úložisko súborov a PDF
+
+Modul zmlúv používa nové balíky **`docxtemplater`** a **`pizzip`** (čisté JS, bez
+natívnych častí). Po `git pull` preto na serveri spustite **`npm install`**
+(inak build/štart zlyhá na chýbajúcom module).
+
+| Premenná | Popis |
+|---|---|
+| `STORAGE_DIR` | priečinok na šablóny a vygenerované zmluvy, napr. `/home/USER/etaxi-storage` (default `~/etaxi-storage`) |
+| `PDF_CONVERTER` | `none` (default) alebo `gotenberg` |
+| `GOTENBERG_URL` | (len pri `gotenberg`) adresa služby, napr. `https://pdf.example.sk` |
+| `GOTENBERG_USER` / `GOTENBERG_PASS` | (voliteľné) basic auth ku Gotenbergu |
+
+> **`STORAGE_DIR` musí byť MIMO priečinka aplikácie a mimo `public/`** (súbory sa
+> nesmú dať stiahnuť priamo cez web ani prepísať nasadením). Priečinky sa vytvárajú
+> s právami `0700`, súbory `0600`; súbory na disku sa nešifrujú — zálohujte ich
+> spolu s DB, ale mimo verejných priečinkov. Sťahovanie ide len cez portál
+> (MAJITEĽ, audit, `Cache-Control: no-store`).
+
+Fáza 1 generuje len **DOCX**. PDF je dostupné až po nastavení `PDF_CONVERTER=gotenberg`
+s bežiacou službou Gotenberg (LibreOffice priamo na cPanel sa nepoužíva). Bez nej
+portál pri požiadavke na PDF vráti DOCX a upozornenie „PDF nie je na serveri dostupné".
+
+Ukážkové šablóny so značkami sú v `tests/fixtures/` (nahrajte ich v portáli ako
+šablóny a aktivujte). Ručná kontrola bez DB:
+```bash
+npx tsx scripts/sample-generate.ts /tmp/ukazky-zmluv
+```
+
 ## D. Výpočet poplatkov
 
 - Poplatok za aplikáciu podľa týždennej tržby (pásma: 0–50→0 €, 51–100→5 €,
