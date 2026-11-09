@@ -248,6 +248,19 @@ Ukážkové šablóny so značkami sú v `tests/fixtures/` (nahrajte ich v port�
 npx tsx scripts/sample-generate.ts /tmp/ukazky-zmluv
 ```
 
+## C4. Retencia (GDPR)
+
+Skript `scripts/gdpr-retention.ts` raz za čas (napr. ročne) odstráni údaje, ktoré už netreba držať:
+zmaže záznamy `AuditLog` staršie ako 5 rokov a anonymizuje profil vodiča (RČ, OP, dátum
+narodenia, pobyt, doklady, IBAN, firemné polia), ak jeho posledná zmluva skončila pred viac ako
+5 rokmi a nemá žiadnu aktívnu zmluvu. Samotné zmluvy sa nemenia. Skript vypisuje len počty.
+```bash
+npx tsx scripts/gdpr-retention.ts            # DRY-RUN (default): len počty
+npx tsx scripts/gdpr-retention.ts --apply    # vykoná zmazanie / anonymizáciu
+```
+Potrebuje `DATABASE_URL`. Cron sa zatiaľ nenastavuje — spúšťa sa ručne; pred `--apply`
+vždy skontrolujte výstup dry-runu a majte čerstvú zálohu DB.
+
 ## D. Výpočet poplatkov
 
 - Poplatok za aplikáciu podľa týždennej tržby (pásma: 0–50→0 €, 51–100→5 €,
