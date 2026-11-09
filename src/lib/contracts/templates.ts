@@ -4,6 +4,7 @@
 // Unikátnosť aktívnej šablóny na typ zaručuje generovaný stĺpec `aktivnaTyp`
 // s UNIQUE indexom — pri aktivácii sa preto NAJPRV deaktivujú ostatné.
 import { createHash } from "node:crypto";
+import { inflateRawSync } from "node:zlib";
 import PizZip from "pizzip";
 import type { ContractTemplateRow, TypZmluvy } from "@/lib/db";
 import { PublicError } from "@/lib/safeLog";
@@ -14,6 +15,46 @@ import { removeStored, templateRelPath, writeFileAtomic } from "./storage";
 export const MAX_TEMPLATE_BYTES = 5 * 1024 * 1024;
 
 const ZIP_MAGIC = Buffer.from([0x50, 0x4b, 0x03, 0x04]);
+
+/** Limity po rozbalení (ochrana pred „zip bombou“). */
+export const MAX_ENTRY_UNCOMPRESSED = 20 * 1024 * 1024;
+export const MAX_TOTAL_UNCOMPRESSED = 60 * 1024 * 1024;
+const MAX_ENTRIES = 1000;
+
+type ZipEntryData = { compressionMethod?: string; getCompressedContent?: () => Uint8Array | string };
+
+/**
+ * Overí skutočnú veľkosť po rozbalení každej položky ZIP (nie údaj z hlavičky,
+ * ten môže klamať): DEFLATE sa rozbaľuje s pevným stropom výstupu.
+ * Prekročenie / neznáma kompresia → PublicError 400.
+ */
+export function assertZipSize(zip: PizZip): void {
+  const tooBig = () => new PublicError("Súbor je po rozbalení príliš veľký.", 400);
+  const files = Object.values(zip.files).filter((f) => !f.dir);
+  if (files.length > MAX_ENTRIES) throw tooBig();
+  let total = 0;
+  for (const f of files) {
+    const data = (f as unknown as { _data?: ZipEntryData })._data;
+    if (!data || typeof data.getCompressedContent !== "function") {
+      throw new PublicError("Súbor nie je platný DOCX (ZIP) dokument.", 400);
+    }
+    const raw = data.getCompressedContent();
+    const comp = typeof raw === "string" ? Buffer.from(raw, "binary") : Buffer.from(raw);
+    let size: number;
+    if (data.compressionMethod === "\x00\x00") size = comp.length;
+    else if (data.compressionMethod === "\x08\x00") {
+      try {
+        size = inflateRawSync(comp, { maxOutputLength: MAX_ENTRY_UNCOMPRESSED }).length;
+      } catch (e) {
+        if ((e as { code?: unknown } | null)?.code === "ERR_BUFFER_TOO_LARGE" || e instanceof RangeError) throw tooBig();
+        throw new PublicError("Súbor nie je platný DOCX (ZIP) dokument.", 400);
+      }
+    } else throw new PublicError("Súbor nie je platný DOCX (ZIP) dokument.", 400);
+    if (size > MAX_ENTRY_UNCOMPRESSED) throw tooBig();
+    total += size;
+    if (total > MAX_TOTAL_UNCOMPRESSED) throw tooBig();
+  }
+}
 
 /** Dekóduje base64 (aj „data:…;base64,“). Neplatný reťazec → PublicError 400. */
 export function decodeBase64Upload(data: string): Buffer {
@@ -48,10 +89,17 @@ export function validateTemplateUpload(buf: Buffer): TemplateUploadCheck {
     throw new PublicError("Súbor nie je platný DOCX (ZIP) dokument.", 400);
   }
   if (!zip.file("word/document.xml")) throw new PublicError("Súbor nie je dokument Word (chýba word/document.xml).", 400);
+  assertZipSize(zip);
 
   const ins = inspectTemplate(buf);
   if (ins.chyby?.length) {
     throw new TemplateError(`Šablóna obsahuje chyby: ${ins.chyby.join("; ")}`, ins.chyby, 400);
+  }
+  // {@značka} vkladá hodnotu ako surové XML (údaje vodiča by mohli meniť štruktúru dokumentu).
+  const raw = ins.tagy.filter((t) => t.startsWith("@"));
+  if (raw.length) {
+    const chyby = raw.map((t) => `raw_xml_nepovolene: ${t}`);
+    throw new TemplateError(`Šablóna obsahuje chyby: ${chyby.join("; ")}`, chyby, 400);
   }
   return {
     sha256: createHash("sha256").update(buf).digest("hex"),

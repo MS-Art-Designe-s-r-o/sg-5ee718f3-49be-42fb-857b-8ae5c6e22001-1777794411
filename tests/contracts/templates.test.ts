@@ -115,3 +115,29 @@ test("activateTemplate: najprv deaktivuje ostatné, potom aktivuje", async () =>
   assert.match(upd[1].sql, /SET `aktivna` = 1/);
   assert.equal(await activateTemplate(ex, 10), null);
 });
+
+test("validateTemplateUpload: zip bomba (veľký document.xml po rozbalení) → 400", () => {
+  const zip = new PizZip(makeDocx(["{firma.nazov}"]));
+  // ~30 MB textu sa zbalí na pár desiatok kB
+  zip.file("word/document.xml", "<w:document>" + " ".repeat(30 * 1024 * 1024) + "</w:document>");
+  const buf = zip.generate({ type: "nodebuffer", compression: "DEFLATE" }) as Buffer;
+  assert.ok(buf.length < MAX_TEMPLATE_BYTES);
+  assert.throws(
+    () => validateTemplateUpload(buf),
+    (e: unknown) => e instanceof PublicError && e.status === 400 && /príliš veľký/.test(e.message)
+  );
+});
+
+test("validateTemplateUpload: veľa stredne veľkých položiek nad celkový limit → 400", () => {
+  const zip = new PizZip(makeDocx(["{firma.nazov}"]));
+  for (let i = 0; i < 4; i++) zip.file(`word/media/x${i}.xml`, "a".repeat(19 * 1024 * 1024));
+  const buf = zip.generate({ type: "nodebuffer", compression: "DEFLATE" }) as Buffer;
+  assert.throws(() => validateTemplateUpload(buf), (e: unknown) => e instanceof PublicError && e.status === 400);
+});
+
+test("validateTemplateUpload: {@raw} značka (surové XML) sa odmietne", () => {
+  assert.throws(
+    () => validateTemplateUpload(makeDocx(["{@vodic.meno}"])),
+    (e: unknown) => e instanceof TemplateError && e.chyby.some((c) => c.startsWith("raw_xml_nepovolene"))
+  );
+});
