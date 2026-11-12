@@ -10,6 +10,7 @@ import { describeApiError } from "@/lib/fieldLabels";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
@@ -112,6 +113,8 @@ export function GenerateContractDialog({
   const [datumUzavretia, setDatumUzavretia] = useState(todayIso());
   const [platnostOd, setPlatnostOd] = useState(todayIso());
   const [platnostDo, setPlatnostDo] = useState("");
+  // Predvolene na dobu neurčitú (platnostDo = null), dátum „do“ sa zadáva len po odškrtnutí.
+  const [naNeurcito, setNaNeurcito] = useState(true);
   const [najomneSuma, setNajomneSuma] = useState("");
   const [najomneJednotka, setNajomneJednotka] = useState<Jednotka>("ZMENA");
   const [najomne24h, setNajomne24h] = useState("");
@@ -173,7 +176,7 @@ export function GenerateContractDialog({
       driverId: driver.id,
       datumUzavretia: strOrNull(datumUzavretia),
       platnostOd: strOrNull(platnostOd),
-      platnostDo: strOrNull(platnostDo),
+      platnostDo: naNeurcito ? null : strOrNull(platnostDo),
       miestoPodpisu: strOrNull(miestoPodpisu),
     };
     if (typ === "NAJOM") {
@@ -194,7 +197,7 @@ export function GenerateContractDialog({
       poplatokRegistracny: moneyOrNull(poplatokReg),
     };
   }, [
-    typ, driver.id, datumUzavretia, platnostOd, platnostDo, miestoPodpisu, vehicleId, najomneSuma,
+    typ, driver.id, datumUzavretia, platnostOd, platnostDo, naNeurcito, miestoPodpisu, vehicleId, najomneSuma,
     najomneJednotka, najomne24h, kaucia, spoluucast, stavKm, provizia, poplatokReg,
   ]);
   const bodyKey = JSON.stringify(body);
@@ -239,7 +242,8 @@ export function GenerateContractDialog({
   const varovania = preview?.varovania ?? [];
   const canGenerate =
     !!options && !!sablona && !!preview && chybajuce.length === 0 && !previewLoading && !generating &&
-    (typ !== "NAJOM" || !!vehicleId);
+    (typ !== "NAJOM" || !!vehicleId) &&
+    (naNeurcito || platnostDo.trim() !== "");
 
   async function generate() {
     if (!canGenerate) return;
@@ -371,8 +375,20 @@ export function GenerateContractDialog({
                   </div>
                   <div className="sm:col-span-2">
                     <Label>Platnosť do</Label>
-                    <Input type="date" value={platnostDo} onChange={(e) => setPlatnostDo(e.target.value)} />
-                    <p className="text-xs text-muted-foreground mt-1">Prázdne = na dobu neurčitú.</p>
+                    <label className="flex items-center gap-2 text-sm cursor-pointer mb-2">
+                      <Checkbox checked={naNeurcito} onCheckedChange={(v) => setNaNeurcito(!!v)} />
+                      Na dobu neurčitú
+                    </label>
+                    <Input
+                      type="date"
+                      value={platnostDo}
+                      min={platnostOd || undefined}
+                      disabled={naNeurcito}
+                      onChange={(e) => setPlatnostDo(e.target.value)}
+                    />
+                    {!naNeurcito && platnostDo.trim() === "" && (
+                      <p className="text-xs text-red-600 mt-1">Zadajte dátum „do“, alebo zaškrtnite „Na dobu neurčitú“.</p>
+                    )}
                   </div>
 
                   {typ === "NAJOM" ? (
