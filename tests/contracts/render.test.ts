@@ -13,6 +13,7 @@ import { flotila, source, vodic } from "./_data";
 const FIX = path.join(__dirname, "..", "fixtures");
 const NAJOM = readFileSync(path.join(FIX, "sablona-najom.docx"));
 const DISP = readFileSync(path.join(FIX, "sablona-dispecing.docx"));
+const DISP_V = readFileSync(path.join(FIX, "sablona-dispecing-vodic.docx"));
 
 function text(tpl: Buffer, src: SnapshotSource): string {
   const out = renderDocx(tpl, buildTemplateData(src));
@@ -36,7 +37,7 @@ const PO_KONCESIA = vodic({
 });
 
 test("fixtures: inspectTemplate nenájde chyby ani neznáme značky", () => {
-  for (const tpl of [NAJOM, DISP]) {
+  for (const tpl of [NAJOM, DISP, DISP_V]) {
     const r = inspectTemplate(tpl);
     assert.equal(r.chyby, undefined);
     assert.deepEqual(r.neznameTagy, []);
@@ -149,6 +150,65 @@ test("dispečing: vlastná koncesia bez flotily — blok koncesie, bez dopravcu"
   assert.ok(!t.includes("2. Dopravca (partnerská taxislužba)"));
   assert.ok(t.includes("vo výške 25,00 €"));
   assert.ok(t.includes("vo výške 12,5 % z tržby"));
+});
+
+test("dispečing (vodič): fyzická osoba bez flotily — bez IČO, koncesie a dopravcu", () => {
+  const t = text(DISP_V, source({ typ: "DISPECING", vozidlo: null, vodic: vodic({ rezim: null, fleetId: null }), meta: { cislo: "DS-2026-010", verzia: 1, datumVygenerovania: "2026-02-01" } }));
+  noBraces(t);
+  for (const v of ["Číslo zmluvy: DS-2026-010", "2. Partnerský vodič", "Meno a priezvisko / Obchodné meno: Testo Fiktívny", "Volací znak: K-77", "Bankové spojenie / IBAN: "]) {
+    assert.ok(t.includes(v), v);
+  }
+  assert.ok(!t.includes("Dopravca (Partnerský vodič je zamestnaný"));
+  assert.ok(!t.includes("Číslo koncesie na taxislužbu"));
+  assert.ok(!t.includes("IČO: 1122"), "IČO vodiča-podnikateľa sa nemá vypísať");
+  assert.ok(!t.includes("Zastúpený:"));
+});
+
+test("dispečing (vodič): vo flotile — riadok dopravcu so značkami flotily", () => {
+  const t = text(DISP_V, source({ typ: "DISPECING", vozidlo: null, vodic: vodic({ fleetId: 7, rezim: "VO_FLOTILE" }), flotila: flotila() }));
+  noBraces(t);
+  assert.ok(t.includes("Dopravca (Partnerský vodič je zamestnaný u zmluvného Dopravcu): Flotila Príklad s.r.o., IČO: 87654321"));
+  assert.ok(t.includes("číslo koncesie: KONC-FLOT-01"));
+});
+
+test("dispečing (vodič): vlastná koncesia — právnická osoba s IČO, DIČ, koncesiou a zastúpením", () => {
+  const t = text(DISP_V, source({ typ: "DISPECING", vozidlo: null, vodic: PO_KONCESIA }));
+  noBraces(t);
+  for (const v of [
+    "Meno a priezvisko / Obchodné meno: Vodičova Firma s.r.o.",
+    "Bytom / Sídlo: Firemná 9, 040 01 Košice",
+    "IČO: 11223344",
+    "DIČ: 1122334455  IČ DPH: SK1122334455",
+    "Číslo koncesie na taxislužbu: KONC-PO-01",
+    "Zastúpený: Štatutár Vodičovej Firmy",
+  ]) {
+    assert.ok(t.includes(v), v);
+  }
+});
+
+test("dispečing (vodič): SZČO s vlastnou koncesiou — IČO a DIČ, bez „Zastúpený“", () => {
+  const t = text(
+    DISP_V,
+    source({
+      typ: "DISPECING",
+      vozidlo: null,
+      vodic: vodic({ stranaTyp: "FYZICKA_OSOBA", rezim: "VLASTNA_KONCESIA", firmaIco: "55667788", firmaDic: "1055667788", firmaIcDph: null, cisloKoncesie: "KONC-SZCO-01" }),
+    })
+  );
+  noBraces(t);
+  assert.ok(t.includes("IČO: 55667788"));
+  assert.ok(t.includes("DIČ: 1055667788"));
+  assert.ok(!t.includes("IČ DPH:"), "IČ DPH je voliteľné");
+  assert.ok(t.includes("Číslo koncesie na taxislužbu: KONC-SZCO-01"));
+  assert.ok(!t.includes("Zastúpený:"));
+});
+
+test("dispečing (vodič): doba trvania — neurčitá aj určitá", () => {
+  const neurcita = text(DISP_V, source({ typ: "DISPECING", vozidlo: null, input: { ...source().input, platnostDo: null } }));
+  assert.ok(neurcita.includes("Táto zmluva sa uzatvára na dobu neurčitú"));
+  const urcita = text(DISP_V, source({ typ: "DISPECING", vozidlo: null, input: { ...source().input, platnostOd: "2026-02-01", platnostDo: "2027-01-31" } }));
+  noBraces(urcita);
+  assert.ok(/Táto zmluva sa uzatvára na dobu určitú od 01\.02\.2026 do 31\.01\.2027/.test(urcita), "doba určitá");
 });
 
 test("renderDocx: chyba šablóny → TemplateError so značkami, bez hodnôt", () => {

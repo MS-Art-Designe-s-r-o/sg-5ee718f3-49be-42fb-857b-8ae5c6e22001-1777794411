@@ -1,8 +1,8 @@
 // Výroba ukážkových šablón so značkami z dvoch vzorových zmlúv (DOCX).
 //
 // Spustenie (z koreňa projektu):
-//   npx tsx scripts/make-sample-templates.ts --najom <vzor-najom.docx> --dispecing <vzor-dispecing.docx> [--out tests/fixtures]
-// Výstup: <out>/sablona-najom.docx a <out>/sablona-dispecing.docx
+//   npx tsx scripts/make-sample-templates.ts [--najom <vzor-najom.docx>] [--dispecing <vzor-dispecing.docx>] [--dispecing-vodic <vzor.docx>] [--out tests/fixtures]
+// Výstup: <out>/sablona-najom.docx, <out>/sablona-dispecing.docx a <out>/sablona-dispecing-vodic.docx
 //
 // Postup: z word/document.xml sa identifikujú odstavce podľa textu a ich text sa
 // nahradí značkami (zachová sa pPr odstavca a rPr prvého runu, ostatné runy sa
@@ -388,6 +388,99 @@ function editDispecing(ed: Editor) {
   );
 }
 
+// ── Dispečerská zmluva – zmluvnou stranou je Partnerský vodič ──────────────────
+
+function editDispecingVodic(ed: Editor) {
+  const title = ed.find(starts("uzatvorená podľa"));
+  ed.insertAfter(title, ["Číslo zmluvy: {zmluva.cislo}"], "číslo zmluvy pod nadpis");
+
+  // 1. Prevádzkovateľ dispečingu
+  const p1 = ed.find(starts("1. Prevádzkovateľ dispečingu"));
+  ed.replace(ed.find(starts("Obchodné meno:"), p1), ["Obchodné meno: {firma.nazov}"], "prevádzkovateľ – obchodné meno");
+  ed.replace(ed.find(starts("Sídlo:"), p1), ["Sídlo: {firma.sidlo}"], "prevádzkovateľ – sídlo");
+  ed.replace(
+    ed.find(starts("IČO:"), p1),
+    ["IČO: {firma.ico}  DIČ: {firma.dic}{#firma.ic_dph}  IČ DPH: {firma.ic_dph}{/firma.ic_dph}"],
+    "prevádzkovateľ – IČO/DIČ/IČ DPH"
+  );
+  ed.replace(ed.find(starts("Zapísaná:"), p1), ["Zapísaná: {firma.zapisany_v}"], "prevádzkovateľ – zápis");
+  ed.replace(
+    ed.find(starts("Zastúpená:"), p1),
+    ["Zastúpená: {firma.statutar}, {firma.statutar_funkcia}"],
+    "prevádzkovateľ – štatutár"
+  );
+  ed.replace(ed.find(starts("Bankové spojenie"), p1), ["Bankové spojenie / IBAN: {firma.iban}"], "prevádzkovateľ – IBAN");
+
+  // 2. Partnerský vodič (zmluvná strana = vodič alebo jeho s.r.o. / SZČO)
+  const p2 = ed.find(starts("2. Partnerský vodič"));
+  ed.replace(
+    ed.find(starts("Meno a Priezvisko"), p2),
+    ["Meno a priezvisko / Obchodné meno: {strana.nazov}"],
+    "vodič – meno / obchodné meno"
+  );
+  ed.replace(ed.find(starts("Bytom"), p2), ["Bytom / Sídlo: {strana.sidlo}"], "vodič – bydlisko / sídlo");
+  ed.replace(
+    ed.find(starts("Dátum narodenia"), p2),
+    ["Dátum narodenia: {vodic.datum_narodenia}  Číslo OP: {vodic.cislo_op}"],
+    "vodič – dátum narodenia a OP"
+  );
+  ed.replace(ed.find(starts("Volací znak"), p2), ["Volací znak: {vodic.volaci_znak}"], "vodič – volací znak");
+  const pIco = ed.find(starts("IČO:"), p2);
+  ed.replace(
+    pIco,
+    blok("podnikatel", ["IČO: {strana.ico}", "DIČ: {strana.dic}{#strana.ic_dph}  IČ DPH: {strana.ic_dph}{/strana.ic_dph}"]),
+    "vodič – IČO/DIČ/IČ DPH (len podnikateľ)"
+  );
+  const pIban = ed.find(starts("DIČ:"), p2);
+  ed.replace(pIban, ["Bankové spojenie / IBAN: {strana.iban}"], "vodič – IBAN", pIco);
+  ed.insertAfter(
+    pIban,
+    blok("koncesia", [
+      "Číslo koncesie na taxislužbu: {strana.cislo_koncesie}",
+      ...blok("pravnicka_osoba", ["Zastúpený: {strana.statutar}", "Zapísaný: {strana.zapisana_v}"]),
+    ]),
+    "vlastná koncesia a zastúpenie (len koncesia / právnická osoba)",
+    pIco
+  );
+  ed.replace(
+    ed.find(starts("Dopravca:"), p2),
+    blok("flotila", [
+      "Dopravca (Partnerský vodič je zamestnaný u zmluvného Dopravcu): {flotila.nazov}, IČO: {flotila.ico}, sídlo: {flotila.sidlo}, číslo koncesie: {flotila.cislo_koncesie}",
+    ]),
+    "dopravca (flotila) – vždy keď ho vodič má"
+  );
+
+  // 4.1 a) registračný poplatok, b) provízia
+  ed.replaceText(
+    ed.find(starts("a) registračný poplatok")),
+    "30,- EUR",
+    "{zmluva.poplatok_registracny}",
+    "4.1 a) registračný poplatok"
+  );
+  ed.replaceText(ed.find(starts("b) poplatok za dispečerské služby")), "15 %", "{zmluva.provizia}", "4.1 b) provízia");
+
+  // 10.1 doba trvania (neurčitá / určitá podľa zadania v portáli)
+  ed.replaceText(
+    ed.find(starts("10.1 Táto zmluva sa uzatvára")),
+    "na dobu neurčitú",
+    "{zmluva.trvanie_text}",
+    "10.1 doba trvania"
+  );
+
+  // Podpisy
+  ed.replace(
+    ed.find(starts("V Košiciach, dňa")),
+    ["V {zmluva.miesto_podpisu}, dňa {zmluva.datum_uzavretia}"],
+    "miesto a dátum podpisu"
+  );
+  const podpisy = ed.find(starts("Za Prevádzkovateľa dispečingu"));
+  ed.replace(
+    ed.find(starts("meno, funkcia"), podpisy),
+    ["{firma.statutar}, {firma.statutar_funkcia}\t\t{strana.nazov}"],
+    "mená pod podpismi (prevádzkovateľ, vodič)"
+  );
+}
+
 // ── Spracovanie súboru ────────────────────────────────────────────────────────
 
 /** Reťazce zo vzorov, ktoré sa vo výsledku nesmú objaviť (vzorové osobné údaje). */
@@ -465,13 +558,19 @@ function arg(name: string): string | undefined {
 async function main() {
   const najom = arg("--najom");
   const disp = arg("--dispecing");
+  const dispVodic = arg("--dispecing-vodic");
   const outDir = arg("--out") ?? "tests/fixtures";
-  if (!najom || !disp) {
-    console.error("Použitie: npx tsx scripts/make-sample-templates.ts --najom <vzor.docx> --dispecing <vzor.docx> [--out tests/fixtures]");
+  if (!najom && !disp && !dispVodic) {
+    console.error(
+      "Použitie: npx tsx scripts/make-sample-templates.ts [--najom <vzor.docx>] [--dispecing <vzor.docx>] [--dispecing-vodic <vzor.docx>] [--out tests/fixtures]"
+    );
     process.exit(2);
   }
-  await makeTemplate(najom, path.join(outDir, "sablona-najom.docx"), editNajom, "Nájomná zmluva");
-  await makeTemplate(disp, path.join(outDir, "sablona-dispecing.docx"), editDispecing, "Dispečerská zmluva");
+  if (najom) await makeTemplate(najom, path.join(outDir, "sablona-najom.docx"), editNajom, "Nájomná zmluva");
+  if (disp) await makeTemplate(disp, path.join(outDir, "sablona-dispecing.docx"), editDispecing, "Dispečerská zmluva (Dopravca)");
+  if (dispVodic) {
+    await makeTemplate(dispVodic, path.join(outDir, "sablona-dispecing-vodic.docx"), editDispecingVodic, "Dispečerská zmluva (Vodič)");
+  }
 }
 
 main().catch((e) => {
