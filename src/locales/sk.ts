@@ -141,7 +141,7 @@ export const sk = {
     ecoBadge: "Ekologické",
     capacityLabel: "Kapacita:",
     capacityUnit: "osoby",
-    note: "Celkovo 14 vozidiel k dispozícii, všetky klimatizované, čisté a v dobrom technickom stave",
+    note: "Celkovo 5 vozidiel k dispozícii, všetky klimatizované, čisté a v dobrom technickom stave",
     vehicles: [
       {
         id: "1",
@@ -205,19 +205,6 @@ export const sk = {
         image: "/VW_Jetta.png",
         description: "Praktické vozidlo pre rodiny a väčšie skupiny",
       },
-      {
-        id: "6",
-        name: "Ďalšie vozidlá",
-        type: "van",
-        capacity: 4,
-        isEco: false,
-        features: [
-          { icon: "wind", label: "Klimatizácia" },
-          { icon: "baby", label: "Detská sedačka" },
-        ],
-        image: "/auta.png",
-        description: "Celkovo 14 vozidiel k dispozícii",
-      },
     ],
   },
 
@@ -229,8 +216,7 @@ export const sk = {
     transfersTitle: "Letiskové a diaľkové transfery",
     transfersTitleShort: "Letiskové transfery",
     basicPricing: [
-      { label: "Štartovné", price: "2 €" },
-      { label: "Štartovné mimo centrum mesta", price: "0,75 € / km" },
+      { label: "Štartovné", price: "0,75 € / km" },
       { label: "Jazdné", price: "1,50 € / km" },
       { label: "Čakanie", price: "20 € / hod" },
       { label: "Minimálne jazdné", price: "6 €" },
@@ -247,6 +233,7 @@ export const sk = {
       { destination: "Košice - Letisko Krakov", price: "290 EUR" },
       { destination: "Košice - Bratislava", price: "390 EUR" },
       { destination: "Košice - Viedeň", price: "450 EUR" },
+      { destination: "Košice - Katowice", price: "350 EUR" },
     ],
     cta: {
       title: "Chcete si objednať jazdu?",
@@ -256,11 +243,11 @@ export const sk = {
 
   about: {
     title: "O nás",
-    subtitle: "Profesionálna taxislužba v Košiciach od roku 2015",
+    subtitle: "Profesionálna taxislužba v Košiciach od roku 2020",
     description:
       "E-TAXI Košice je moderná taxislužba, ktorá sa zameriava na spokojnosť zákazníkov, spoľahlivosť a ekologickú prepravu. Naším cieľom je poskytovať bezpečné, pohodlné a cenovo dostupné prepravné služby pre obyvateľov a návštevníkov Košíc.",
     stats: [
-      { value: "14", label: "Vozidiel" },
+      { value: "5", label: "Vozidiel" },
       { value: "6+", label: "Rokov na trhu" },
       { value: "15000+", label: "Spokojných zákazníkov" },
       { value: "24/7", label: "Dispečing" },
@@ -445,7 +432,7 @@ export const sk = {
         id: "6",
         question: "Ako sa počíta cena jazdy?",
         answer:
-          "Cena sa skladá z: nástupného poplatku (2 €, mimo centra mesta 0,75 €/km), kilometrovej sadzby (1,50 €/km) a prípadných prirážok (nočná, víkendová, batožina). Pre presný odhad použite náš online formulár alebo zavolajte.",
+          "Cena sa skladá z: štartovného (0,75 €/km), kilometrovej sadzby (1,50 €/km) a prípadných prirážok (nočná, víkendová, batožina). Pre presný odhad použite náš online formulár alebo zavolajte.",
       },
       {
         id: "7",
@@ -463,7 +450,7 @@ export const sk = {
         id: "9",
         question: "Poskytujete faktúry pre firmy?",
         answer:
-          "Áno, pre firemných klientov vystavujeme faktúry s DPH. Pri objednávke stačí uviesť fakturačné údaje. Ponúkame aj mesačné vyúčtovanie pre pravidelnú spoluprácu.",
+          "Áno, pre firemných klientov vystavujeme faktúry (nie sme platcami DPH, preto sú vystavené bez DPH). Pri objednávke stačí uviesť fakturačné údaje. Ponúkame aj mesačné vyúčtovanie pre pravidelnú spoluprácu.",
       },
       {
         id: "10",

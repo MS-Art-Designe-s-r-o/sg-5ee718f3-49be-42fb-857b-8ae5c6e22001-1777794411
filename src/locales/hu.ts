@@ -141,7 +141,7 @@ export const hu: Dictionary = {
     ecoBadge: "Környezetbarát",
     capacityLabel: "Férőhely:",
     capacityUnit: "fő",
-    note: "Összesen 14 jármű áll rendelkezésre, mind légkondicionált, tiszta és kiváló műszaki állapotú",
+    note: "Összesen 5 jármű áll rendelkezésre, mind légkondicionált, tiszta és kiváló műszaki állapotú",
     vehicles: [
       {
         id: "1",
@@ -205,19 +205,6 @@ export const hu: Dictionary = {
         image: "/VW_Jetta.png",
         description: "Praktikus jármű családok és nagyobb csoportok számára",
       },
-      {
-        id: "6",
-        name: "További járművek",
-        type: "van",
-        capacity: 4,
-        isEco: false,
-        features: [
-          { icon: "wind", label: "Légkondicionálás" },
-          { icon: "baby", label: "Gyerekülés" },
-        ],
-        image: "/auta.png",
-        description: "Összesen 14 jármű áll rendelkezésre",
-      },
     ],
   },
 
@@ -229,8 +216,7 @@ export const hu: Dictionary = {
     transfersTitle: "Reptéri és távolsági transzferek",
     transfersTitleShort: "Reptéri transzferek",
     basicPricing: [
-      { label: "Alapdíj", price: "2 €" },
-      { label: "Alapdíj a belvároson kívül", price: "0,75 € / km" },
+      { label: "Induló díj", price: "0,75 € / km" },
       { label: "Kilométerdíj", price: "1,50 € / km" },
       { label: "Várakozás", price: "20 € / óra" },
       { label: "Minimális fuvardíj", price: "6 €" },
@@ -247,6 +233,7 @@ export const hu: Dictionary = {
       { destination: "Kassa – Krakkói reptér", price: "290 €" },
       { destination: "Kassa – Pozsony", price: "390 €" },
       { destination: "Kassa – Bécs", price: "450 €" },
+      { destination: "Kassa – Katowice", price: "350 €" },
     ],
     cta: {
       title: "Szeretne fuvart foglalni?",
@@ -256,11 +243,11 @@ export const hu: Dictionary = {
 
   about: {
     title: "Rólunk",
-    subtitle: "Professzionális taxiszolgálat Kassán 2015 óta",
+    subtitle: "Professzionális taxiszolgálat Kassán 2020 óta",
     description:
       "Az E-TAXI Kassa egy modern taxiszolgálat, amely az ügyfél-elégedettségre, a megbízhatóságra és a környezetbarát szállításra összpontosít. Célunk, hogy biztonságos, kényelmes és megfizethető szállítási szolgáltatásokat nyújtsunk Kassa lakói és látogatói számára.",
     stats: [
-      { value: "14", label: "Jármű" },
+      { value: "5", label: "Jármű" },
       { value: "6+", label: "Év a piacon" },
       { value: "15000+", label: "Elégedett ügyfél" },
       { value: "24/7", label: "Diszpécser" },
@@ -445,7 +432,7 @@ export const hu: Dictionary = {
         id: "6",
         question: "Hogyan számítják ki a fuvardíjat?",
         answer:
-          "Az ár a következőkből áll: alapdíj (2 €; a belvároson kívül 0,75 €/km), kilométerdíj (1,50 €/km) és esetleges felárak (éjszakai, hétvégi, csomag). Pontos becsléshez használja online űrlapunkat, vagy hívjon minket.",
+          "Az ár a következőkből áll: induló díj (0,75 €/km), kilométerdíj (1,50 €/km) és esetleges felárak (éjszakai, hétvégi, csomag). Pontos becsléshez használja online űrlapunkat, vagy hívjon minket.",
       },
       {
         id: "7",
@@ -463,7 +450,7 @@ export const hu: Dictionary = {
         id: "9",
         question: "Állítanak ki számlát cégek részére?",
         answer:
-          "Igen, céges ügyfeleink részére áfás számlát állítunk ki. Foglaláskor csak adja meg számlázási adatait. Rendszeres együttműködéshez havi elszámolást is kínálunk.",
+          "Igen, céges ügyfeleink részére számlát állítunk ki (nem vagyunk áfaalanyok, ezért a számla áfa nélkül készül). Foglaláskor csak adja meg számlázási adatait. Rendszeres együttműködéshez havi elszámolást is kínálunk.",
       },
       {
         id: "10",

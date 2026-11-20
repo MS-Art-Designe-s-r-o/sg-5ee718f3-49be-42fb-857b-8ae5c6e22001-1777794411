@@ -141,7 +141,7 @@ export const de: Dictionary = {
     ecoBadge: "Umweltfreundlich",
     capacityLabel: "Kapazität:",
     capacityUnit: "Personen",
-    note: "Insgesamt 14 Fahrzeuge verfügbar, alle klimatisiert, sauber und in ausgezeichnetem technischem Zustand",
+    note: "Insgesamt 5 Fahrzeuge verfügbar, alle klimatisiert, sauber und in ausgezeichnetem technischem Zustand",
     vehicles: [
       {
         id: "1",
@@ -205,19 +205,6 @@ export const de: Dictionary = {
         image: "/VW_Jetta.png",
         description: "Praktisches Fahrzeug für Familien und größere Gruppen",
       },
-      {
-        id: "6",
-        name: "Weitere Fahrzeuge",
-        type: "van",
-        capacity: 4,
-        isEco: false,
-        features: [
-          { icon: "wind", label: "Klimaanlage" },
-          { icon: "baby", label: "Kindersitz" },
-        ],
-        image: "/auta.png",
-        description: "Insgesamt 14 Fahrzeuge verfügbar",
-      },
     ],
   },
 
@@ -229,8 +216,7 @@ export const de: Dictionary = {
     transfersTitle: "Flughafen- und Langstreckentransfers",
     transfersTitleShort: "Flughafentransfers",
     basicPricing: [
-      { label: "Grundgebühr", price: "2 €" },
-      { label: "Grundgebühr außerhalb der Innenstadt", price: "0,75 € / km" },
+      { label: "Startgebühr", price: "0,75 € / km" },
       { label: "Fahrpreis pro km", price: "1,50 € / km" },
       { label: "Wartezeit", price: "20 € / Std." },
       { label: "Mindestfahrpreis", price: "6 €" },
@@ -247,6 +233,7 @@ export const de: Dictionary = {
       { destination: "Košice – Flughafen Krakau", price: "290 €" },
       { destination: "Košice – Bratislava", price: "390 €" },
       { destination: "Košice – Wien", price: "450 €" },
+      { destination: "Košice – Katowice", price: "350 €" },
     ],
     cta: {
       title: "Möchten Sie eine Fahrt buchen?",
@@ -256,11 +243,11 @@ export const de: Dictionary = {
 
   about: {
     title: "Über uns",
-    subtitle: "Professioneller Taxidienst in Košice seit 2015",
+    subtitle: "Professioneller Taxidienst in Košice seit 2020",
     description:
       "E-TAXI Košice ist ein moderner Taxidienst, der auf Kundenzufriedenheit, Zuverlässigkeit und umweltfreundliche Beförderung setzt. Unser Ziel ist es, sichere, bequeme und erschwingliche Beförderungsdienste für die Einwohner und Besucher von Košice anzubieten.",
     stats: [
-      { value: "14", label: "Fahrzeuge" },
+      { value: "5", label: "Fahrzeuge" },
       { value: "6+", label: "Jahre am Markt" },
       { value: "15000+", label: "Zufriedene Kunden" },
       { value: "24/7", label: "Zentrale" },
@@ -445,7 +432,7 @@ export const de: Dictionary = {
         id: "6",
         question: "Wie wird der Fahrpreis berechnet?",
         answer:
-          "Der Preis setzt sich zusammen aus: einer Grundgebühr (2 €; außerhalb der Innenstadt 0,75 €/km), einem Kilometertarif (1,50 €/km) und eventuellen Zuschlägen (nachts, am Wochenende, Gepäck). Für einen genauen Kostenvoranschlag nutzen Sie unser Online-Formular oder rufen Sie uns an.",
+          "Der Preis setzt sich zusammen aus: einer Startgebühr (0,75 €/km), einem Kilometertarif (1,50 €/km) und eventuellen Zuschlägen (nachts, am Wochenende, Gepäck). Für einen genauen Kostenvoranschlag nutzen Sie unser Online-Formular oder rufen Sie uns an.",
       },
       {
         id: "7",
@@ -463,7 +450,7 @@ export const de: Dictionary = {
         id: "9",
         question: "Stellen Sie Rechnungen für Unternehmen aus?",
         answer:
-          "Ja, für Firmenkunden stellen wir Rechnungen mit MwSt. aus. Geben Sie bei der Buchung einfach Ihre Rechnungsdaten an. Wir bieten auch eine monatliche Abrechnung für regelmäßige Zusammenarbeit an.",
+          "Ja, für Firmenkunden stellen wir Rechnungen aus (wir sind kein Mehrwertsteuerzahler, daher ohne MwSt.). Geben Sie bei der Buchung einfach Ihre Rechnungsdaten an. Wir bieten auch eine monatliche Abrechnung für regelmäßige Zusammenarbeit an.",
       },
       {
         id: "10",
