@@ -84,7 +84,16 @@ export function BlogSection() {
         )}
 
         {/* Pôvodný Soro blog — doterajšie príspevky ostávajú zobrazené */}
-        <div id="soro-blog"></div>
+        <div id="soro-blog">
+          {/* Fallback pre crawlery a prehliadače bez JS: Soro vloží články klientsky */}
+          <noscript>
+            <p className="text-center">
+              <Link href="/blog" locale="sk" className="font-semibold text-primary hover:underline">
+                {ALL_POSTS.sk} →
+              </Link>
+            </p>
+          </noscript>
+        </div>
       </div>
     </section>
   );

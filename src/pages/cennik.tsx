@@ -5,6 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plane, Car, Info, Phone } from "lucide-react";
 import Link from "next/link";
+import Head from "next/head";
+import { SITE_URL } from "@/locales";
+import { breadcrumbSchema, jsonLdScript } from "@/lib/schema";
 import { useTranslation } from "@/hooks/useTranslation";
 
 export default function CennikPage() {
@@ -18,6 +21,17 @@ export default function CennikPage() {
         keywords={t.seo.pricing.keywords}
       />
 
+      <Head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={jsonLdScript(
+            breadcrumbSchema([
+              { name: "E-TAXI Košice", url: `${SITE_URL}/` },
+              { name: t.pricing.title, url: `${SITE_URL}/cennik` },
+            ]),
+          )}
+        />
+      </Head>
       <Header />
 
       <main className="pt-24 pb-16">

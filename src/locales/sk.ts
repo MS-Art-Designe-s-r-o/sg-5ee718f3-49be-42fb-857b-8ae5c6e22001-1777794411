@@ -85,6 +85,7 @@ export const sk = {
       { label: "Recenzie", href: "/#recenzie" },
       { label: "FAQ", href: "/#faq" },
       { label: "Cenník", href: "/cennik" },
+      { label: "Pre firmy", href: "/sluzby-pre-firmy" },
     ],
     app: "Aplikácia",
     downloadApp: "Stiahnuť aplikáciu",
@@ -515,8 +516,12 @@ export const sk = {
     services: [
       { label: "Objednať jazdu", href: "/#objednavka" },
       { label: "Vozový park", href: "/#vozovy-park" },
-      { label: "Letiskové transfery", href: "/#cennik" },
-      { label: "Firemné transfery", href: "/#vozovy-park" },
+      { label: "Letiskové transfery", href: "/taxi-letisko-kosice" },
+      { label: "Firemné transfery", href: "/sluzby-pre-firmy" },
+      { label: "Košice – Budapešť", href: "/transfer-kosice-budapest" },
+      { label: "Košice – Krakov", href: "/transfer-kosice-krakow" },
+      { label: "Košice – Katowice", href: "/transfer-kosice-katowice" },
+      { label: "Košice – Viedeň", href: "/transfer-kosice-viedna" },
     ],
     infoTitle: "Informácie",
     info: [

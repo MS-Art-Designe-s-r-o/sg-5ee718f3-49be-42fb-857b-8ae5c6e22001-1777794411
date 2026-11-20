@@ -1,0 +1,27 @@
+# E-TAXI Košice
+
+> Taxislužba v Košiciach (Slovensko), činná od roku 2020. Dispečing 24/7, 5 vozidiel, mestská doprava, letiskové a diaľkové transfery, firemná preprava. Nie sme platcami DPH.
+
+Kontakt: +421 911 606 206 · dispecing@e-taxike.sk · Košice, Slovensko
+Objednávka: online formulár na webe, mobilná aplikácia (App Store, Google Play) alebo telefonicky. Platba kartou v každom vozidle. Konkrétnu cenu určuje aplikácia vopred.
+
+## Hlavné stránky
+- [Domov](https://e-taxike.sk/): služby, vozový park, FAQ, objednávka
+- [Cenník](https://e-taxike.sk/cennik): štartovné 0,75 €/km, jazdné 1,50 €/km, letiskové a diaľkové transfery
+- [Taxi pre firmy](https://e-taxike.sk/sluzby-pre-firmy): firemné transfery, mesačné vyúčtovanie, objednávanie cez web a aplikáciu
+- [Prepravný poriadok](https://e-taxike.sk/prepravny-poriadok)
+- [Blog](https://e-taxike.sk/blog)
+
+## Transfery a ceny
+- [Taxi na letisko Košice](https://e-taxike.sk/taxi-letisko-kosice): od 18 €
+- [Košice – letisko Budapešť](https://e-taxike.sk/transfer-kosice-budapest): 250 €
+- [Košice – letisko Krakov](https://e-taxike.sk/transfer-kosice-krakow): 290 €
+- [Košice – Katowice](https://e-taxike.sk/transfer-kosice-katowice): 350 €
+- [Košice – Bratislava](https://e-taxike.sk/transfer-kosice-bratislava): 390 €
+- [Košice – Viedeň](https://e-taxike.sk/transfer-kosice-viedna): 450 €
+
+## Kľúčové fakty
+- Činnosť od roku 2020; vozový park: 5 vozidiel
+- Nie sme platcami DPH; faktúry sa vystavujú bez DPH
+- Štartovné 0,75 €/km; detské sedačky bezplatne po dohode pri objednávke
+- Jazyky webu: slovenčina, angličtina, nemčina, maďarčina (landing stránky a blog len po slovensky)

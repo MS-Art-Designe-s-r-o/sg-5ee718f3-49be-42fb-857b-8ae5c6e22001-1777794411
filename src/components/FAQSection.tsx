@@ -1,18 +1,21 @@
 import { motion } from "framer-motion";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { Phone } from "lucide-react";
+import Head from "next/head";
+import { ChevronDown, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/hooks/useTranslation";
+import { faqPageSchema } from "@/lib/schema";
 
 export function FAQSection() {
   const { t } = useTranslation();
 
   return (
+    <>
+    <Head>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqPageSchema(t.faq.items)) }}
+      />
+    </Head>
     <motion.section
       id="faq"
       className="py-16 sm:py-20 bg-muted/30"
@@ -32,22 +35,21 @@ export function FAQSection() {
         </div>
 
         <div className="max-w-3xl mx-auto">
-          <Accordion type="single" collapsible className="space-y-4">
+          {/* Natívne <details>: odpovede sú vždy v zdrojovom HTML (SSR), nie len po kliknutí cez JS. */}
+          <div className="space-y-4">
             {t.faq.items.map((item) => (
-              <AccordionItem
+              <details
                 key={item.id}
-                value={item.id}
-                className="border border-border rounded-lg px-6 bg-card"
+                className="group border border-border rounded-lg px-6 bg-card"
               >
-                <AccordionTrigger className="text-left font-display font-semibold hover:no-underline py-5">
-                  {item.question}
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground pb-5 leading-relaxed">
-                  {item.answer}
-                </AccordionContent>
-              </AccordionItem>
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 py-5 text-left font-display font-semibold [&::-webkit-details-marker]:hidden">
+                  <h3 className="font-display font-semibold">{item.question}</h3>
+                  <ChevronDown className="h-4 w-4 shrink-0 transition-transform group-open:rotate-180" aria-hidden />
+                </summary>
+                <p className="text-muted-foreground pb-5 leading-relaxed">{item.answer}</p>
+              </details>
             ))}
-          </Accordion>
+          </div>
 
           <div className="mt-12 text-center">
             <p className="text-muted-foreground mb-4">
@@ -66,5 +68,6 @@ export function FAQSection() {
         </div>
       </div>
     </motion.section>
+    </>
   );
 }
