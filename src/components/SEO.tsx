@@ -1,21 +1,31 @@
 import Head from "next/head";
+import { SITE_URL, SITE_NAME } from "@/lib/site";
 
 export interface SEOProps {
   title?: string;
   description?: string;
   image?: string;
+  /** Absolute URL or site-relative path (e.g. "/cennik"). Backward compatible. */
   url?: string;
+  /** Preferred: site-relative path used for canonical and og:url. */
+  path?: string;
   type?: string;
+  /** @deprecated Ignored (meta keywords are obsolete). Kept for compatibility. */
   keywords?: string;
+  noindex?: boolean;
+  imageAlt?: string;
+  /** Extra JSON-LD node(s) rendered in the page head. */
+  jsonLd?: object | object[];
+  /** Article metadata (for type="article"). */
+  publishedTime?: string;
+  modifiedTime?: string;
 }
 
 export function SEOElements() {
   return (
     <>
-      <meta name="robots" content="index, follow" />
-      <meta name="language" content="Slovak" />
-      <meta name="author" content="E-TAXI Košice" />
-      
+      <meta name="author" content={SITE_NAME} />
+
       {/* Geo Tags */}
       <meta name="geo.region" content="SK-KI" />
       <meta name="geo.placename" content="Košice" />
@@ -25,48 +35,70 @@ export function SEOElements() {
   );
 }
 
-export function SEO({ 
+function toAbsolute(value: string): string {
+  if (/^https?:\/\//i.test(value)) return value;
+  return `${SITE_URL}${value.startsWith("/") ? value : `/${value}`}`;
+}
+
+export function SEO({
   title = "E-TAXI Košice | Taxislužba 24/7 | Transfery na letisko Budapešť, Krakov, Viedeň",
   description = "Profesionálna taxislužba v Košiciach ✓ Dispečing 24/7 ✓ Letiskové transfery Budapešť, Krakov, Viedeň ✓ Online objednávka ✓ Moderné vozidlá ✓ Expresné transfery na letiská",
-  image = "https://etaxi-kosice.sk/og-image.png",
-  url = "https://etaxi-kosice.sk"
+  image = `${SITE_URL}/og-image.png`,
+  url,
+  path,
+  type = "website",
+  noindex = false,
+  imageAlt = "E-TAXI Košice - taxislužba 24/7",
+  jsonLd,
+  publishedTime,
+  modifiedTime,
 }: SEOProps) {
+  const rawUrl = path ?? url ?? "/";
+  let canonical = toAbsolute(rawUrl);
+  if (canonical.length > SITE_URL.length + 1) canonical = canonical.replace(/\/$/, "");
+  else canonical = SITE_URL;
+  const imageUrl = toAbsolute(image);
+  const isDefaultImage = imageUrl === `${SITE_URL}/og-image.png`;
+  const nodes = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+
   return (
     <Head>
-      {/* Primary Meta Tags */}
       <title>{title}</title>
-      <meta name="title" content={title} />
       <meta name="description" content={description} />
-      <meta name="keywords" content="taxi Košice, taxislužba Košice, taxi služba Košice, transfer letisko Budapešť, transfer Budapešť Košice, letiskový transfer Budapešť, transfer Krakov, transfer Viedeň, taxi na letisko, letiskové transfery, taxi 24/7 Košice, dispečing taxi Košice, objednať taxi Košice, expresný transfer letisko, medzinárodné transfery Košice" />
-      <meta name="robots" content="index, follow" />
-      <meta name="language" content="Slovak" />
-      <meta name="author" content="E-TAXI Košice" />
-      
-      {/* Geo Tags */}
-      <meta name="geo.region" content="SK-KI" />
-      <meta name="geo.placename" content="Košice" />
-      <meta name="geo.position" content="48.7164;21.2611" />
-      <meta name="ICBM" content="48.7164, 21.2611" />
+      <meta
+        name="robots"
+        content={noindex ? "noindex, nofollow" : "index, follow, max-image-preview:large, max-snippet:-1"}
+      />
+      <link rel="canonical" href={canonical} />
 
-      {/* Open Graph / Facebook */}
-      <meta property="og:type" content="website" />
-      <meta property="og:url" content={url} />
+      {/* Open Graph */}
+      <meta property="og:type" content={type} />
+      <meta property="og:url" content={canonical} />
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
-      <meta property="og:image" content={image} />
+      <meta property="og:image" content={imageUrl} />
+      <meta property="og:image:alt" content={imageAlt} />
+      {isDefaultImage && <meta property="og:image:width" content="1200" />}
+      {isDefaultImage && <meta property="og:image:height" content="590" />}
       <meta property="og:locale" content="sk_SK" />
-      <meta property="og:site_name" content="E-TAXI Košice" />
+      <meta property="og:site_name" content={SITE_NAME} />
+      {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+      {modifiedTime && <meta property="article:modified_time" content={modifiedTime} />}
 
       {/* Twitter */}
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:url" content={url} />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
-      <meta name="twitter:image" content={image} />
+      <meta name="twitter:image" content={imageUrl} />
+      <meta name="twitter:image:alt" content={imageAlt} />
 
-      {/* Additional SEO */}
-      <link rel="canonical" href={url} />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      {nodes.map((node, i) => (
+        <script
+          key={`jsonld-${i}`}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(node).replace(/</g, "\\u003c") }}
+        />
+      ))}
     </Head>
   );
 }

@@ -6,6 +6,7 @@ import { pricingData } from "@/data/pricing";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plane, Car, Info, Phone } from "lucide-react";
 import Link from "next/link";
+import { pricingGraph } from "@/lib/schema";
 
 export default function CennikPage() {
   return (
@@ -13,7 +14,8 @@ export default function CennikPage() {
       <SEO 
         title="Cenník taxislužby | E-TAXI Košice | Ceny za km a transfery na letisko"
         description="Aktuálny cenník E-TAXI Košice ✓ Mestská taxislužba od 1,50€/km ✓ Transfer Budapešť 250€ ✓ Transfer Krakov 290€ ✓ Transfer Viedeň 450€ ✓ Transparentné ceny bez skrytých poplatkov"
-        url="https://etaxi-kosice.sk/cennik"
+        path="/cennik"
+        jsonLd={pricingGraph()}
       />
       
       <Header />
@@ -87,7 +89,7 @@ export default function CennikPage() {
                 <ul className="space-y-2 text-sm">
                   <li>• Ceny sú orientačné a môžu sa líšiť podľa aktuálnej dopravnej situácie</li>
                   <li>• Pri dlhších trasách možnosť dohodnutia paušálnej ceny vopred</li>
-                  <li>• Pre firmy vystavujeme faktúry s platbou prevodom</li>
+                  <li>• Pre firmy vystavujeme faktúry s platbou prevodom a ponúkame vlastnú webovú aplikáciu na zadávanie objednávok a prehľad zrealizovaných jázd (<Link href="/sluzby-pre-firmy" className="underline">Služby pre firmy</Link>)</li>
                 </ul>
               </CardContent>
             </Card>

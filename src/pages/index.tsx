@@ -1,10 +1,11 @@
 import dynamic from "next/dynamic";
 import { SEO } from "@/components/SEO";
 import { Header } from "@/components/Header";
-import { Phone, Calendar, Clock, Zap, CheckCircle2, Wine, Plane, CreditCard, Smartphone } from "lucide-react";
+import { Phone, Calendar, Clock, Zap, CheckCircle2, Wine, Plane, CreditCard, Smartphone, Building2 } from "lucide-react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import Head from "next/head";
+import { homeGraph } from "@/lib/schema";
 import Image from "next/image";
 
 // Lazy load below-the-fold sections
@@ -41,115 +42,13 @@ const Footer = dynamic(() => import("@/components/Footer").then((mod) => ({ defa
 });
 
 export default function Home() {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "@id": "https://etaxi-kosice.sk",
-    "name": "E-TAXI Košice",
-    "alternateName": "E-TAXI Košice - Taxislužba",
-    "description": "Profesionálna taxislužba v Košiciach dostupná 24/7. Letiskové transfery Budapešť, Krakov, Viedeň. Online objednávka a okamžité potvrdenie.",
-    "image": "https://etaxi-kosice.sk/og-image.png",
-    "logo": "https://etaxi-kosice.sk/etaxi_logo_svg.svg",
-    "telephone": "+421911606206",
-    "email": "dispecing@e-taxike.sk",
-    "url": "https://etaxi-kosice.sk",
-    "priceRange": "€€",
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Košice",
-      "addressRegion": "Košický kraj",
-      "addressCountry": "SK"
-    },
-    "geo": {
-      "@type": "GeoCoordinates",
-      "latitude": "48.7164",
-      "longitude": "21.2611"
-    },
-    "areaServed": [
-    {
-      "@type": "City",
-      "name": "Košice"
-    },
-    {
-      "@type": "City",
-      "name": "Prešov"
-    },
-    {
-      "@type": "AdministrativeArea",
-      "name": "Košický kraj"
-    }],
-
-    "openingHoursSpecification": {
-      "@type": "OpeningHoursSpecification",
-      "dayOfWeek": [
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-      "Sunday"],
-
-      "opens": "00:00",
-      "closes": "23:59"
-    },
-    "hasOfferCatalog": {
-      "@type": "OfferCatalog",
-      "name": "Taxislužby a transfery",
-      "itemListElement": [
-      {
-        "@type": "Offer",
-        "itemOffered": {
-          "@type": "Service",
-          "name": "Mestská taxislužba Košice",
-          "description": "Rýchla a spoľahlivá taxislužba v Košiciach a okolí dostupná 24/7"
-        }
-      },
-      {
-        "@type": "Offer",
-        "itemOffered": {
-          "@type": "Service",
-          "name": "Transfer na letisko Budapešť",
-          "description": "Expresný transfer z Košíc na letisko Budapešť za 250 EUR"
-        }
-      },
-      {
-        "@type": "Offer",
-        "itemOffered": {
-          "@type": "Service",
-          "name": "Transfer na letisko Krakov",
-          "description": "Pohodlný transfer z Košíc na letisko Krakov za 290 EUR"
-        }
-      },
-      {
-        "@type": "Offer",
-        "itemOffered": {
-          "@type": "Service",
-          "name": "Transfer na letisko Viedeň",
-          "description": "Profesionálny transfer z Košíc na letisko Viedeň za 450 EUR"
-        }
-      }]
-
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.8",
-      "reviewCount": "127"
-    }
-  };
-
   return (
     <>
       <SEO
         title="E-TAXI Košice | Taxislužba 24/7 | Transfery Budapešť, Krakov, Viedeň"
         description="Profesionálna taxislužba v Košiciach dostupná 24/7 ✓ Letiskové transfery Budapešť, Krakov, Viedeň ✓ Online objednávka ✓ Moderné vozidlá ✓ Dispečing +421 911 606 206"
-        url="https://etaxi-kosice.sk" />
-      
-      <Head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      </Head>
+        path="/"
+        jsonLd={homeGraph()} />
       <Header />
       <main className="pt-16">
         <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
@@ -319,6 +218,19 @@ export default function Home() {
                   </h3>
                   <p className="text-muted-foreground">
                     V každom našom vozidle môžete platiť kartou. Žiadne starosti s hotovosťou.
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="border-2 hover:border-primary/50 transition-colors">
+                <CardContent className="p-6">
+                  <Building2 className="w-12 h-12 text-primary mb-4" />
+                  <h3 className="font-display font-semibold text-xl mb-3">
+                    Služby pre firmy
+                  </h3>
+                  <p className="text-muted-foreground">
+                    Vlastná webová aplikácia na zadávanie objednávok a prehľad zrealizovaných jázd. Faktúry a mesačné vyúčtovanie.{" "}
+                    <Link href="/sluzby-pre-firmy" className="text-primary font-semibold underline">Zistiť viac</Link>
                   </p>
                 </CardContent>
               </Card>

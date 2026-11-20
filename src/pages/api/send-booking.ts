@@ -91,7 +91,7 @@ ${priceEstimateOnly ? "💰 TYP: Iba cenová kalkulácia (zákazník nežiada ob
 
 ────────────────────────────────────────
 Odoslané: ${new Date().toLocaleString("sk-SK")}
-Z webu: https://etaxi-kosice.sk
+Z webu: https://e-taxike.sk
     `.trim();
 
     const emailHtml = `
@@ -153,7 +153,7 @@ Z webu: https://etaxi-kosice.sk
     
     <div class="footer">
       <p>Odoslané: ${new Date().toLocaleString("sk-SK")}</p>
-      <p>Z webu: <a href="https://etaxi-kosice.sk">etaxi-kosice.sk</a></p>
+      <p>Z webu: <a href="https://e-taxike.sk">e-taxike.sk</a></p>
     </div>
   </div>
 </body>
@@ -260,7 +260,7 @@ E-TAXI Košice tím
     
     <div class="footer">
       <p>Ďakujeme, že ste si vybrali E-TAXI Košice</p>
-      <p><a href="https://etaxi-kosice.sk">etaxi-kosice.sk</a></p>
+      <p><a href="https://e-taxike.sk">e-taxike.sk</a></p>
     </div>
   </div>
 </body>

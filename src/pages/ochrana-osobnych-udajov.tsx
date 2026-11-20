@@ -10,8 +10,7 @@ export default function PrivacyPolicy() {
       <SEO 
         title="Ochrana osobných údajov | GDPR | E-TAXI Košice"
         description="Zásady ochrany osobných údajov E-TAXI Košice v súlade s GDPR. Informácie o spracúvaní cookies, marketingových údajov a vašich právach podľa nariadenia GDPR."
-        keywords="ochrana osobných údajov, GDPR, cookies, spracúvanie údajov, práva subjektov údajov, Google Analytics, súhlas so spracovaním údajov"
-        url="https://etaxi-kosice.sk/ochrana-osobnych-udajov"
+        path="/ochrana-osobnych-udajov"
       />
       <Header />
       

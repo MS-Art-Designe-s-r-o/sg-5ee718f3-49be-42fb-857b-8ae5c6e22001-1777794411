@@ -62,7 +62,7 @@ export const faqItems: FAQItem[] = [
   {
     id: "9",
     question: "Poskytujete faktúry pre firmy?",
-    answer: "Áno, pre firemných klientov vystavujeme faktúry s DPH. Pri objednávke stačí uviesť fakturačné údaje. Ponúkame aj mesačné vyúčtovanie pre pravidelnú spoluprácu.",
+    answer: "Áno, pre firemných klientov vystavujeme faktúry s DPH, ponúkame mesačné vyúčtovanie a platbu bankovým prevodom. Firmy môžu využívať aj vlastnú webovú aplikáciu na zadávanie objednávok a prehľad zrealizovaných jázd. Viac na stránke Služby pre firmy.",
     category: "platba"
   },
   {
@@ -70,5 +70,11 @@ export const faqItems: FAQItem[] = [
     question: "Koľko batožiny sa zmestí do vozidla?",
     answer: "Štandardné vozidlá (sedan) pojmú 2-3 kusy veľkej batožiny + príručnú batožinu. Pre väčšie skupiny alebo viac batožiny odporúčame kombi alebo van, ktoré pojmú až 6-8 kufrov.",
     category: "vozidlá"
+  },
+  {
+    id: "11",
+    question: "Majú firmy vlastnú webovú aplikáciu na objednávanie taxi?",
+    answer: "Áno. Firemní klienti E-TAXI Košice dostanú samostatnú webovú aplikáciu, v ktorej zadávajú svoje objednávky a majú v nej prehľad zrealizovaných objednávok. Pre prístup nás kontaktujte na dispecing@e-taxike.sk alebo na +421 911 606 206.",
+    category: "služby"
   }
 ];
