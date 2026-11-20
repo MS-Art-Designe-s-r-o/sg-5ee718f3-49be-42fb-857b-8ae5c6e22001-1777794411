@@ -86,6 +86,7 @@ export const hu: Dictionary = {
       { label: "GYIK", href: "/#faq" },
       { label: "Árlista", href: "/cennik" },
       { label: "Cégeknek", href: "/sluzby-pre-firmy" },
+      { label: "Blog", href: "/#blog" },
     ],
     app: "Mobilalkalmazás",
     downloadApp: "Alkalmazás letöltése",
@@ -217,7 +218,8 @@ export const hu: Dictionary = {
     transfersTitle: "Reptéri és távolsági transzferek",
     transfersTitleShort: "Reptéri transzferek",
     basicPricing: [
-      { label: "Induló díj", price: "0,75 € / km" },
+      { label: "Alapdíj", price: "2 €" },
+      { label: "Alapdíj a belvároson kívül", price: "0,75 € / km" },
       { label: "Kilométerdíj", price: "1,50 € / km" },
       { label: "Várakozás", price: "20 € / óra" },
       { label: "Minimális fuvardíj", price: "6 €" },
@@ -433,7 +435,7 @@ export const hu: Dictionary = {
         id: "6",
         question: "Hogyan számítják ki a fuvardíjat?",
         answer:
-          "Az ár a következőkből áll: induló díj (0,75 €/km), kilométerdíj (1,50 €/km) és esetleges felárak (éjszakai, hétvégi, csomag). Pontos becsléshez használja online űrlapunkat, vagy hívjon minket.",
+          "Az ár a következőkből áll: alapdíj (2 €; a városon kívüli fuvaroknál 0,75 €/km kerül felszámításra az indulási vagy az úti cél helyétől számítva, amelyik közelebb van a városhoz), kilométerdíj (1,50 €/km) és esetleges felárak (éjszakai, hétvégi, csomag). Pontos becsléshez használja online űrlapunkat, vagy hívjon minket.",
       },
       {
         id: "7",

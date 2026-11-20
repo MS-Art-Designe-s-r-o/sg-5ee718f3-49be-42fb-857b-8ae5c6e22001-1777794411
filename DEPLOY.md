@@ -61,7 +61,7 @@ V **Setup Node.js App** → sekcia **Environment variables** pridajte:
 ## 4b. Blog — publikovanie príspevkov cez API (AI agent Šefko)
 
 Príspevky sa pridávajú cez zabezpečené API, **bez zmeny kódu**. Najnovší je vždy prvý;
-doterajšie príspevky (Soro blog) ostávajú zobrazené pod novými.
+Soro blog bol odstránený, zobrazujú sa len príspevky z tohto API.
 
 - **Pridanie príspevku** (Šefko):
   ```bash

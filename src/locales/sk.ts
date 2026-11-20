@@ -86,6 +86,7 @@ export const sk = {
       { label: "FAQ", href: "/#faq" },
       { label: "Cenník", href: "/cennik" },
       { label: "Pre firmy", href: "/sluzby-pre-firmy" },
+      { label: "Blog", href: "/#blog" },
     ],
     app: "Aplikácia",
     downloadApp: "Stiahnuť aplikáciu",
@@ -217,7 +218,8 @@ export const sk = {
     transfersTitle: "Letiskové a diaľkové transfery",
     transfersTitleShort: "Letiskové transfery",
     basicPricing: [
-      { label: "Štartovné", price: "0,75 € / km" },
+      { label: "Štartovné", price: "2 €" },
+      { label: "Štartovné mimo centrum mesta", price: "0,75 € / km" },
       { label: "Jazdné", price: "1,50 € / km" },
       { label: "Čakanie", price: "20 € / hod" },
       { label: "Minimálne jazdné", price: "6 €" },
@@ -433,7 +435,7 @@ export const sk = {
         id: "6",
         question: "Ako sa počíta cena jazdy?",
         answer:
-          "Cena sa skladá z: štartovného (0,75 €/km), kilometrovej sadzby (1,50 €/km) a prípadných prirážok (nočná, víkendová, batožina). Pre presný odhad použite náš online formulár alebo zavolajte.",
+          "Cena sa skladá z: štartovného (2 €; pri jazde mimo mesta sa pripočítava 0,75 €/km k štartu alebo cieľu podľa toho, čo je bližšie), kilometrovej sadzby (1,50 €/km) a prípadných prirážok (nočná, víkendová, batožina). Pre presný odhad použite náš online formulár alebo zavolajte.",
       },
       {
         id: "7",

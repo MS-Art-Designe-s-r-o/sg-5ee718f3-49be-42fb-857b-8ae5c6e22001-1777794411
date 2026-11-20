@@ -27,16 +27,16 @@ export const LANDING_PAGES: LandingPageData[] = [
     navLabel: "Pre firmy",
     seoTitle: "Taxi pre firmy Košice – firemné transfery a objednávanie cez web | E-TAXI",
     seoDescription:
-      "Firemná preprava v Košiciach: pravidelné jazdy, transfery pre hostí a zamestnancov, mesačné vyúčtovanie a objednávanie cez web a mobilnú aplikáciu. Nie sme platcami DPH. 5 vozidiel, dispečing 24/7.",
+      "Firemná preprava v Košiciach: pravidelné jazdy, transfery pre hostí a zamestnancov, mesačné vyúčtovanie a objednávanie cez webový formulár Taxximo so sledovaním jázd na mape. Nie sme platcami DPH. 5 vozidiel, dispečing 24/7.",
     keywords: "taxi pre firmy Košice, firemné transfery Košice, firemná preprava, mesačné vyúčtovanie taxi, objednávka taxi cez web",
     h1: "Taxislužba pre firmy v Košiciach",
     lead:
-      "E-TAXI Košice jazdí od roku 2020 a dnes zabezpečuje pravidelnú aj jednorazovú prepravu pre firmy, hotely a obchodných partnerov. Jazdy si môžete objednať cez web a mobilnú aplikáciu, fakturujeme prehľadne a mesačne.",
+      "E-TAXI Košice jazdí od roku 2020 a dnes zabezpečuje pravidelnú aj jednorazovú prepravu pre firmy, hotely, servisy a ďalších partnerov. Jazdy si objednáte cez webový formulár, kde sledujete aj ich stav, fakturujeme prehľadne a mesačne.",
     serviceType: "Firemná taxislužba",
     facts: [
       { label: "Vozový park", value: "5 vozidiel" },
       { label: "Dispečing", value: "24/7" },
-      { label: "Štartovné", value: "0,75 € / km" },
+      { label: "Objednávanie", value: "webový formulár Taxximo" },
       { label: "Fakturácia", value: "mesačné vyúčtovanie, bez DPH" },
     ],
     sections: [
@@ -48,23 +48,24 @@ export const LANDING_PAGES: LandingPageData[] = [
         ],
       },
       {
-        title: "Objednávanie cez web a aplikáciu",
+        title: "Objednávanie cez webový formulár Taxximo",
         paragraphs: [
-          "Jazdu si firma objedná cez online formulár na webe alebo v mobilnej aplikácii E-TAXI (App Store, Google Play). Konkrétnu cenu určuje aplikácia vopred, takže viete, koľko jazda stojí ešte pred odchodom.",
+          "Firmy, hotely, servisy a ďalší partneri môžu používať webový formulár das.taxximo.com (https://das.taxximo.com). Umožňuje zadať objednávku, sledovať jej stav, zobraziť vozidlá na mape a prezerať prehľad už ukončených objednávok.",
+          "Objednať môžete aj cez mobilnú aplikáciu E-TAXI (App Store, Google Play). Konkrétnu cenu určuje aplikácia vopred.",
           "Objednávka na konkrétny čas je zdarma, platiť môžete v každom vozidle aj kartou. " + PHONE_NOTE,
         ],
       },
       {
         title: "Prečo firmy volia E-TAXI",
         paragraphs: [
-          "Dispečing beží nepretržite, vodiči poznajú Košice a okolie a vozidlá sú klimatizované a udržiavané. Medzi našich partnerov patria hotely a obchodné firmy v Košiciach.",
+          "Dispečing beží nepretržite, vodiči poznajú Košice a okolie a vozidlá sú klimatizované a udržiavané. Formulár využijú firmy, hotely, servisy aj ďalší partneri.",
         ],
       },
     ],
     faq: [
       { question: "Fakturujete firmám mesačne?", answer: "Áno, pre pravidelnú spoluprácu ponúkame mesačné vyúčtovanie. Fakturačné údaje stačí uviesť pri objednávke." },
       { question: "Sú faktúry s DPH?", answer: "Nie. Nie sme platcami DPH, preto faktúry vystavujeme bez DPH." },
-      { question: "Dá sa objednať cez web?", answer: "Áno, jazdu môžete objednať cez online formulár na webe alebo cez mobilnú aplikáciu. Cenu určuje aplikácia vopred." },
+      { question: "Dá sa objednať cez web?", answer: "Áno, cez webový formulár das.taxximo.com môžete zadať objednávku, sledovať jej stav, vidieť vozidlá na mape a prezerať ukončené objednávky. Je vhodný pre firmy, hotely, servisy a ďalších partnerov." },
       { question: "Koľko vozidiel máte?", answer: "Máme 5 vozidiel. Pre väčšie skupiny a skupinové transfery sa odporúča objednať s predstihom." },
     ],
     related: ["taxi-letisko-kosice", "transfer-kosice-katowice", "transfer-kosice-budapest"],
@@ -124,7 +125,7 @@ export const LANDING_PAGES: LandingPageData[] = [
     facts: [
       { label: "Cena", value: "250 €" },
       { label: "Trasa", value: "Košice – letisko Budapešť" },
-      { label: "Čas jazdy", value: "približne 3 – 3,5 hod." },
+      { label: "Čas jazdy", value: "2,5 – 3 hod." },
     ],
     sections: [
       {
@@ -164,7 +165,7 @@ export const LANDING_PAGES: LandingPageData[] = [
     facts: [
       { label: "Cena", value: "290 €" },
       { label: "Trasa", value: "Košice – letisko Krakov" },
-      { label: "Čas jazdy", value: "približne 4 hod." },
+      { label: "Čas jazdy", value: "3,5 – 4 hod." },
     ],
     sections: [
       {
@@ -203,7 +204,7 @@ export const LANDING_PAGES: LandingPageData[] = [
     facts: [
       { label: "Cena", value: "350 €" },
       { label: "Trasa", value: "Košice – Katowice" },
-      { label: "Objednávka", value: "24/7" },
+      { label: "Čas jazdy", value: "4 – 4,5 hod." },
     ],
     sections: [
       {
@@ -241,7 +242,7 @@ export const LANDING_PAGES: LandingPageData[] = [
     facts: [
       { label: "Cena", value: "450 €" },
       { label: "Trasa", value: "Košice – Viedeň" },
-      { label: "Objednávka", value: "24/7" },
+      { label: "Čas jazdy", value: "4,5 – 5 hod." },
     ],
     sections: [
       {
@@ -273,7 +274,7 @@ export const LANDING_PAGES: LandingPageData[] = [
     facts: [
       { label: "Cena", value: "390 €" },
       { label: "Trasa", value: "Košice – Bratislava" },
-      { label: "Objednávka", value: "24/7" },
+      { label: "Čas jazdy", value: "4 – 4,5 hod." },
     ],
     sections: [
       {

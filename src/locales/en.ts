@@ -86,6 +86,7 @@ export const en: Dictionary = {
       { label: "FAQ", href: "/#faq" },
       { label: "Price list", href: "/cennik" },
       { label: "For business", href: "/sluzby-pre-firmy" },
+      { label: "Blog", href: "/#blog" },
     ],
     app: "Mobile app",
     downloadApp: "Download the app",
@@ -217,7 +218,8 @@ export const en: Dictionary = {
     transfersTitle: "Airport & long-distance transfers",
     transfersTitleShort: "Airport transfers",
     basicPricing: [
-      { label: "Starting fee", price: "€0.75 / km" },
+      { label: "Base fare", price: "€2" },
+      { label: "Base fare outside city centre", price: "€0.75 / km" },
       { label: "Rate per km", price: "€1.50 / km" },
       { label: "Waiting", price: "€20 / hour" },
       { label: "Minimum fare", price: "€6" },
@@ -433,7 +435,7 @@ export const en: Dictionary = {
         id: "6",
         question: "How is the fare calculated?",
         answer:
-          "The price consists of: a starting fee (€0.75/km), a per-kilometre rate (€1.50/km) and any surcharges (night, weekend, luggage). For an exact estimate, use our online form or give us a call.",
+          "The price consists of: a base fare (€2; for trips outside the city, €0.75/km is added, counted from the pickup or the destination, whichever is closer to the city), a per-kilometre rate (€1.50/km) and any surcharges (night, weekend, luggage). For an exact estimate, use our online form or give us a call.",
       },
       {
         id: "7",

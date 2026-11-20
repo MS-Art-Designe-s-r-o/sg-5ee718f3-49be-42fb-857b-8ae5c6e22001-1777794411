@@ -86,6 +86,7 @@ export const de: Dictionary = {
       { label: "FAQ", href: "/#faq" },
       { label: "Preisliste", href: "/cennik" },
       { label: "Für Firmen", href: "/sluzby-pre-firmy" },
+      { label: "Blog", href: "/#blog" },
     ],
     app: "Mobile App",
     downloadApp: "App herunterladen",
@@ -217,7 +218,8 @@ export const de: Dictionary = {
     transfersTitle: "Flughafen- und Langstreckentransfers",
     transfersTitleShort: "Flughafentransfers",
     basicPricing: [
-      { label: "Startgebühr", price: "0,75 € / km" },
+      { label: "Grundgebühr", price: "2 €" },
+      { label: "Grundgebühr außerhalb der Innenstadt", price: "0,75 € / km" },
       { label: "Fahrpreis pro km", price: "1,50 € / km" },
       { label: "Wartezeit", price: "20 € / Std." },
       { label: "Mindestfahrpreis", price: "6 €" },
@@ -433,7 +435,7 @@ export const de: Dictionary = {
         id: "6",
         question: "Wie wird der Fahrpreis berechnet?",
         answer:
-          "Der Preis setzt sich zusammen aus: einer Startgebühr (0,75 €/km), einem Kilometertarif (1,50 €/km) und eventuellen Zuschlägen (nachts, am Wochenende, Gepäck). Für einen genauen Kostenvoranschlag nutzen Sie unser Online-Formular oder rufen Sie uns an.",
+          "Der Preis setzt sich zusammen aus: einer Grundgebühr (2 €; bei Fahrten außerhalb der Stadt kommen 0,75 €/km hinzu, gerechnet ab Start oder Ziel, je nachdem, was näher an der Stadt liegt), einem Kilometertarif (1,50 €/km) und eventuellen Zuschlägen (nachts, am Wochenende, Gepäck). Für einen genauen Kostenvoranschlag nutzen Sie unser Online-Formular oder rufen Sie uns an.",
       },
       {
         id: "7",
