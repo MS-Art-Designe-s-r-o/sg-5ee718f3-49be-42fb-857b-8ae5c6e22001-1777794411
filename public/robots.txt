@@ -1,6 +1,28 @@
-# E-TAXI Košice - Robots.txt
+# E-TAXI Košice - robots.txt
 User-agent: *
 Allow: /
 Disallow: /api/
 
-Sitemap: https://etaxi-kosice.sk/sitemap.xml
+# AI search & answer engines - explicitly allowed
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://e-taxike.sk/sitemap.xml

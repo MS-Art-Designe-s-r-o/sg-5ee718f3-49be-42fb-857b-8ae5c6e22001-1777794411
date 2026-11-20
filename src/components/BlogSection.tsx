@@ -1,27 +1,9 @@
-import { useEffect } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { getSortedPosts, formatPostDate } from "@/data/blog";
 
 export function BlogSection() {
-  useEffect(() => {
-    // Clean up any existing script to avoid duplicates
-    const existingScript = document.querySelector('script[src*="trysoro.com"]');
-    if (existingScript) {
-      existingScript.remove();
-    }
-
-    // Create and append the Soro blog script
-    const script = document.createElement("script");
-    script.src = "https://app.trysoro.com/api/embed/72e345cc-26ab-4fa7-90c3-2a16001d07d4";
-    script.defer = true;
-    document.body.appendChild(script);
-
-    // Cleanup on unmount
-    return () => {
-      const soroScript = document.querySelector('script[src*="trysoro.com"]');
-      if (soroScript) {
-        soroScript.remove();
-      }
-    };
-  }, []);
+  const posts = getSortedPosts().slice(0, 3);
 
   return (
     <section id="blog" className="py-24 bg-background">
@@ -31,11 +13,45 @@ export function BlogSection() {
             Blog a novinky
           </h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Aktuality, tipy a zaujímavosti zo sveta taxislužieb a mobility
+            Tipy k objednaniu taxi, letiskovým transferom a cenám v Košiciach
           </p>
         </div>
 
-        <div id="soro-blog"></div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+          {posts.map((post) => (
+            <article key={post.slug} className="rounded-lg border bg-card overflow-hidden flex flex-col">
+              <Link href={`/blog/${post.slug}`} className="block">
+                <Image
+                  src={post.image}
+                  alt={post.imageAlt}
+                  width={800}
+                  height={500}
+                  className="w-full h-48 object-cover"
+                />
+              </Link>
+              <div className="p-6 flex flex-col flex-1">
+                <p className="text-xs text-muted-foreground mb-2">
+                  {post.category} · <time dateTime={post.datePublished}>{formatPostDate(post.datePublished)}</time>
+                </p>
+                <h3 className="font-display font-semibold text-xl mb-3">
+                  <Link href={`/blog/${post.slug}`} className="hover:text-accent transition-colors">
+                    {post.title}
+                  </Link>
+                </h3>
+                <p className="text-muted-foreground text-sm mb-4 flex-1">{post.excerpt}</p>
+                <Link href={`/blog/${post.slug}`} className="text-sm font-semibold text-primary hover:underline">
+                  Čítať viac
+                </Link>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <div className="text-center mt-10">
+          <Link href="/blog" className="font-semibold text-primary hover:underline">
+            Všetky články
+          </Link>
+        </div>
       </div>
     </section>
   );

@@ -19,12 +19,14 @@ export function Header() {
   }, []);
 
   const menuItems = [
-    { label: "Služby", href: "#sluzby" },
-    { label: "Vozový park", href: "#vozovy-park" },
-    { label: "O nás", href: "#o-nas" },
-    { label: "Recenzie", href: "#recenzie" },
-    { label: "FAQ", href: "#faq" },
-    { label: "Cenník", href: "/cennik" }
+    { label: "Služby", href: "/#sluzby" },
+    { label: "Vozový park", href: "/#vozovy-park" },
+    { label: "O nás", href: "/#o-nas" },
+    { label: "Recenzie", href: "/#recenzie" },
+    { label: "FAQ", href: "/#faq" },
+    { label: "Cenník", href: "/cennik" },
+    { label: "Pre firmy", href: "/sluzby-pre-firmy" },
+    { label: "Blog", href: "/blog" }
   ];
 
   return (
@@ -45,6 +47,8 @@ export function Header() {
               <img
                 src="/etaxi_logo_svg.svg"
                 alt="E-TAXI Košice"
+                width={120}
+                height={48}
                 className="h-12 w-auto"
               />
             </div>
@@ -66,7 +70,7 @@ export function Header() {
               </Link>
             ))}
             <Link
-              href="#aplikacia"
+              href="/#aplikacia"
               className={`font-medium transition-colors flex items-center gap-2 ${
                 isScrolled
                   ? "text-[#282462] hover:text-accent"
@@ -132,7 +136,7 @@ export function Header() {
                 </Link>
               ))}
               <Link
-                href="#aplikacia"
+                href="/#aplikacia"
                 className={`flex items-center gap-2 px-4 py-3 font-medium transition-colors ${
                   isScrolled
                     ? "text-[#282462] hover:bg-muted"

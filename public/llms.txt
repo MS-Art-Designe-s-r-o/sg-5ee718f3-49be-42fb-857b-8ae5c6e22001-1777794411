@@ -1,0 +1,41 @@
+# E-TAXI Košice
+
+> E-TAXI Košice (https://e-taxike.sk) je taxislužba v Košiciach (Slovensko) s dispečingom 24/7, online objednávkou, platbou kartou a letiskovými transfermi do Budapešti, Krakova a Viedne.
+> E-TAXI Košice is a 24/7 taxi and airport-transfer service in Košice, Slovakia, with online booking and card payment.
+
+## Kontakt / Contact
+- Telefón / Phone (24/7): +421 911 606 206
+- Email: dispecing@e-taxike.sk
+- Web: https://e-taxike.sk
+- Facebook: https://facebook.com/etaxikosice
+- Instagram: https://instagram.com/etaxikosice
+- Oblasť služieb / Service area: Košice, Prešov, Košický kraj; transfery na letiská a do miest v zahraničí / cross-border transfers
+
+## Služby / Services
+- Mestská taxislužba v Košiciach a okolí, 24/7 / City taxi in Košice, 24/7
+- Letiskové a diaľkové transfery (Košice, Budapešť, Krakov, Viedeň, Bratislava) / Airport and long-distance transfers
+- Firemné transfery / Business transfers
+- DRINK Taxi, časová (vopred plánovaná) objednávka zdarma, platba kartou zdarma
+- Objednávka cez telefón, web alebo mobilnú aplikáciu (iOS, Android)
+
+## Ceny / Prices (EUR, nie sme platci DPH / not VAT payers)
+- Štartovné / Start fee: 2 €
+- Jazdné / Per km: 1,50 € / km (štartovné mimo mesta / out-of-city start rate: 0,75 € / km)
+- Čakanie / Waiting: 20 € / hod
+- Minimálne jazdné / Minimum fare: 6 €
+- Príplatok za domáce zviera / Pet surcharge: 2 €
+- Transfer Košice - Letisko Košice: od / from 15 EUR
+- Transfer Košice - Letisko Budapešť: 250 EUR
+- Transfer Košice - Letisko Krakov: 290 EUR
+- Transfer Košice - Bratislava: 390 EUR
+- Transfer Košice - Viedeň: 450 EUR
+- Konkrétnu cenu určuje aplikácia vopred / The exact price is shown in the app in advance.
+
+## Kľúčové stránky / Key pages
+- [Domov / Home](https://e-taxike.sk/)
+- [Cenník / Pricing](https://e-taxike.sk/cennik)
+- [Služby pre firmy / Business services](https://e-taxike.sk/sluzby-pre-firmy)
+- [Blog](https://e-taxike.sk/blog)
+- [Prepravný poriadok / Terms of carriage](https://e-taxike.sk/prepravny-poriadok)
+- [Ochrana osobných údajov / Privacy](https://e-taxike.sk/ochrana-osobnych-udajov)
+- [Sitemap](https://e-taxike.sk/sitemap.xml)

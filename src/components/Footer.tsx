@@ -13,7 +13,7 @@ export function Footer() {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center p-1">
-                <img src="/etaxi_logo_svg.svg" alt="Logo" className="w-full h-full object-contain" />
+                <img src="/etaxi_logo_svg.svg" alt="E-TAXI Košice logo" width={40} height={40} className="w-full h-full object-contain" />
               </div>
               <span className="font-display font-bold text-xl">E-TAXI Košice</span>
             </div>
@@ -63,17 +63,17 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/#fleet" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors text-sm">
+                <Link href="/#vozovy-park" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors text-sm">
                   Vozový park
                 </Link>
               </li>
               <li>
-                <Link href="/#cennik" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors text-sm">
+                <Link href="/cennik" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors text-sm">
                   Letiskové transfery
                 </Link>
               </li>
               <li>
-                <Link href="/#fleet" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors text-sm">
+                <Link href="/sluzby-pre-firmy" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors text-sm">
                   Firemné transfery
                 </Link>
               </li>
@@ -103,17 +103,17 @@ export function Footer() {
                   </Link>
                 </li>
                 <li>
-                  <Link href="#faq" className="text-white hover:text-accent transition-colors">
+                  <Link href="/#faq" className="text-white hover:text-accent transition-colors">
                     FAQ
                   </Link>
                 </li>
                 <li>
-                  <Link href="#recenzie" className="text-white hover:text-accent transition-colors">
+                  <Link href="/#recenzie" className="text-white hover:text-accent transition-colors">
                     Recenzie zákazníkov
                   </Link>
                 </li>
                 <li>
-                  <Link href="#blog" className="text-white hover:text-accent transition-colors">
+                  <Link href="/blog" className="text-white hover:text-accent transition-colors">
                     Blog
                   </Link>
                 </li>
