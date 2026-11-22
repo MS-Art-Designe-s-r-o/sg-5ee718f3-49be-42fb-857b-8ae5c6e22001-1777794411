@@ -1,8 +1,10 @@
-// Ochrana stránok portálu — presmeruje neprihlásených na /prihlasenie.
+// 1) 301 zo starých blogových adries /?post=<slug> na aktuálne stránky (SEO).
+// 2) Ochrana stránok portálu — presmeruje neprihlásených na /prihlasenie.
 // Skutočná kontrola rolí je server-side (API withAuth + getServerSideProps).
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
+import { legacyPostRedirect } from "@/lib/legacyPostRedirects";
 
 const SESSION_COOKIE = "etaxi_session";
 
@@ -24,6 +26,17 @@ async function isValidSession(token: string | undefined): Promise<boolean> {
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
+  // Staré blogové URL (?post=) -> trvalé presmerovanie na najbližšiu aktuálnu stránku.
+  const legacy = legacyPostRedirect(pathname, req.nextUrl.searchParams.get("post"), req.nextUrl.locale);
+  if (legacy) {
+    return NextResponse.redirect(legacy, 301);
+  }
+
+  // Ďalej len portál.
+  if (!/^\/((en|de|hu)\/)?portal(\/|$)/.test(pathname)) {
+    return NextResponse.next();
+  }
+
   // Normalizuj prípadný /en prefix (i18n).
   const path = pathname.replace(/^\/en/, "") || "/";
 
@@ -43,5 +56,6 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/portal/:path*", "/en/portal/:path*"],
+  // "/" pokrýva aj /en, /de, /hu (Next i18n pridáva jazykové prefixy k matcherom automaticky).
+  matcher: ["/", "/portal/:path*", "/en/portal/:path*"],
 };
