@@ -2,12 +2,16 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { Phone, Menu, X, Smartphone } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useRouter } from "next/router";
+import { Phone, Menu, X, Smartphone, ChevronDown } from "lucide-react";
+import { useTranslation } from "@/hooks/useTranslation";
+import { locales } from "@/locales";
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { t, locale } = useTranslation();
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -18,20 +22,40 @@ export function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const menuItems = [
-    { label: "Služby", href: "#sluzby" },
-    { label: "Vozový park", href: "#vozovy-park" },
-    { label: "O nás", href: "#o-nas" },
-    { label: "Recenzie", href: "#recenzie" },
-    { label: "FAQ", href: "#faq" },
-    { label: "Cenník", href: "/cennik" }
-  ];
+  const menuItems = t.header.menu;
+
+  const languageSwitcher = (extraClass = "") => (
+    <div className={`flex items-center gap-1 ${extraClass}`} aria-label="Language">
+      {locales.map((l, idx) => (
+        <span key={l} className="flex items-center gap-1">
+          {idx > 0 && (
+            <span className={isScrolled ? "text-muted-foreground" : "text-white/50"}>|</span>
+          )}
+          <Link
+            href={router.asPath}
+            locale={l}
+            className={`px-1 font-semibold text-sm uppercase transition-colors ${
+              l === locale
+                ? isScrolled
+                  ? "text-accent"
+                  : "text-yellow-400"
+                : isScrolled
+                  ? "text-[#282462] hover:text-accent"
+                  : "text-white hover:text-accent"
+            }`}
+          >
+            {l}
+          </Link>
+        </span>
+      ))}
+    </div>
+  );
 
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled 
-          ? "bg-white shadow-md" 
+        isScrolled
+          ? "bg-white shadow-md"
           : "bg-[#282462]"
       }`}
     >
@@ -44,29 +68,50 @@ export function Header() {
             }`}>
               <img
                 src="/etaxi_logo_svg.svg"
-                alt="E-TAXI Košice"
+                alt={t.common.logoAlt}
                 className="h-12 w-auto"
               />
             </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-8">
-            {menuItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`font-medium transition-colors ${
-                  isScrolled
-                    ? "text-[#282462] hover:text-accent"
-                    : "text-white hover:text-accent"
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
+          <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
+            {menuItems.map((item) => {
+              const linkClass = `font-medium whitespace-nowrap transition-colors ${
+                isScrolled ? "text-[#282462] hover:text-accent" : "text-white hover:text-accent"
+              }`;
+              if (!item.children) {
+                return (
+                  <Link key={item.label} href={item.href} className={linkClass}>
+                    {item.label}
+                  </Link>
+                );
+              }
+              return (
+                <div key={item.label} className="relative group">
+                  <button type="button" aria-haspopup="true" className={`${linkClass} flex items-center gap-1`}>
+                    {item.label}
+                    <ChevronDown className="h-4 w-4 transition-transform group-hover:rotate-180 group-focus-within:rotate-180" aria-hidden />
+                  </button>
+                  <div className="absolute left-0 top-full hidden pt-3 group-hover:block group-focus-within:block">
+                    <ul className="min-w-[200px] rounded-lg border border-border bg-white py-2 shadow-lg">
+                      {item.children.map((child) => (
+                        <li key={child.href}>
+                          <Link
+                            href={child.href}
+                            className="block whitespace-nowrap px-4 py-2 text-sm font-medium text-[#282462] hover:bg-muted hover:text-accent"
+                          >
+                            {child.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              );
+            })}
             <Link
-              href="#aplikacia"
+              href="/#aplikacia"
               className={`font-medium transition-colors flex items-center gap-2 ${
                 isScrolled
                   ? "text-[#282462] hover:text-accent"
@@ -74,13 +119,14 @@ export function Header() {
               }`}
             >
               <Smartphone className="h-4 w-4" />
-              Aplikácia
+              {t.header.app}
             </Link>
+            {languageSwitcher()}
           </nav>
 
           {/* Right Side: Call Button */}
           <div className="hidden md:flex items-center gap-3">
-            <Link href="tel:+421911606206" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+            <Link href={t.common.phoneHref} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
               <div className="bg-accent rounded-full p-3">
                 <Phone className="h-5 w-5 text-white" />
               </div>
@@ -88,27 +134,30 @@ export function Header() {
                 <span className={`text-xs font-medium ${
                   isScrolled ? "text-muted-foreground" : "text-white/80"
                 }`}>
-                  Dispečing 24/7
+                  {t.common.dispatch}
                 </span>
                 <span className={`font-bold tabular-nums ${
                   isScrolled ? "text-[#282462]" : "text-white"
                 }`}>
-                  +421 911 606 206
+                  {t.common.phone}
                 </span>
               </div>
             </Link>
           </div>
 
           {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className={`lg:hidden p-2 transition-colors ${
-              isScrolled ? "text-[#282462]" : "text-white"
-            }`}
-            aria-label="Toggle menu"
-          >
-            {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
+          <div className="lg:hidden flex items-center gap-2">
+            {languageSwitcher()}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className={`p-2 transition-colors ${
+                isScrolled ? "text-[#282462]" : "text-white"
+              }`}
+              aria-label="Toggle menu"
+            >
+              {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Menu */}
@@ -117,22 +166,32 @@ export function Header() {
             isScrolled ? "border-border bg-white" : "border-white/20 bg-[#282462]"
           }`}>
             <nav className="py-4 space-y-1">
-              {menuItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`block px-4 py-3 font-medium transition-colors ${
-                    isScrolled
-                      ? "text-[#282462] hover:bg-muted"
-                      : "text-white hover:bg-white/10"
-                  }`}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  {item.label}
-                </Link>
-              ))}
+              {menuItems.map((item) => {
+                const mobClass = `block px-4 py-3 font-medium transition-colors ${
+                  isScrolled ? "text-[#282462] hover:bg-muted" : "text-white hover:bg-white/10"
+                }`;
+                if (!item.children) {
+                  return (
+                    <Link key={item.label} href={item.href} className={mobClass} onClick={() => setIsMobileMenuOpen(false)}>
+                      {item.label}
+                    </Link>
+                  );
+                }
+                return (
+                  <div key={item.label}>
+                    <div className={`px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wide ${isScrolled ? "text-muted-foreground" : "text-white/60"}`}>
+                      {item.label}
+                    </div>
+                    {item.children.map((child) => (
+                      <Link key={child.href} href={child.href} className={`${mobClass} pl-8`} onClick={() => setIsMobileMenuOpen(false)}>
+                        {child.label}
+                      </Link>
+                    ))}
+                  </div>
+                );
+              })}
               <Link
-                href="#aplikacia"
+                href="/#aplikacia"
                 className={`flex items-center gap-2 px-4 py-3 font-medium transition-colors ${
                   isScrolled
                     ? "text-[#282462] hover:bg-muted"
@@ -141,13 +200,13 @@ export function Header() {
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 <Smartphone className="h-4 w-4" />
-                Stiahnuť aplikáciu
+                {t.header.downloadApp}
               </Link>
-              
+
               <div className={`border-t pt-4 mt-4 px-4 ${
                 isScrolled ? "border-border" : "border-white/20"
               }`}>
-                <Link href="tel:+421911606206" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                <Link href={t.common.phoneHref} className="flex items-center gap-3 hover:opacity-80 transition-opacity">
                   <div className="bg-accent rounded-full p-3">
                     <Phone className="h-5 w-5 text-white" />
                   </div>
@@ -155,12 +214,12 @@ export function Header() {
                     <span className={`text-xs font-medium ${
                       isScrolled ? "text-muted-foreground" : "text-white/80"
                     }`}>
-                      Dispečing 24/7
+                      {t.common.dispatch}
                     </span>
                     <span className={`font-bold tabular-nums ${
                       isScrolled ? "text-[#282462]" : "text-white"
                     }`}>
-                      +421 911 606 206
+                      {t.common.phone}
                     </span>
                   </div>
                 </Link>

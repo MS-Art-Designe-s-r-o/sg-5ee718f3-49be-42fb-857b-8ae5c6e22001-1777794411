@@ -1,38 +1,29 @@
 /** @type {import('next').NextConfig} */
-import { createRequire } from "module";
-
-// Check if element-tagger is available
-function isElementTaggerAvailable() {
-  try {
-    const require = createRequire(import.meta.url);
-    require.resolve("@softgenai/element-tagger");
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-// Build turbo rules only if tagger is available
-function getTurboRules() {
-  if (!isElementTaggerAvailable()) {
-    console.log(
-      "[Softgen] Element tagger not found, skipping loader configuration"
-    );
-    return {};
-  }
-
-  return {
-    "*.tsx": ["@softgenai/element-tagger"],
-    "*.jsx": ["@softgenai/element-tagger"],
-  };
-}
-
 const nextConfig = {
   reactStrictMode: true,
+  // Zabalenie ESM utility balíkov priamo do buildu. Bez tohto Next necháva v
+  // serverovom výstupe (_document.js a pod.) externé importy typu `import 'clsx'`,
+  // ktoré na hostingu Polar55 padajú na "Cannot find package 'clsx'" a zhodia
+  // CELÝ web (verejný aj portál, lebo _document je zdieľaný). Transpiláciou sa
+  // tieto balíky stanú súčasťou výstupných chunkov — žiadny runtime import.
+  transpilePackages: [
+    "clsx",
+    "tailwind-merge",
+    "class-variance-authority",
+    "lucide-react",
+    "tailwindcss-animate",
+  ],
+  // Obmedzenie počtu worker procesov pri builde — nutné na zdieľanom hostingu
+  // (CloudLinux NPROC limit), inak `next build` padá s chybou spawn EAGAIN.
   experimental: {
-    turbo: {
-      rules: getTurboRules(),
-    },
+    cpus: 1,
+    workerThreads: false,
+  },
+  i18n: {
+    // Nový jazyk: pridajte kód sem a vytvorte slovník v src/locales (pozri src/locales/index.ts).
+    locales: ["sk", "en", "de", "hu"],
+    defaultLocale: "sk",
+    localeDetection: false,
   },
   images: {
     remotePatterns: [
@@ -42,7 +33,23 @@ const nextConfig = {
       },
     ],
   },
-  allowedDevOrigins: ["*.daytona.work", "*.softgen.dev"],
+  // Obrázky blogu sú na disku (data/blog-images) — verejná URL mimo /api/ (robots.txt blokuje /api/).
+  async rewrites() {
+    return [{ source: "/blog/obrazky/:file", destination: "/api/blog/image/:file" }];
+  },
+  async headers() {
+    return [
+      {
+        source: "/(.*)",
+        headers: [
+          {
+            key: "X-Content-Type-Options",
+            value: "nosniff",
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

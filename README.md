@@ -11,6 +11,28 @@ Profesionálna taxislužba v Košiciach s online objednávkovým systémom.
 - Framer Motion
 - shadcn/ui
 
+## 🌍 Jazykové verzie
+
+Web je viacjazyčný (vstavaný i18n routing Next.js):
+
+- **Slovenčina** (hlavný jazyk): `https://e-taxike.sk/`
+- **Angličtina**: `https://e-taxike.sk/en`
+- **Nemčina**: `https://e-taxike.sk/de`
+- **Maďarčina**: `https://e-taxike.sk/hu`
+
+Všetky texty sú v slovníkoch `src/locales/sk.ts` a `src/locales/en.ts`.
+Slovenský slovník definuje typ `Dictionary` — TypeScript ustráži, že žiadny
+jazyk nemá chýbajúce texty.
+
+### Pridanie nového jazyka (napr. nemčina)
+
+1. Skopírujte `src/locales/en.ts` do `src/locales/de.ts` a preložte texty.
+2. Zaregistrujte jazyk v `src/locales/index.ts` (`dictionaries = { sk, en, de }`).
+3. Pridajte `"de"` do `i18n.locales` v `next.config.mjs`.
+4. Doplňte `/de` URL do `public/sitemap.xml`.
+
+Prepínač jazykov v hlavičke aj hreflang/canonical meta tagy sa vygenerujú automaticky.
+
 ## 📧 Nastavenie emailov (SMTP)
 
 Pre funkčnosť odosielania objednávok cez formulár je potrebné nakonfigurovať SMTP server:
@@ -39,7 +61,7 @@ Pre funkčnosť odosielania objednávok cez formulár je potrebné nakonfigurova
 
 - **NIKDY** necommitujte `.env.local` do git repository
 - `.env.local` je automaticky ignorovaný v `.gitignore`
-- Pre production (Vercel) pridajte environment variables v dashboard
+- Pre production nastavte environment premenné v cPanel (pozri [DEPLOY.md](DEPLOY.md))
 
 ### 🔧 SMTP Nastavenia:
 
@@ -71,4 +93,28 @@ npm run start
 
 ## 🌐 Deployment
 
-Projekt je optimalizovaný pre Vercel deployment. Pri deployment nezabudnite pridať environment variables.
+Web je nasadený na hostingu **Polar55** ako Node.js aplikácia (cPanel Setup Node.js App,
+štartovací súbor `server.js`). Kompletný postup nasadenia je v [DEPLOY.md](DEPLOY.md).
+## 🔐 Portál (backend pre vodičov, dispečerov, majiteľa)
+
+Interný portál na správu firemných vozidiel, vodičov, rozpisu smien a týždenných
+tržieb s automatickým výpočtom poplatkov. Prihlásenie je na `/prihlasenie`
+(overenie človeka cez Cloudflare Turnstile), aplikácia na `/portal`.
+
+- **Technológie:** MySQL/MariaDB + Prisma, JWT session (httpOnly cookie), Cloudflare Turnstile.
+- **Roly:** Majiteľ (všetko), Dispečer (rozpis smien + vyťaženosť), Vodič (svoje smeny a poplatky).
+  Jeden používateľ môže mať viac rolí.
+- **Poplatky:** poplatok za app podľa pásiem tržby, provízia 15 %, registračný poplatok 30 €,
+  poplatok za smenu/prenájom auta (evidencia úhrady po vodičoch).
+
+### Lokálne spustenie portálu
+
+```bash
+cp .env.example .env.local     # vyplňte DATABASE_URL, AUTH_JWT_SECRET, (Turnstile), INITIAL_OWNER_*
+npm install
+npx prisma migrate deploy      # alebo `npx prisma migrate dev` počas vývoja
+npm run seed                   # tarify, konfigurácia, prvý majiteľ
+npm run dev
+```
+
+Testy výpočtu poplatkov: `npm run test:fees`. Nasadenie na hosting: pozri `DEPLOY.md`.

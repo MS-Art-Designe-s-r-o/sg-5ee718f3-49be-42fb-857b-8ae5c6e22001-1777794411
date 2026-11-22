@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -14,23 +15,47 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { MapPin, Navigation, Calendar, Users, Phone, Briefcase, Plane, Mail } from "lucide-react";
+import { useTranslation } from "@/hooks/useTranslation";
+import type { Dictionary } from "@/locales";
 
-const bookingSchema = z.object({
-  pickup: z.string().min(3, "Zadajte odberné miesto (min. 3 znaky)"),
-  destination: z.string().min(3, "Zadajte cieľ (min. 3 znaky)"),
-  datetime: z.string().min(1, "Vyberte dátum a čas"),
-  phone: z.string().min(10, "Zadajte platné telefónne číslo"),
-  email: z.string().email("Zadajte platnú emailovú adresu"),
-  passengers: z.string().optional(),
-  luggage: z.string().optional(),
-  flightNumber: z.string().optional(),
-  note: z.string().optional(),
-  priceEstimateOnly: z.boolean().default(false),
-});
+const createBookingSchema = (t: Dictionary) =>
+  z.object({
+    pickup: z.string().min(3, t.bookingForm.validation.pickup),
+    destination: z.string().min(3, t.bookingForm.validation.destination),
+    datetime: z.string().min(1, t.bookingForm.validation.datetime),
+    phone: z.string().min(10, t.bookingForm.validation.phone),
+    email: z.string().email(t.bookingForm.validation.email),
+    passengers: z.string().optional(),
+    luggage: z.string().optional(),
+    flightNumber: z.string().optional(),
+    note: z.string().optional(),
+    priceEstimateOnly: z.boolean().default(false),
+  }).superRefine((data, ctx) => {
+    // Objednávku (nie cenovú kalkuláciu) je možné poslať najskôr 6 hodín vopred.
+    if (data.priceEstimateOnly || !data.datetime) return;
+    const when = new Date(data.datetime).getTime();
+    const MIN_ADVANCE_MS = 6 * 60 * 60 * 1000;
+    if (Number.isNaN(when) || when - Date.now() < MIN_ADVANCE_MS) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["datetime"],
+        message: t.bookingForm.validation.datetimeTooSoon,
+      });
+    }
+  });
 
-type BookingFormData = z.infer<typeof bookingSchema>;
+type BookingFormData = z.infer<ReturnType<typeof createBookingSchema>>;
+
+function passengerUnit(n: number, t: Dictionary, locale: string) {
+  if (n === 1) return t.bookingForm.personOne;
+  if (locale === "sk" && n < 5) return t.bookingForm.personFew;
+  return locale === "sk" ? t.bookingForm.personMany : t.bookingForm.personFew;
+}
 
 export function BookingForm() {
+  const { t, locale } = useTranslation();
+  const bookingSchema = useMemo(() => createBookingSchema(t), [t]);
+
   const {
     register,
     handleSubmit,
@@ -55,20 +80,20 @@ export function BookingForm() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, locale }),
       });
 
       const result = await response.json();
 
       if (response.ok) {
-        alert("Vaša objednávka bola prijatá. O jej spracovaní Vás budeme informovať");
+        alert(t.bookingForm.alerts.success);
         reset();
       } else {
-        alert(`⚠️ ${result.message || "Chyba pri odosielaní objednávky. Zavolajte na +421 911 606 206"}`);
+        alert(`⚠️ ${result.message || t.bookingForm.alerts.errorFallback}`);
       }
     } catch (error) {
       console.error("Error submitting form:", error);
-      alert("❌ Chyba pri odosielaní objednávky. Zavolajte prosím priamo na +421 911 606 206");
+      alert(t.bookingForm.alerts.networkError);
     }
   };
 
@@ -78,19 +103,19 @@ export function BookingForm() {
       className="bg-card border border-border rounded-lg p-6 shadow-xl"
     >
       <h2 className="font-display font-bold text-2xl mb-6">
-        Objednať taxík online
+        {t.bookingForm.heading}
       </h2>
 
       <div className="space-y-4">
         <div>
           <Label htmlFor="pickup" className="flex items-center gap-2 mb-2">
             <MapPin className="w-4 h-4 text-primary" />
-            Odkiaľ <span className="text-destructive">*</span>
+            {t.bookingForm.from} <span className="text-destructive">*</span>
           </Label>
           <Input
             id="pickup"
             {...register("pickup")}
-            placeholder="Napr. Hlavná 1, Košice"
+            placeholder={t.bookingForm.fromPlaceholder}
             className="h-12 text-base"
           />
           {errors.pickup && (
@@ -103,12 +128,12 @@ export function BookingForm() {
         <div>
           <Label htmlFor="destination" className="flex items-center gap-2 mb-2">
             <Navigation className="w-4 h-4 text-primary" />
-            Kam <span className="text-destructive">*</span>
+            {t.bookingForm.to} <span className="text-destructive">*</span>
           </Label>
           <Input
             id="destination"
             {...register("destination")}
-            placeholder="Napr. Letisko Košice"
+            placeholder={t.bookingForm.toPlaceholder}
             className="h-12 text-base"
           />
           {errors.destination && (
@@ -121,7 +146,7 @@ export function BookingForm() {
         <div>
           <Label htmlFor="datetime" className="flex items-center gap-2 mb-2">
             <Calendar className="w-4 h-4 text-primary" />
-            Kedy <span className="text-destructive">*</span>
+            {t.bookingForm.when} <span className="text-destructive">*</span>
           </Label>
           <Input
             id="datetime"
@@ -139,13 +164,13 @@ export function BookingForm() {
         <div>
           <Label htmlFor="phone" className="flex items-center gap-2 mb-2">
             <Phone className="w-4 h-4 text-primary" />
-            Telefón <span className="text-destructive">*</span>
+            {t.bookingForm.phone} <span className="text-destructive">*</span>
           </Label>
           <Input
             id="phone"
             type="tel"
             {...register("phone")}
-            placeholder="+421 XXX XXX XXX"
+            placeholder={t.bookingForm.phonePlaceholder}
             className="h-12 text-base"
           />
           {errors.phone && (
@@ -158,13 +183,13 @@ export function BookingForm() {
         <div>
           <Label htmlFor="email" className="flex items-center gap-2 mb-2">
             <Mail className="w-4 h-4 text-primary" />
-            Email <span className="text-destructive">*</span>
+            {t.bookingForm.email} <span className="text-destructive">*</span>
           </Label>
           <Input
             id="email"
             type="email"
             {...register("email")}
-            placeholder="vas@email.sk"
+            placeholder={t.bookingForm.emailPlaceholder}
             className="h-12 text-base"
           />
           {errors.email && (
@@ -178,19 +203,19 @@ export function BookingForm() {
           <div>
             <Label htmlFor="passengers" className="flex items-center gap-2 mb-2">
               <Users className="w-4 h-4 text-primary" />
-              Počet osôb
+              {t.bookingForm.passengers}
             </Label>
             <Select
               value={passengers}
               onValueChange={(value) => setValue("passengers", value)}
             >
               <SelectTrigger className="h-12 text-base">
-                <SelectValue placeholder="Vyberte" />
+                <SelectValue placeholder={t.bookingForm.select} />
               </SelectTrigger>
               <SelectContent>
                 {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
                   <SelectItem key={num} value={num.toString()}>
-                    {num} {num === 1 ? "osoba" : num < 5 ? "osoby" : "osôb"}
+                    {num} {passengerUnit(num, t, locale)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -200,12 +225,12 @@ export function BookingForm() {
           <div>
             <Label htmlFor="luggage" className="flex items-center gap-2 mb-2">
               <Briefcase className="w-4 h-4 text-primary" />
-              Batožina
+              {t.bookingForm.luggage}
             </Label>
             <Input
               id="luggage"
               {...register("luggage")}
-              placeholder="Napr. 2 kufre"
+              placeholder={t.bookingForm.luggagePlaceholder}
               className="h-12 text-base"
             />
           </div>
@@ -214,24 +239,24 @@ export function BookingForm() {
         <div>
           <Label htmlFor="flightNumber" className="flex items-center gap-2 mb-2">
             <Plane className="w-4 h-4 text-primary" />
-            Číslo letu
+            {t.bookingForm.flightNumber}
           </Label>
           <Input
             id="flightNumber"
             {...register("flightNumber")}
-            placeholder="Napr. FR1234"
+            placeholder={t.bookingForm.flightPlaceholder}
             className="h-12 text-base"
           />
         </div>
 
         <div>
           <Label htmlFor="note" className="mb-2 block">
-            Poznámka
+            {t.bookingForm.note}
           </Label>
           <Textarea
             id="note"
             {...register("note")}
-            placeholder="Napr. detská sedačka, výmena kontaktu..."
+            placeholder={t.bookingForm.notePlaceholder}
             className="min-h-[80px] text-base resize-none"
           />
         </div>
@@ -248,7 +273,7 @@ export function BookingForm() {
             htmlFor="priceEstimateOnly"
             className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
           >
-            Len cenová kalkulácia (nezáväzné)
+            {t.bookingForm.estimateOnly}
           </label>
         </div>
       </div>
@@ -259,16 +284,16 @@ export function BookingForm() {
           size="lg"
           className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-display font-semibold h-14"
         >
-          {priceEstimateOnly ? "Získať cenovú ponuku" : "Objednať taxík"}
+          {priceEstimateOnly ? t.bookingForm.submitQuote : t.bookingForm.submitOrder}
         </Button>
-        <a href="tel:+421911606206" className="w-full">
+        <a href={t.common.phoneHref} className="w-full">
           <Button
             type="button"
             size="lg"
             className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-display font-semibold h-14"
           >
             <Phone className="w-5 h-5 mr-2" />
-            Zavolať
+            {t.common.call}
           </Button>
         </a>
       </div>

@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { X, Cookie, Shield } from "lucide-react";
+import { Cookie, Shield } from "lucide-react";
 import Link from "next/link";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export function CookieConsent() {
   const [showBanner, setShowBanner] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const consent = localStorage.getItem("cookieConsent");
@@ -42,41 +44,42 @@ export function CookieConsent() {
             <div className="flex-shrink-0 mt-1">
               <Cookie className="h-8 w-8 text-primary" />
             </div>
-            
+
             <div className="flex-1">
               <h3 className="font-display font-bold text-xl mb-3 text-foreground flex items-center gap-2">
-                Súbory cookies a ochrana osobných údajov
+                {t.cookies.title}
               </h3>
-              
+
               <div className="space-y-3 text-sm text-muted-foreground mb-6">
                 <p>
-                  Táto webová stránka používa súbory cookies na zlepšenie vášho zážitku a pre marketingové účely.
+                  {t.cookies.intro}
                 </p>
-                
+
                 <div className="bg-muted/50 rounded-lg p-4 border border-border">
                   <p className="font-semibold text-foreground mb-2 flex items-center gap-2">
                     <Shield className="h-4 w-4" />
-                    Používame nasledujúce typy cookies:
+                    {t.cookies.typesTitle}
                   </p>
                   <ul className="space-y-2 ml-6 list-disc">
                     <li>
-                      <strong>Nevyhnutné cookies:</strong> Potrebné pre základné fungovanie stránky (zapamätanie vašich preferencií)
+                      <strong>{t.cookies.essentialLabel}</strong> {t.cookies.essentialText}
                     </li>
                     <li>
-                      <strong>Marketingové cookies (Google Ads):</strong> Používame Google Ads na cielenie reklám a meranie ich efektivity. Tieto cookies sledujú vašu aktivitu na webe a môžu byť použité na zobrazenie personalizovaných reklám.
+                      <strong>{t.cookies.marketingLabel}</strong> {t.cookies.marketingText}
                     </li>
                   </ul>
                 </div>
 
                 <p>
-                  Kliknutím na „Prijať všetky cookies" súhlasíte s ukladaním cookies na vašom zariadení na účely vylepšenia navigácie na stránke, analýzy využívania stránky a marketingových aktivít v súlade s{" "}
+                  {t.cookies.consentBefore}
                   <Link href="/ochrana-osobnych-udajov" className="text-primary hover:underline font-semibold">
-                    Zásadami ochrany osobných údajov
-                  </Link>.
+                    {t.cookies.consentLink}
+                  </Link>
+                  {t.cookies.consentAfter}
                 </p>
 
                 <p className="text-xs">
-                  Vaše osobné údaje spracovávame v súlade s nariadením GDPR (EU) 2016/679 a zákonom č. 18/2018 Z. z. o ochrane osobných údajov.
+                  {t.cookies.gdprNote}
                 </p>
               </div>
 
@@ -86,26 +89,26 @@ export function CookieConsent() {
                   onClick={handleAccept}
                   className="bg-primary hover:bg-primary/90 text-white flex-1"
                 >
-                  Prijať všetky
+                  {t.cookies.acceptAll}
                 </Button>
                 <Button
                   onClick={handleRejectOptional}
                   variant="outline"
                   className="border-primary text-primary hover:bg-primary/10 flex-1"
                 >
-                  Len nevyhnutné
+                  {t.cookies.essentialOnly}
                 </Button>
                 <Button
                   onClick={handleRejectAll}
                   variant="outline"
                   className="border-destructive text-destructive hover:bg-destructive/10 flex-1"
                 >
-                  Odmietnuť všetky
+                  {t.cookies.rejectAll}
                 </Button>
               </div>
 
               <p className="text-xs text-muted-foreground mt-4">
-                Svoje rozhodnutie môžete kedykoľvek zmeniť v nastaveniach prehliadača alebo vymazaním cookies.
+                {t.cookies.changeNote}
               </p>
             </div>
           </div>

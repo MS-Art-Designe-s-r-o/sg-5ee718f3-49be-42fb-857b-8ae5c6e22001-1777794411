@@ -4,6 +4,7 @@ import type { AppProps } from "next/app";
 import { useEffect } from "react";
 import { ThemeProvider } from "@/contexts/ThemeProvider";
 import { CookieConsent } from "@/components/CookieConsent";
+import { Toaster } from "@/components/ui/toaster";
 
 export default function App({ Component, pageProps }: AppProps) {
   // Track clicks on any tel: link as GA4 "contact_phone" (imported to Google Ads)
@@ -48,6 +49,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       />
       <Component {...pageProps} />
       <CookieConsent />
+      <Toaster />
     </ThemeProvider>
   );
 }

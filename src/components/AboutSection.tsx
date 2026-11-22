@@ -1,21 +1,24 @@
-import { aboutData } from "@/data/about";
-import { Shield, Leaf, ShieldCheck, Eye, Phone, Mail, MapPin } from "lucide-react";
+import { Shield, Leaf, ShieldCheck, Eye, Phone, Lightbulb, Award } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
+import { useTranslation } from "@/hooks/useTranslation";
 
 const iconMap = {
   Shield,
   Leaf,
   ShieldCheck,
-  Eye
+  Eye,
+  Lightbulb,
+  Award
 };
 
 export function AboutSection() {
+  const { t } = useTranslation();
+
   return (
     <section id="o-nas" className="py-24 bg-background">
-      
+
       <div className="container">
         <motion.div
           className="text-center max-w-3xl mx-auto mb-12"
@@ -23,20 +26,20 @@ export function AboutSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.2 }}>
-          
+
           <h2 className="font-display font-bold text-3xl sm:text-4xl mb-4">
-            {aboutData.title}
+            {t.about.title}
           </h2>
           <p className="text-xl text-primary font-semibold mb-4">
-            {aboutData.subtitle}
+            {t.about.subtitle}
           </p>
           <p className="text-muted-foreground text-lg">
-            {aboutData.description}
+            {t.about.description}
           </p>
         </motion.div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
-          {aboutData.stats.map((stat, idx) =>
+          {t.about.stats.map((stat, idx) =>
           <Card key={idx} className="text-center">
               <CardContent className="p-6">
                 <div className="font-display font-bold text-3xl sm:text-4xl text-primary mb-2 tabular-nums">
@@ -64,8 +67,8 @@ export function AboutSection() {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true }}>
-          
-          {aboutData.values.map((value, idx) => {
+
+          {t.about.values.map((value, idx) => {
             const Icon = iconMap[value.icon as keyof typeof iconMap];
             return (
               <motion.div
@@ -75,7 +78,7 @@ export function AboutSection() {
                   hidden: { opacity: 0, y: 20 },
                   show: { opacity: 1, y: 0 }
                 }}>
-                
+
                 <Card className="hover:shadow-lg transition-shadow">
                   <CardContent className="p-6">
                     <div className="flex items-start gap-4">
@@ -101,28 +104,28 @@ export function AboutSection() {
         <Card className="bg-primary text-primary-foreground">
           <CardContent className="p-8 text-center">
             <h3 className="font-display font-bold text-2xl mb-4">
-              Potrebujete taxík práve teraz?
+              {t.about.cta.title}
             </h3>
             <p className="mb-6 text-primary-foreground/90">
-              Zavolajte nám alebo objednajte online
+              {t.about.cta.text}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href="tel:+421911606206">
-                <Button 
-                  size="lg" 
+              <a href={t.common.phoneHref}>
+                <Button
+                  size="lg"
                   className="w-full sm:w-auto bg-accent hover:bg-accent/90 text-accent-foreground font-display font-semibold h-14"
                 >
                   <Phone className="w-5 h-5 mr-2" />
-                  Zavolať +421 911 606 206
+                  {t.common.callPhone}
                 </Button>
               </a>
               <a href="#objednavka">
-                <Button 
-                  size="lg" 
+                <Button
+                  size="lg"
                   variant="outline"
                   className="w-full sm:w-auto border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary font-display font-semibold h-14"
                 >
-                  Objednať jazdu teraz
+                  {t.common.orderRideNow}
                 </Button>
               </a>
             </div>

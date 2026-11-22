@@ -1,14 +1,20 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import nodemailer from "nodemailer";
+import { getDictionary } from "@/locales";
+import { describeError } from "@/lib/safeLog";
 
 type BookingData = {
   pickup: string;
   destination: string;
   datetime: string;
-  passengers: number;
+  passengers?: number | string;
+  luggage?: string;
+  flightNumber?: string;
+  note?: string;
   phone?: string;
   email?: string;
   priceEstimateOnly?: boolean;
+  locale?: string;
 };
 
 export default async function handler(
@@ -20,40 +26,30 @@ export default async function handler(
   }
 
   try {
-    const { pickup, destination, datetime, passengers, phone, email, priceEstimateOnly }: BookingData = req.body;
+    const { pickup, destination, datetime, passengers, luggage, flightNumber, note, phone, email, priceEstimateOnly, locale }: BookingData = req.body;
+    // Slovník pre komunikáciu so zákazníkom (podľa jazyka webu, z ktorého objednal)
+    const t = getDictionary(locale);
 
-    // Validate required fields
-    if (!pickup || !destination || !datetime || !passengers || !phone || !email) {
+    // Povinné polia (zhodné s hviezdičkami vo formulári). passengers/luggage/
+    // flightNumber/note sú nepovinné, preto ich tu nevynucujeme.
+    if (!pickup || !destination || !datetime || !phone || !email) {
       return res.status(400).json({ message: "Chýbajú povinné polia" });
     }
+
+    // Zobraziteľné hodnoty voliteľných polí (v e-mailoch len ak sú vyplnené)
+    const passengersText = passengers ? String(passengers) : "—";
 
     // Validate environment variables
     if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
       console.error("⚠️ SMTP configuration missing. Please set SMTP_HOST, SMTP_USER, and SMTP_PASS in .env.local");
       
-      // Development fallback - log to console
-      const consoleLog = `
-📧 EMAIL NOTIFICATION (SMTP not configured)
-────────────────────────────────────────
-From: ${process.env.SMTP_USER || "dispecing@e-taxike.sk"}
-To: ${process.env.SMTP_USER || "dispecing@e-taxike.sk"}
-────────────────────────────────────────
-📍 Miesto vyzdvihnutia: ${pickup}
-📍 Cieľ: ${destination}
-🕐 Dátum a čas: ${new Date(datetime).toLocaleString("sk-SK")}
-👥 Počet pasažierov: ${passengers}
-📞 Telefón: ${phone}
-📧 Email: ${email}
-${priceEstimateOnly ? "💰 Iba cenová kalkulácia (bez objednávky)" : ""}
-────────────────────────────────────────
-      `.trim();
-      
-      console.log(consoleLog);
+      // Bez zápisu osobných údajov objednávky (telefón, e-mail, adresy) do logu.
+
 
       return res.status(200).json({ 
         message: "Objednávka prijatá. Pre aktiváciu emailov nastavte SMTP_HOST, SMTP_USER a SMTP_PASS v .env.local",
         success: true,
-        note: "SMTP nie je nakonfigurované - skontrolujte konzolu servera"
+        note: "SMTP nie je nakonfigurované"
       });
     }
 
@@ -83,7 +79,10 @@ DETAILY OBJEDNÁVKY
 📍 Miesto vyzdvihnutia: ${pickup}
 📍 Cieľ: ${destination}
 🕐 Dátum a čas: ${new Date(datetime).toLocaleString("sk-SK")}
-👥 Počet pasažierov: ${passengers}
+👥 Počet pasažierov: ${passengersText}
+🧳 Batožina: ${luggage || "—"}
+✈️ Číslo letu: ${flightNumber || "—"}
+📝 Poznámka: ${note || "—"}
 📞 Telefón: ${phone}
 📧 Email: ${email}
 
@@ -91,7 +90,7 @@ ${priceEstimateOnly ? "💰 TYP: Iba cenová kalkulácia (zákazník nežiada ob
 
 ────────────────────────────────────────
 Odoslané: ${new Date().toLocaleString("sk-SK")}
-Z webu: https://etaxi-kosice.sk
+Z webu: https://e-taxike.sk
     `.trim();
 
     const emailHtml = `
@@ -137,9 +136,24 @@ Z webu: https://etaxi-kosice.sk
       
       <div class="detail">
         <span class="label">👥 Počet pasažierov:</span><br>
-        ${passengers}
+        ${passengersText}
       </div>
-      
+      ${luggage ? `
+      <div class="detail">
+        <span class="label">🧳 Batožina:</span><br>
+        ${luggage}
+      </div>` : ""}
+      ${flightNumber ? `
+      <div class="detail">
+        <span class="label">✈️ Číslo letu:</span><br>
+        ${flightNumber}
+      </div>` : ""}
+      ${note ? `
+      <div class="detail">
+        <span class="label">📝 Poznámka:</span><br>
+        ${note}
+      </div>` : ""}
+
       <div class="detail">
         <span class="label">📞 Telefón:</span><br>
         <a href="tel:${phone}">${phone}</a>
@@ -153,7 +167,7 @@ Z webu: https://etaxi-kosice.sk
     
     <div class="footer">
       <p>Odoslané: ${new Date().toLocaleString("sk-SK")}</p>
-      <p>Z webu: <a href="https://etaxi-kosice.sk">etaxi-kosice.sk</a></p>
+      <p>Z webu: <a href="https://e-taxike.sk">e-taxike.sk</a></p>
     </div>
   </div>
 </body>
@@ -171,31 +185,32 @@ Z webu: https://etaxi-kosice.sk
 
     console.log("✅ Email sent successfully to dispecing@e-taxike.sk and letiskokosicetaxi@gmail.com");
 
-    // Send confirmation email to customer
+    // Send confirmation email to customer (v jazyku zákazníka)
+    const customerDate = new Date(datetime).toLocaleString(t.dateLocale);
+
     const customerEmailText = `
-Dobrý deň,
+${t.bookingEmail.greeting}
 
-Vaša objednávka taxíka bola prijatá. O jej spracovaní Vás budeme informovať.
-
-────────────────────────────────────────
-DETAILY OBJEDNÁVKY
-────────────────────────────────────────
-
-📍 Z: ${pickup}
-📍 Do: ${destination}
-🕐 Kedy: ${new Date(datetime).toLocaleString("sk-SK")}
-👥 Počet osôb: ${passengers}
-
-${priceEstimateOnly ? "💰 Typ: Cenová kalkulácia" : "✅ Typ: Potvrdená objednávka"}
+${t.bookingEmail.intro}
 
 ────────────────────────────────────────
+${t.bookingEmail.detailsTitle}
+────────────────────────────────────────
 
-Ak potrebujete urobiť zmeny alebo máte otázky, kontaktujte nás:
+📍 ${t.bookingEmail.from} ${pickup}
+📍 ${t.bookingEmail.to} ${destination}
+🕐 ${t.bookingEmail.when} ${customerDate}
+👥 ${t.bookingEmail.persons} ${passengersText}${luggage ? `\n🧳 ${t.bookingForm.luggage}: ${luggage}` : ""}${flightNumber ? `\n✈️ ${t.bookingForm.flightNumber}: ${flightNumber}` : ""}${note ? `\n📝 ${t.bookingForm.note}: ${note}` : ""}
+
+${priceEstimateOnly ? `💰 ${t.bookingEmail.typeEstimate}` : `✅ ${t.bookingEmail.typeOrder}`}
+
+────────────────────────────────────────
+
+${t.bookingEmail.changesText}
 📞 +421 911 606 206
 📧 dispecing@e-taxike.sk
 
-S pozdravom,
-E-TAXI Košice tím
+${t.bookingEmail.sign}
     `.trim();
 
     const customerEmailHtml = `
@@ -218,49 +233,64 @@ E-TAXI Košice tím
   <div class="container">
     <div class="header">
       <h2>🚕 E-TAXI Košice</h2>
-      <p>Potvrdenie objednávky</p>
+      <p>${t.bookingEmail.headerSubtitle}</p>
     </div>
-    
+
     <div style="padding: 20px; text-align: center;">
-      <h3 style="color: #282462;">Vaša objednávka bola prijatá</h3>
-      <p>O jej spracovaní Vás budeme informovať.</p>
+      <h3 style="color: #282462;">${t.bookingEmail.receivedTitle}</h3>
+      <p>${t.bookingEmail.receivedText}</p>
     </div>
-    
+
     <div class="content">
-      <h4 style="color: #282462; margin-bottom: 15px;">Detaily objednávky:</h4>
-      
+      <h4 style="color: #282462; margin-bottom: 15px;">${t.bookingEmail.detailsTitleHtml}</h4>
+
       <div class="detail">
-        <span class="label">📍 Z:</span><br>
+        <span class="label">📍 ${t.bookingEmail.from}</span><br>
         ${pickup}
       </div>
-      
+
       <div class="detail">
-        <span class="label">📍 Do:</span><br>
+        <span class="label">📍 ${t.bookingEmail.to}</span><br>
         ${destination}
       </div>
-      
+
       <div class="detail">
-        <span class="label">🕐 Kedy:</span><br>
-        ${new Date(datetime).toLocaleString("sk-SK")}
+        <span class="label">🕐 ${t.bookingEmail.when}</span><br>
+        ${customerDate}
       </div>
-      
+
       <div class="detail">
-        <span class="label">👥 Počet osôb:</span><br>
-        ${passengers}
+        <span class="label">👥 ${t.bookingEmail.persons}</span><br>
+        ${passengersText}
       </div>
-      
-      ${priceEstimateOnly ? '<div style="background: #fff3cd; padding: 10px; margin: 10px 0; border-left: 4px solid #ff9500;">💰 Typ: Cenová kalkulácia</div>' : '<div style="background: #d4edda; padding: 10px; margin: 10px 0; border-left: 4px solid #28a745;">✅ Typ: Potvrdená objednávka</div>'}
+      ${luggage ? `
+      <div class="detail">
+        <span class="label">🧳 ${t.bookingForm.luggage}</span><br>
+        ${luggage}
+      </div>` : ""}
+      ${flightNumber ? `
+      <div class="detail">
+        <span class="label">✈️ ${t.bookingForm.flightNumber}</span><br>
+        ${flightNumber}
+      </div>` : ""}
+      ${note ? `
+      <div class="detail">
+        <span class="label">📝 ${t.bookingForm.note}</span><br>
+        ${note}
+      </div>` : ""}
+
+      ${priceEstimateOnly ? `<div style="background: #fff3cd; padding: 10px; margin: 10px 0; border-left: 4px solid #ff9500;">💰 ${t.bookingEmail.typeEstimate}</div>` : `<div style="background: #d4edda; padding: 10px; margin: 10px 0; border-left: 4px solid #28a745;">✅ ${t.bookingEmail.typeOrder}</div>`}
     </div>
-    
+
     <div class="contact">
-      <p style="margin: 5px 0;"><strong>Ak potrebujete urobiť zmeny alebo máte otázky:</strong></p>
+      <p style="margin: 5px 0;"><strong>${t.bookingEmail.changesTextHtml}</strong></p>
       <p style="margin: 5px 0;">📞 <a href="tel:+421911606206" style="color: white;">+421 911 606 206</a></p>
       <p style="margin: 5px 0;">📧 <a href="mailto:dispecing@e-taxike.sk" style="color: white;">dispecing@e-taxike.sk</a></p>
     </div>
-    
+
     <div class="footer">
-      <p>Ďakujeme, že ste si vybrali E-TAXI Košice</p>
-      <p><a href="https://etaxi-kosice.sk">etaxi-kosice.sk</a></p>
+      <p>${t.bookingEmail.thanks}</p>
+      <p><a href="https://e-taxike.sk">e-taxike.sk</a></p>
     </div>
   </div>
 </body>
@@ -270,12 +300,12 @@ E-TAXI Košice tím
     await transporter.sendMail({
       from: `"E-TAXI Košice" <${process.env.SMTP_USER}>`,
       to: email,
-      subject: "Potvrdenie objednávky - E-TAXI Košice",
+      subject: t.bookingEmail.subject,
       text: customerEmailText,
       html: customerEmailHtml,
     });
 
-    console.log(`✅ Confirmation email sent to customer: ${email}`);
+    console.log("✅ Confirmation email sent to customer");
 
     return res.status(200).json({ 
       message: "Vaša objednávka bola prijatá. O jej spracovaní Vás budeme informovať",
@@ -283,9 +313,10 @@ E-TAXI Košice tím
     });
 
   } catch (error) {
-    console.error("❌ Error sending booking email:", error);
-    return res.status(500).json({ 
-      message: "Chyba pri odosielaní objednávky. Skúste zavolať na +421 911 606 206",
+    console.error(`❌ Error sending booking email: ${describeError(error, { withMessage: false })}`);
+    const t = getDictionary(req.body?.locale);
+    return res.status(500).json({
+      message: t.bookingForm.alerts.errorFallback,
       success: false,
       error: process.env.NODE_ENV === "development" ? String(error) : undefined
     });

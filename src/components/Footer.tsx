@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { Phone, Mail, MapPin, Clock, Facebook, Instagram, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
+  const { t } = useTranslation();
 
   return (
     <footer className="bg-primary text-primary-foreground">
@@ -13,37 +15,37 @@ export function Footer() {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center p-1">
-                <img src="/etaxi_logo_svg.svg" alt="Logo" className="w-full h-full object-contain" />
+                <img src="/etaxi_logo_svg.svg" alt={t.common.logoAlt} className="w-full h-full object-contain" />
               </div>
               <span className="font-display font-bold text-xl">E-TAXI Košice</span>
             </div>
             <p className="text-primary-foreground/80 text-sm mb-4">
-              Profesionálna taxislužba v Košiciach a okolí. Spoľahlivosť, komfort a bezpečnosť sú naše priority.
+              {t.footer.blurb}
             </p>
-            
+
             {/* Social Links */}
             <div className="flex gap-3">
-              <a 
-                href="https://facebook.com/etaxikosice" 
-                target="_blank" 
+              <a
+                href="https://www.facebook.com/Etaxike"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-primary-foreground/10 hover:bg-primary-foreground/20 rounded-lg flex items-center justify-center transition-colors"
                 aria-label="Facebook"
               >
                 <Facebook className="w-5 h-5" />
               </a>
-              <a 
-                href="https://instagram.com/etaxikosice" 
-                target="_blank" 
+              <a
+                href="https://instagram.com/etaxikosice"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-primary-foreground/10 hover:bg-primary-foreground/20 rounded-lg flex items-center justify-center transition-colors"
                 aria-label="Instagram"
               >
                 <Instagram className="w-5 h-5" />
               </a>
-              <a 
-                href="https://wa.me/421911606206" 
-                target="_blank" 
+              <a
+                href="https://wa.me/421911606206"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-primary-foreground/10 hover:bg-primary-foreground/20 rounded-lg flex items-center justify-center transition-colors"
                 aria-label="WhatsApp"
@@ -55,28 +57,15 @@ export function Footer() {
 
           {/* Services */}
           <div>
-            <h4 className="font-display font-semibold text-lg mb-4">Služby</h4>
+            <h4 className="font-display font-semibold text-lg mb-4">{t.footer.servicesTitle}</h4>
             <ul className="space-y-2">
-              <li>
-                <Link href="/#objednavka" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors text-sm">
-                  Objednať jazdu
-                </Link>
-              </li>
-              <li>
-                <Link href="/#fleet" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors text-sm">
-                  Vozový park
-                </Link>
-              </li>
-              <li>
-                <Link href="/#cennik" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors text-sm">
-                  Letiskové transfery
-                </Link>
-              </li>
-              <li>
-                <Link href="/#fleet" className="text-primary-foreground/80 hover:text-primary-foreground transition-colors text-sm">
-                  Firemné transfery
-                </Link>
-              </li>
+              {t.footer.services.map((item) => (
+                <li key={item.label}>
+                  <Link href={item.href} className="text-primary-foreground/80 hover:text-primary-foreground transition-colors text-sm">
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -84,85 +73,62 @@ export function Footer() {
           <div>
             <div>
               <h3 className="font-display font-semibold text-lg mb-4 text-white">
-                Informácie
+                {t.footer.infoTitle}
               </h3>
               <ul className="space-y-2">
-                <li>
-                  <Link href="/cennik" className="text-white hover:text-accent transition-colors">
-                    Cenník
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/prepravny-poriadok" className="text-white hover:text-accent transition-colors">
-                    Prepravný poriadok
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/ochrana-osobnych-udajov" className="text-white hover:text-accent transition-colors">
-                    Ochrana osobných údajov
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#faq" className="text-white hover:text-accent transition-colors">
-                    FAQ
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#recenzie" className="text-white hover:text-accent transition-colors">
-                    Recenzie zákazníkov
-                  </Link>
-                </li>
-                <li>
-                  <Link href="#blog" className="text-white hover:text-accent transition-colors">
-                    Blog
-                  </Link>
-                </li>
+                {t.footer.info.map((item) => (
+                  <li key={item.label}>
+                    <Link href={item.href} className="text-white hover:text-accent transition-colors">
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
 
           {/* Contact */}
           <div>
-            <h4 className="font-display font-semibold text-lg mb-4">Kontakt</h4>
+            <h4 className="font-display font-semibold text-lg mb-4">{t.footer.contactTitle}</h4>
             <ul className="space-y-3">
               <li className="flex items-start gap-3">
                 <Phone className="w-5 h-5 text-accent mt-1 flex-shrink-0" />
                 <div>
-                  <p className="font-medium text-white">Dispečing 24/7</p>
-                  <a href="tel:+421911606206" className="text-white hover:text-accent transition-colors">
-                    +421 911 606 206
+                  <p className="font-medium text-white">{t.common.dispatch}</p>
+                  <a href={t.common.phoneHref} className="text-white hover:text-accent transition-colors">
+                    {t.common.phone}
                   </a>
                 </div>
               </li>
               <li className="flex items-start gap-3">
                 <Mail className="w-5 h-5 text-accent mt-1 flex-shrink-0" />
                 <div>
-                  <p className="font-medium text-white">Email</p>
-                  <a href="mailto:dispecing@e-taxike.sk" className="text-white hover:text-accent transition-colors">
-                    dispecing@e-taxike.sk
+                  <p className="font-medium text-white">{t.footer.emailLabel}</p>
+                  <a href={`mailto:${t.common.email}`} className="text-white hover:text-accent transition-colors">
+                    {t.common.email}
                   </a>
                 </div>
               </li>
               <li>
                 <div className="flex items-start gap-2 text-primary-foreground/80 text-sm">
                   <MapPin className="w-4 h-4 shrink-0 mt-0.5" />
-                  <span>Košice, Slovensko</span>
+                  <span>{t.footer.location}</span>
                 </div>
               </li>
               <li>
                 <div className="flex items-start gap-2 text-primary-foreground/80 text-sm">
                   <Clock className="w-4 h-4 shrink-0 mt-0.5" />
-                  <span>24/7 Dispečing</span>
+                  <span>{t.footer.hours}</span>
                 </div>
               </li>
             </ul>
 
             <div className="mt-4 pt-4 border-t border-primary-foreground/20">
-              <p className="text-xs font-medium text-primary-foreground/70 mb-2">Stiahnuť aplikáciu</p>
+              <p className="text-xs font-medium text-primary-foreground/70 mb-2">{t.footer.downloadApp}</p>
               <div className="flex gap-2">
-                <a 
-                  href="https://tinyurl.com/e-taxiapple" 
-                  target="_blank" 
+                <a
+                  href="https://tinyurl.com/e-taxiapple"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="flex-1 bg-primary-foreground/10 hover:bg-primary-foreground/20 rounded-lg px-3 py-2 flex items-center justify-center gap-2 transition-colors text-xs font-medium"
                 >
@@ -171,9 +137,9 @@ export function Footer() {
                   </svg>
                   iOS
                 </a>
-                <a 
-                  href="https://tinyurl.com/etaxiandroid" 
-                  target="_blank" 
+                <a
+                  href="https://tinyurl.com/etaxiandroid"
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="flex-1 bg-primary-foreground/10 hover:bg-primary-foreground/20 rounded-lg px-3 py-2 flex items-center justify-center gap-2 transition-colors text-xs font-medium"
                 >
@@ -186,13 +152,13 @@ export function Footer() {
             </div>
 
             <div className="mt-4 pt-4 border-t border-primary-foreground/20">
-              <a href="tel:+421911606206">
-                <Button 
-                  size="sm" 
+              <a href={t.common.phoneHref}>
+                <Button
+                  size="sm"
                   className="w-full bg-accent hover:bg-accent/90 text-accent-foreground font-display font-semibold"
                 >
                   <Phone className="w-4 h-4 mr-2" />
-                  Zavolať teraz
+                  {t.common.callNow}
                 </Button>
               </a>
             </div>
@@ -201,10 +167,13 @@ export function Footer() {
 
         {/* Bottom Bar */}
         <div className="mt-12 pt-8 border-t border-primary-foreground/20">
-          <div className="flex flex-col justify-center items-center">
+          <div className="flex flex-col justify-center items-center gap-2">
             <p className="text-primary-foreground/70 text-sm text-center">
-              © {currentYear} E-TAXI Košice. Všetky práva vyhradené.
+              © {currentYear} E-TAXI Košice. {t.footer.rights}
             </p>
+            <Link href="/prihlasenie" className="text-primary-foreground/50 hover:text-primary-foreground/80 transition-colors text-xs">
+              Portál pre vodičov a dispečerov
+            </Link>
           </div>
         </div>
       </div>
