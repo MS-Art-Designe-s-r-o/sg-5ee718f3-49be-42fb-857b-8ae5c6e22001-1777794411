@@ -145,7 +145,7 @@ export function ReviewsSection() {
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
                           src={review.photo}
-                          alt={`${review.name} – recenzia E-TAXI Košice`}
+                          alt={`${review.name} – ${t.reviews.reviewAlt}`}
                           loading="lazy"
                           className="w-10 h-10 rounded-full object-cover"
                         />

@@ -11,6 +11,7 @@ export const hu: Dictionary = {
   dateLocale: "hu-HU",
 
   common: {
+    logoAlt: "E-TAXI Kassa – taxiszolgálat logó",
     phone: "+421 911 606 206",
     phoneHref: "tel:+421911606206",
     email: "dispecing@e-taxike.sk",
@@ -103,6 +104,7 @@ export const hu: Dictionary = {
   },
 
   hero: {
+    imageAlt: "Taxi Kassa – E-TAXI Kassa, 0–24 órás taxiszolgálat",
     titlePrefix: "E-TAXI Kassa –",
     word1: "gyorsan",
     word2: "megbízhatóan",
@@ -315,6 +317,7 @@ export const hu: Dictionary = {
   },
 
   partners: {
+    partnerAlt: "az E-TAXI Kassa partnere",
     title: "Közreműködőink és referenciáink",
     subtitle:
       "Az évek során szerzett bizalmát a kosice-i vállalkozásoknak — ez a legértékesebb díszünk. A partnerre kattintva a weboldala új ablakban nyílik meg.",
@@ -368,6 +371,7 @@ export const hu: Dictionary = {
   },
 
   reviews: {
+    reviewAlt: "vásárlói vélemény az E-TAXI Kassáról",
     title: "Ügyfélvélemények",
     subtitle: "Olvassa el, mit mondanak rólunk elégedett ügyfeleink",
     countSuffix: "vélemény",

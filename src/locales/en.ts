@@ -11,6 +11,7 @@ export const en: Dictionary = {
   dateLocale: "en-GB",
 
   common: {
+    logoAlt: "E-TAXI Košice – taxi service logo",
     phone: "+421 911 606 206",
     phoneHref: "tel:+421911606206",
     email: "dispecing@e-taxike.sk",
@@ -103,6 +104,7 @@ export const en: Dictionary = {
   },
 
   hero: {
+    imageAlt: "Taxi Košice – E-TAXI Košice, 24/7 taxi service",
     titlePrefix: "E-TAXI Košice –",
     word1: "fast",
     word2: "reliable",
@@ -315,6 +317,7 @@ export const en: Dictionary = {
   },
 
   partners: {
+    partnerAlt: "partner of E-TAXI Košice",
     title: "Our Partners & References",
     subtitle:
       "After years of reliable rides, the trust of local businesses in Kosice is our greatest reward. Clicking a partner opens their website in a new window.",
@@ -368,6 +371,7 @@ export const en: Dictionary = {
   },
 
   reviews: {
+    reviewAlt: "customer review of E-TAXI Košice",
     title: "Customer reviews",
     subtitle: "Read what our happy customers say about us",
     countSuffix: "reviews",

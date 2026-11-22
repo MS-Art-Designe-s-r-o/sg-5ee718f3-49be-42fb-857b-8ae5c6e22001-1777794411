@@ -68,7 +68,7 @@ export function PartnersSection() {
                   <div className="relative h-28 sm:h-32 bg-white border-b">
                     <Image
                       src={partner.logo}
-                      alt={`${partner.name} – E-TAXI Košice`}
+                      alt={`${partner.name} – ${t.partners.partnerAlt}`}
                       fill
                       sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
                       className="object-contain p-4" />

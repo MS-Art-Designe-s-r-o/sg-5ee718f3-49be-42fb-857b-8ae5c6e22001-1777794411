@@ -68,7 +68,7 @@ export function Header() {
             }`}>
               <img
                 src="/etaxi_logo_svg.svg"
-                alt="E-TAXI Košice – logo taxislužby"
+                alt={t.common.logoAlt}
                 className="h-12 w-auto"
               />
             </div>

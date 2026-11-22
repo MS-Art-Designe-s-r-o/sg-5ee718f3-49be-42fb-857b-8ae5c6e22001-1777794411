@@ -15,7 +15,7 @@ export function Footer() {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center p-1">
-                <img src="/etaxi_logo_svg.svg" alt="E-TAXI Košice – logo taxislužby" className="w-full h-full object-contain" />
+                <img src="/etaxi_logo_svg.svg" alt={t.common.logoAlt} className="w-full h-full object-contain" />
               </div>
               <span className="font-display font-bold text-xl">E-TAXI Košice</span>
             </div>

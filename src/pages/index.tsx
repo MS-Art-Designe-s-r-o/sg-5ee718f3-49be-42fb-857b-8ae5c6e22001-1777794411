@@ -77,7 +77,7 @@ export default function Home() {
           <div className="absolute inset-0 z-0">
             <Image
               src="/hero-bg3.png"
-              alt="Taxi Košice – E-TAXI Košice, taxislužba 24/7"
+              alt={t.hero.imageAlt}
               fill
               priority
               quality={75}

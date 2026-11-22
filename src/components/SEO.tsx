@@ -63,6 +63,7 @@ export function SEO({ title, description, image = `${SITE_URL}/og-image.png`, ur
       <meta property="og:title" content={seoTitle} />
       <meta property="og:description" content={seoDescription} />
       <meta property="og:image" content={image} />
+      <meta property="og:image:alt" content={seoTitle} />
       <meta property="og:locale" content={t.ogLocale} />
       <meta property="og:site_name" content="E-TAXI Košice" />
 
@@ -72,6 +73,7 @@ export function SEO({ title, description, image = `${SITE_URL}/og-image.png`, ur
       <meta name="twitter:title" content={seoTitle} />
       <meta name="twitter:description" content={seoDescription} />
       <meta name="twitter:image" content={image} />
+      <meta name="twitter:image:alt" content={seoTitle} />
 
       {/* Jazykové alternatívy */}
       <link rel="canonical" href={canonical} />

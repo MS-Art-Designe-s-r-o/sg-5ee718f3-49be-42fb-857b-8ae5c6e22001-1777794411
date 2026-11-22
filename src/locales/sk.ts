@@ -11,6 +11,7 @@ export const sk = {
   dateLocale: "sk-SK",
 
   common: {
+    logoAlt: "E-TAXI Košice – logo taxislužby",
     phone: "+421 911 606 206",
     phoneHref: "tel:+421911606206",
     email: "dispecing@e-taxike.sk",
@@ -103,6 +104,7 @@ export const sk = {
   },
 
   hero: {
+    imageAlt: "Taxi Košice – E-TAXI Košice, taxislužba 24/7",
     titlePrefix: "E-TAXI Košice –",
     word1: "rýchlo",
     word2: "spoľahlivo",
@@ -315,6 +317,7 @@ export const sk = {
   },
 
   partners: {
+    partnerAlt: "partner E-TAXI Košice",
     title: "Spolupracujeme a referencie",
     subtitle:
       "Za roky spoľahlivých jazd je pre nás najcennejšia dôvera košických firiem. Kliknutím na partnera sa otvorí jeho stránka v novom okne.",
@@ -368,6 +371,7 @@ export const sk = {
   },
 
   reviews: {
+    reviewAlt: "recenzia zákazníka E-TAXI Košice",
     title: "Recenzie zákazníkov",
     subtitle: "Prečítajte si, čo hovoria naši spokojní zákazníci",
     countSuffix: "recenzií",
