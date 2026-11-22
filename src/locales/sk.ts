@@ -94,6 +94,7 @@ export const sk = {
           { label: "Služby", href: "/#sluzby" },
           { label: "Cenník", href: "/cennik" },
           { label: "Pre firmy", href: "/sluzby-pre-firmy" },
+          { label: "Letiskové transfery", href: "/letiskove-transfery" },
         ],
       },
       { label: "FAQ", href: "/#faq" },
@@ -555,7 +556,7 @@ export const sk = {
     services: [
       { label: "Objednať jazdu", href: "/#objednavka" },
       { label: "Vozový park", href: "/#vozovy-park" },
-      { label: "Letiskové transfery", href: "/taxi-letisko-kosice" },
+      { label: "Letiskové transfery", href: "/letiskove-transfery" },
       { label: "Firemné transfery", href: "/sluzby-pre-firmy" },
       { label: "Košice – Budapešť", href: "/transfer-kosice-budapest" },
       { label: "Košice – Krakov", href: "/transfer-kosice-krakow" },

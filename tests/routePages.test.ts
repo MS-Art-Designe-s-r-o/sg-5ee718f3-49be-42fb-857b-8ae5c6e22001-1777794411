@@ -53,3 +53,12 @@ test("duplicitné články smerujú na ponechané články", () => {
   }
   assert.deepEqual(withoutDuplicates([{ slug: Object.keys(BLOG_DUPLICATE_REDIRECTS)[0] }, { slug: "x" }]), [{ slug: "x" }]);
 });
+
+test("rozcestník letiskových transferov je v menu Ponuka vo všetkých jazykoch", async () => {
+  assert.ok(existsSync("src/pages/letiskove-transfery.tsx"));
+  for (const l of ["sk", "en", "de", "hu"]) {
+    const dict = (await import(`../src/locales/${l}`))[l];
+    const ponuka = dict.header.menu[1];
+    assert.ok(ponuka.children.some((c: { href: string }) => c.href === "/letiskove-transfery"), l);
+  }
+});

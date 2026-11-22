@@ -94,6 +94,7 @@ export const hu: Dictionary = {
           { label: "Szolgáltatások", href: "/#sluzby" },
           { label: "Árlista", href: "/cennik" },
           { label: "Cégeknek", href: "/sluzby-pre-firmy" },
+          { label: "Reptéri transzferek", href: "/letiskove-transfery" },
         ],
       },
       { label: "GYIK", href: "/#faq" },
@@ -555,7 +556,7 @@ export const hu: Dictionary = {
     services: [
       { label: "Fuvar foglalása", href: "/#objednavka" },
       { label: "Járműparkunk", href: "/#vozovy-park" },
-      { label: "Reptéri transzferek", href: "/taxi-letisko-kosice" },
+      { label: "Reptéri transzferek", href: "/letiskove-transfery" },
       { label: "Céges transzferek", href: "/sluzby-pre-firmy" },
       { label: "Kassa – Budapest", href: "/transfer-kosice-budapest" },
       { label: "Kassa – Krakkó", href: "/transfer-kosice-krakow" },

@@ -94,6 +94,7 @@ export const de: Dictionary = {
           { label: "Leistungen", href: "/#sluzby" },
           { label: "Preisliste", href: "/cennik" },
           { label: "Für Firmen", href: "/sluzby-pre-firmy" },
+          { label: "Flughafentransfers", href: "/letiskove-transfery" },
         ],
       },
       { label: "FAQ", href: "/#faq" },
@@ -555,7 +556,7 @@ export const de: Dictionary = {
     services: [
       { label: "Fahrt buchen", href: "/#objednavka" },
       { label: "Fuhrpark", href: "/#vozovy-park" },
-      { label: "Flughafentransfers", href: "/taxi-letisko-kosice" },
+      { label: "Flughafentransfers", href: "/letiskove-transfery" },
       { label: "Firmentransfers", href: "/sluzby-pre-firmy" },
       { label: "Košice – Budapest", href: "/transfer-kosice-budapest" },
       { label: "Košice – Krakau", href: "/transfer-kosice-krakow" },

@@ -15,6 +15,7 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
   const landing = LANDING_PAGES.map(
     (p) => `  <url>\n    <loc>${SITE_URL}/${p.slug}</loc>\n    <lastmod>${LANDING_LASTMOD}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>${p.slug === "sluzby-pre-firmy" || p.airportCode ? "0.8" : "0.7"}</priority>\n  </url>`,
   ).join("\n");
+  const hub = `  <url>\n    <loc>${SITE_URL}/letiskove-transfery</loc>\n    <lastmod>${LANDING_LASTMOD}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.9</priority>\n  </url>`;
   const blog = [
     `  <url>\n    <loc>${SITE_URL}/blog</loc>${latest ? `\n    <lastmod>${latest.slice(0, 10)}</lastmod>` : ""}\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>`,
     ...posts.map((p) => {
@@ -27,6 +28,7 @@ export const getServerSideProps: GetServerSideProps = async ({ res }) => {
         xmlns:xhtml="http://www.w3.org/1999/xhtml"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
 ${SITEMAP_BASE_ENTRIES}
+${hub}
 ${landing}
 ${blog}
 </urlset>
