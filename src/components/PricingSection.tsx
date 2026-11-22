@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Plane, Car, Info, Phone } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { PRICING_TRANSFER_SLUGS } from "@/locales";
 import { useTranslation } from "@/hooks/useTranslation";
 
 export function PricingSection() {
@@ -91,7 +92,13 @@ export function PricingSection() {
                 <ul className="space-y-4">
                   {t.pricing.transfers.map((item, index) => (
                     <li key={index} className="flex justify-between items-center border-b border-border/50 pb-2 last:border-0 last:pb-0">
-                      <span className="font-medium text-foreground/80 pr-4">{item.destination}</span>
+                      {PRICING_TRANSFER_SLUGS[index] ? (
+                        <Link href={`/${PRICING_TRANSFER_SLUGS[index]}`} className="font-medium text-foreground/80 pr-4 hover:text-primary hover:underline underline-offset-4">
+                          {item.destination}
+                        </Link>
+                      ) : (
+                        <span className="font-medium text-foreground/80 pr-4">{item.destination}</span>
+                      )}
                       <span className="font-bold tabular-nums text-primary whitespace-nowrap">{item.price}</span>
                     </li>
                   ))}

@@ -1,14 +1,19 @@
 import type { GetServerSideProps } from "next";
 import { LandingPage } from "@/components/LandingPage";
 import { getLanding } from "@/content/landing";
+import { getLocalizedLanding, isRouteLocale } from "@/content/i18n/build";
 
-// Stránka existuje len v slovenčine (ako blog) — ostatné jazyky presmeruje na SK verziu.
+const SLUG = "transfer-kosice-katowice";
+
+// SK + preklady EN/DE/HU/PL (src/content/i18n).
 export const getServerSideProps: GetServerSideProps = async ({ locale, res }) => {
-  if (locale && locale !== "sk") return { redirect: { destination: "/transfer-kosice-katowice", permanent: false, locale: false } as never };
+  const l = locale && isRouteLocale(locale) ? locale : "sk";
+  if (locale && locale !== l) return { redirect: { destination: `/${SLUG}`, permanent: false, locale: false } as never };
   res.setHeader("Cache-Control", "public, s-maxage=600, stale-while-revalidate=3600");
-  return { props: {} };
+  return { props: { locale: l } };
 };
 
-export default function Page() {
-  return <LandingPage page={getLanding("transfer-kosice-katowice")} />;
+export default function Page({ locale }: { locale: string }) {
+  const page = isRouteLocale(locale) ? getLocalizedLanding(SLUG, locale) : getLanding(SLUG);
+  return <LandingPage page={page} locale={locale} />;
 }

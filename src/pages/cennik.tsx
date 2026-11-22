@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Plane, Car, Info, Phone } from "lucide-react";
 import Link from "next/link";
 import Head from "next/head";
-import { SITE_URL } from "@/locales";
+import { PRICING_TRANSFER_SLUGS, SITE_URL } from "@/locales";
 import { breadcrumbSchema, jsonLdScript } from "@/lib/schema";
 import { useTranslation } from "@/hooks/useTranslation";
 
@@ -81,7 +81,13 @@ export default function CennikPage() {
                   <ul className="space-y-4">
                     {t.pricing.transfers.map((item, index) =>
                     <li key={index} className="flex justify-between items-center border-b border-border/50 pb-3 last:border-0 last:pb-0">
-                        <span className="text-foreground">{item.destination}</span>
+                        {PRICING_TRANSFER_SLUGS[index] ? (
+                          <Link href={`/${PRICING_TRANSFER_SLUGS[index]}`} className="text-foreground hover:text-primary hover:underline underline-offset-4">
+                            {item.destination}
+                          </Link>
+                        ) : (
+                          <span className="text-foreground">{item.destination}</span>
+                        )}
                         <span className="font-semibold text-[#282462] tabular-nums">
                           {item.price}
                         </span>

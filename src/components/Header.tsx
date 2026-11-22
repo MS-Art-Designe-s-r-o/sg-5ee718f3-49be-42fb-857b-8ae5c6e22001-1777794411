@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { Phone, Menu, X, Smartphone, ChevronDown } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
-import { locales } from "@/locales";
+import { allLocales, locales, ROUTE_LOCALE_SLUGS } from "@/locales";
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -23,10 +23,12 @@ export function Header() {
   }, []);
 
   const menuItems = t.header.menu;
+  // Poľština (pl) len na stránkach letiskových transferov.
+  const switcherLocales = (ROUTE_LOCALE_SLUGS as readonly string[]).includes(router.pathname.slice(1)) ? allLocales : locales;
 
   const languageSwitcher = (extraClass = "") => (
     <div className={`flex items-center gap-1 ${extraClass}`} aria-label="Language">
-      {locales.map((l, idx) => (
+      {switcherLocales.map((l, idx) => (
         <span key={l} className="flex items-center gap-1">
           {idx > 0 && (
             <span className={isScrolled ? "text-muted-foreground" : "text-white/50"}>|</span>

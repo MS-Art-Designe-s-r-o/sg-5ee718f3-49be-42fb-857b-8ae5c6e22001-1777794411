@@ -102,7 +102,17 @@ export function breadcrumbSchema(crumbs: { name: string; url: string }[]) {
   };
 }
 
-export function serviceSchema(opts: { name: string; description: string; url: string; serviceType: string; price?: string; areaServed?: string[] }) {
+export function serviceSchema(opts: {
+  name: string;
+  description: string;
+  url: string;
+  serviceType: string;
+  price?: string;
+  areaServed?: string[];
+  /** Cieľové letisko (IATA) trasovej stránky. */
+  airport?: { iataCode: string; name: string };
+  inLanguage?: string;
+}) {
   return {
     "@context": "https://schema.org",
     "@type": "Service",
@@ -111,7 +121,11 @@ export function serviceSchema(opts: { name: string; description: string; url: st
     url: opts.url,
     serviceType: opts.serviceType,
     provider: { "@id": BUSINESS_ID },
-    areaServed: (opts.areaServed ?? ["Košice"]).map((n) => ({ "@type": "Place", name: n })),
+    areaServed: [
+      ...(opts.areaServed ?? ["Košice"]).map((n) => ({ "@type": "Place", name: n })),
+      ...(opts.airport ? [{ "@type": "Airport", name: opts.airport.name, iataCode: opts.airport.iataCode }] : []),
+    ],
+    ...(opts.inLanguage ? { inLanguage: opts.inLanguage } : {}),
     ...(opts.price
       ? { offers: { "@type": "Offer", price: opts.price, priceCurrency: BUSINESS.currency, url: opts.url, availability: "https://schema.org/InStock" } }
       : {}),

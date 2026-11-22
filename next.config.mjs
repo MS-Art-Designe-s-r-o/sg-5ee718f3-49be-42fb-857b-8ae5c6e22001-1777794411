@@ -21,7 +21,7 @@ const nextConfig = {
   },
   i18n: {
     // Nový jazyk: pridajte kód sem a vytvorte slovník v src/locales (pozri src/locales/index.ts).
-    locales: ["sk", "en", "de", "hu"],
+    locales: ["sk", "en", "de", "hu", "pl"],
     defaultLocale: "sk",
     localeDetection: false,
   },
@@ -34,6 +34,15 @@ const nextConfig = {
     ],
   },
   // Obrázky blogu sú na disku (data/blog-images) — verejná URL mimo /api/ (robots.txt blokuje /api/).
+  // Poľština (pl) existuje len pre letiskové transfery; ostatné /pl/* -> /en/* (dočasne, 307).
+  async redirects() {
+    const plPages =
+      "letiskove-transfery|taxi-letisko-kosice|transfer-kosice-budapest|transfer-kosice-krakow|transfer-kosice-katowice|transfer-kosice-viedna|transfer-kosice-debrecin|transfer-kosice-bratislava|transfer-kosice-rzeszow|transfer-kosice-poprad";
+    return [
+      { source: "/pl", destination: "/en", locale: false, permanent: false },
+      { source: `/pl/:path((?!(?:${plPages})$).*)`, destination: "/en/:path", locale: false, permanent: false },
+    ];
+  },
   async rewrites() {
     return [{ source: "/blog/obrazky/:file", destination: "/api/blog/image/:file" }];
   },

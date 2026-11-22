@@ -12,6 +12,8 @@ export interface SEOProps {
   keywords?: string;
   /** Stránka existuje len v slovenčine (blog) — bez hreflang alternatív pre ostatné jazyky. */
   singleLocale?: boolean;
+  /** Vlastné hreflang alternatívy (napr. trasové stránky vrátane pl). Má prednosť pred singleLocale. */
+  alternates?: { hrefLang: string; href: string }[];
 }
 
 export function SEOElements() {
@@ -29,7 +31,7 @@ export function SEOElements() {
   );
 }
 
-export function SEO({ title, description, image = `${SITE_URL}/og-image.png`, url, type = "website", keywords, singleLocale }: SEOProps) {
+export function SEO({ title, description, image = `${SITE_URL}/og-image.png`, url, type = "website", keywords, singleLocale, alternates }: SEOProps) {
   const { t, locale } = useTranslation();
   const router = useRouter();
 
@@ -77,9 +79,10 @@ export function SEO({ title, description, image = `${SITE_URL}/og-image.png`, ur
 
       {/* Jazykové alternatívy */}
       <link rel="canonical" href={canonical} />
-      {!singleLocale &&
+      {alternates?.map((a) => <link key={a.hrefLang} rel="alternate" hrefLang={a.hrefLang} href={a.href} />)}
+      {!alternates && !singleLocale &&
         locales.map((l) => <link key={l} rel="alternate" hrefLang={l} href={localizedUrl(path, l)} />)}
-      {!singleLocale && <link rel="alternate" hrefLang="x-default" href={localizedUrl(path, defaultLocale)} />}
+      {!alternates && !singleLocale && <link rel="alternate" hrefLang="x-default" href={localizedUrl(path, defaultLocale)} />}
 
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     </Head>

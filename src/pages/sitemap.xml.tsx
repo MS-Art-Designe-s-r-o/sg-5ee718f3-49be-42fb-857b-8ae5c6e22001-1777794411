@@ -5,17 +5,33 @@ import { listPosts, type BlogPost } from "@/lib/blogStore";
 import { SITE_URL } from "@/locales";
 import { withoutDuplicates } from "@/lib/blogDuplicates";
 import { LANDING_PAGES } from "@/content/landing";
+import { HUB_SLUG, routeAlternates, routeUrl } from "@/content/i18n/build";
+import { ROUTE_LOCALES } from "@/content/i18n/types";
 
-const LANDING_LASTMOD = "2026-11-23";
+const LANDING_LASTMOD = "2026-11-22";
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {
   const posts: BlogPost[] = withoutDuplicates(await listPosts().catch(() => [] as BlogPost[]));
   const latest = posts.reduce((m, p) => ((p.updatedAt || p.date) > m ? p.updatedAt || p.date : m), "");
-  const landing = LANDING_PAGES.map(
-    (p) => `  <url>\n    <loc>${SITE_URL}/${p.slug}</loc>\n    <lastmod>${LANDING_LASTMOD}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>${p.slug === "sluzby-pre-firmy" || p.airportCode ? "0.8" : "0.7"}</priority>\n  </url>`,
+  // Rozcestník a trasové stránky: každý jazyk (sk, en, de, hu, pl) má vlastný <url> s hreflang alternatívami.
+  const localized = (slug: string, priority: string) => {
+    const alt = routeAlternates(slug)
+      .map((a) => `\n    <xhtml:link rel="alternate" hreflang="${a.hrefLang}" href="${a.href}"/>`)
+      .join("");
+    return ["sk", ...ROUTE_LOCALES]
+      .map(
+        (l) =>
+          `  <url>\n    <loc>${routeUrl(slug, l)}</loc>\n    <lastmod>${LANDING_LASTMOD}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>${l === "sk" ? priority : "0.7"}</priority>${alt}\n  </url>`,
+      )
+      .join("\n");
+  };
+  const landing = LANDING_PAGES.map((p) =>
+    p.airportCode
+      ? localized(p.slug, "0.8")
+      : `  <url>\n    <loc>${SITE_URL}/${p.slug}</loc>\n    <lastmod>${LANDING_LASTMOD}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>${p.slug === "sluzby-pre-firmy" ? "0.8" : "0.7"}</priority>\n  </url>`,
   ).join("\n");
-  const hub = `  <url>\n    <loc>${SITE_URL}/letiskove-transfery</loc>\n    <lastmod>${LANDING_LASTMOD}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.9</priority>\n  </url>`;
+  const hub = localized(HUB_SLUG, "0.9");
   const blog = [
     `  <url>\n    <loc>${SITE_URL}/blog</loc>${latest ? `\n    <lastmod>${latest.slice(0, 10)}</lastmod>` : ""}\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>`,
     ...posts.map((p) => {

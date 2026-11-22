@@ -11,10 +11,11 @@ import { MarkdownBlocks, parseBlocks, tocFrom, readingMinutes } from "@/componen
 import { getPost, listPosts, type BlogPost } from "@/lib/blogStore";
 import { blogDuplicateTarget, withoutDuplicates } from "@/lib/blogDuplicates";
 import { SITE_URL } from "@/locales";
+import { blogRouteLink, type BlogRouteLink } from "@/lib/blogRouteLink";
 import { useTranslation } from "@/hooks/useTranslation";
 import { CalendarDays, Clock, ChevronRight, Phone, ListOrdered, HelpCircle, Car } from "lucide-react";
 
-type Props = { post: BlogPost; related: PostCardData[]; minutes: number };
+type Props = { post: BlogPost; related: PostCardData[]; minutes: number; routeLink: BlogRouteLink | null };
 
 const abs = (u?: string) => (!u ? `${SITE_URL}/og-image.png` : /^https?:\/\//.test(u) ? u : `${SITE_URL}${u}`);
 
@@ -34,10 +35,10 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({ params, lo
     imageAlt: p.imageAlt, category: p.category, date: p.date, minutes: readingMinutes(p.content),
   }));
   res.setHeader("Cache-Control", "public, s-maxage=60, stale-while-revalidate=300");
-  return { props: JSON.parse(JSON.stringify({ post, related, minutes: readingMinutes(post.content) })) };
+  return { props: JSON.parse(JSON.stringify({ post, related, minutes: readingMinutes(post.content), routeLink: blogRouteLink(post) })) };
 };
 
-export default function BlogPostPage({ post, related, minutes }: Props) {
+export default function BlogPostPage({ post, related, minutes, routeLink }: Props) {
   const { t } = useTranslation();
   const url = `${SITE_URL}/blog/${post.slug}`;
   const blocks = parseBlocks(post.content, post.format === "markdown" ? "markdown" : "text", post.title);
@@ -166,6 +167,19 @@ export default function BlogPostPage({ post, related, minutes }: Props) {
                     ))}
                   </div>
                 </section>
+              )}
+
+              {routeLink && (
+                <aside aria-label="Súvisiaci transfer" className="mt-12 rounded-xl border border-border bg-muted/40 p-5">
+                  <p className="font-semibold text-[#282462] dark:text-white mb-1">Plánujete cestu na letisko?</p>
+                  <p className="text-foreground/80">
+                    Pozrite si náš transfer{" "}
+                    <Link href={`/${routeLink.slug}`} className="font-semibold text-primary underline underline-offset-4">
+                      {routeLink.label}
+                    </Link>
+                    {routeLink.price ? ` – pevná cena ${routeLink.price} za auto, 24/7, od dverí až pred terminál.` : " – pevné ceny za auto, 24/7, od dverí až pred terminál."}
+                  </p>
+                </aside>
               )}
 
               <div className="mt-12">{cta}</div>

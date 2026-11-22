@@ -33,7 +33,7 @@ export async function middleware(req: NextRequest) {
   }
 
   // Ďalej len portál.
-  if (!/^\/((en|de|hu)\/)?portal(\/|$)/.test(pathname)) {
+  if (!/^\/((en|de|hu|pl)\/)?portal(\/|$)/.test(pathname)) {
     return NextResponse.next();
   }
 
