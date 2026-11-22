@@ -173,7 +173,7 @@ export default function BlogPostPage({ post, related, minutes, routeLink }: Prop
                 <aside aria-label="Súvisiaci transfer" className="mt-12 rounded-xl border border-border bg-muted/40 p-5">
                   <p className="font-semibold text-[#282462] dark:text-white mb-1">Plánujete cestu na letisko?</p>
                   <p className="text-foreground/80">
-                    Pozrite si náš transfer{" "}
+                    Viac o tejto ceste:{" "}
                     <Link href={`/${routeLink.slug}`} className="font-semibold text-primary underline underline-offset-4">
                       {routeLink.label}
                     </Link>
