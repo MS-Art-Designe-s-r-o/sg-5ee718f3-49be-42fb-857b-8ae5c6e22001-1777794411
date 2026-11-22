@@ -24,11 +24,11 @@ export const hu: Dictionary = {
 
   seo: {
     home: {
-      title: "E-TAXI Kassa | Taxi 0–24 | Reptéri transzferek Budapest, Krakkó, Bécs",
+      title: "E-TAXI Kassa | Taxi 0–24 | Reptéri transzferek Budapest, Debrecen, Krakkó, Bécs",
       description:
-        "Professzionális taxiszolgálat Kassán, 0–24 órában elérhető ✓ Reptéri transzferek Budapestre, Krakkóba, Bécsbe ✓ Online foglalás ✓ Modern járművek ✓ Diszpécser +421 911 606 206",
+        "Professzionális taxiszolgálat Kassán, 0–24 órában elérhető ✓ Reptéri transzferek Budapestre, Debrecenbe, Krakkóba, Bécsbe ✓ Online foglalás ✓ Modern járművek ✓ Diszpécser +421 911 606 206",
       keywords:
-        "taxi Kassa, taxiszolgálat Kassa, kassai reptéri taxi, reptéri transzfer Budapest, transzfer Budapest Kassa, reptéri transzfer Krakkó, transzfer Bécs, taxi a reptérre, reptéri transzferek, taxi 0-24 Kassa, taxi foglalás Kassa, expressz reptéri transzfer, nemzetközi transzferek Kassa",
+        "taxi Kassa, taxiszolgálat Kassa, kassai reptéri taxi, reptéri transzfer Budapest, transzfer Budapest Kassa, reptéri transzfer Krakkó, transzfer Bécs, taxi a reptérre, reptéri transzferek, taxi 0-24 Kassa, taxi foglalás Kassa, expressz reptéri transzfer, nemzetközi transzferek Kassa, transzfer Debrecen, taxi Kassa Debrecen",
     },
     pricing: {
       title: "Taxi árlista | E-TAXI Kassa | Kilométerdíjak és reptéri transzferek",
@@ -55,7 +55,7 @@ export const hu: Dictionary = {
 
   jsonLd: {
     description:
-      "Professzionális taxiszolgálat Kassán, 0–24 órában elérhető. Reptéri transzferek Budapestre, Krakkóba, Bécsbe. Online foglalás azonnali visszaigazolással.",
+      "Professzionális taxiszolgálat Kassán, 0–24 órában elérhető. Reptéri transzferek Budapestre, Debrecenbe, Krakkóba, Bécsbe. Online foglalás azonnali visszaigazolással.",
     offerCatalogName: "Taxiszolgáltatások és transzferek",
     offers: [
       {
@@ -85,6 +85,8 @@ export const hu: Dictionary = {
       { label: "Vélemények", href: "/#recenzie" },
       { label: "GYIK", href: "/#faq" },
       { label: "Árlista", href: "/cennik" },
+      { label: "Cégeknek", href: "/sluzby-pre-firmy" },
+      { label: "Blog", href: "/#blog" },
     ],
     app: "Mobilalkalmazás",
     downloadApp: "Alkalmazás letöltése",
@@ -141,7 +143,7 @@ export const hu: Dictionary = {
     ecoBadge: "Környezetbarát",
     capacityLabel: "Férőhely:",
     capacityUnit: "fő",
-    note: "Összesen 14 jármű áll rendelkezésre, mind légkondicionált, tiszta és kiváló műszaki állapotú",
+    note: "Összesen 5 jármű áll rendelkezésre, mind légkondicionált, tiszta és kiváló műszaki állapotú",
     vehicles: [
       {
         id: "1",
@@ -205,19 +207,6 @@ export const hu: Dictionary = {
         image: "/VW_Jetta.png",
         description: "Praktikus jármű családok és nagyobb csoportok számára",
       },
-      {
-        id: "6",
-        name: "További járművek",
-        type: "van",
-        capacity: 4,
-        isEco: false,
-        features: [
-          { icon: "wind", label: "Légkondicionálás" },
-          { icon: "baby", label: "Gyerekülés" },
-        ],
-        image: "/auta.png",
-        description: "Összesen 14 jármű áll rendelkezésre",
-      },
     ],
   },
 
@@ -245,8 +234,10 @@ export const hu: Dictionary = {
       { destination: "Kassa – Kassai reptér", price: "18 €-tól" },
       { destination: "Kassa – Budapesti reptér", price: "250 €" },
       { destination: "Kassa – Krakkói reptér", price: "290 €" },
+      { destination: "Kassa – Debrecen", price: "220 €" },
       { destination: "Kassa – Pozsony", price: "390 €" },
       { destination: "Kassa – Bécs", price: "450 €" },
+      { destination: "Kassa – Katowice", price: "350 €" },
     ],
     cta: {
       title: "Szeretne fuvart foglalni?",
@@ -256,11 +247,11 @@ export const hu: Dictionary = {
 
   about: {
     title: "Rólunk",
-    subtitle: "Professzionális taxiszolgálat Kassán 2015 óta",
+    subtitle: "Professzionális taxiszolgálat Kassán 2020 óta",
     description:
       "Az E-TAXI Kassa egy modern taxiszolgálat, amely az ügyfél-elégedettségre, a megbízhatóságra és a környezetbarát szállításra összpontosít. Célunk, hogy biztonságos, kényelmes és megfizethető szállítási szolgáltatásokat nyújtsunk Kassa lakói és látogatói számára.",
     stats: [
-      { value: "14", label: "Jármű" },
+      { value: "5", label: "Jármű" },
       { value: "6+", label: "Év a piacon" },
       { value: "15000+", label: "Elégedett ügyfél" },
       { value: "24/7", label: "Diszpécser" },
@@ -445,7 +436,7 @@ export const hu: Dictionary = {
         id: "6",
         question: "Hogyan számítják ki a fuvardíjat?",
         answer:
-          "Az ár a következőkből áll: alapdíj (2 €; a belvároson kívül 0,75 €/km), kilométerdíj (1,50 €/km) és esetleges felárak (éjszakai, hétvégi, csomag). Pontos becsléshez használja online űrlapunkat, vagy hívjon minket.",
+          "Az ár a következőkből áll: alapdíj (2 €; a városon kívüli fuvaroknál 0,75 €/km kerül felszámításra az indulási vagy az úti cél helyétől számítva, amelyik közelebb van a városhoz), kilométerdíj (1,50 €/km) és esetleges felárak (éjszakai, hétvégi, csomag). Pontos becsléshez használja online űrlapunkat, vagy hívjon minket.",
       },
       {
         id: "7",
@@ -463,7 +454,7 @@ export const hu: Dictionary = {
         id: "9",
         question: "Állítanak ki számlát cégek részére?",
         answer:
-          "Igen, céges ügyfeleink részére áfás számlát állítunk ki. Foglaláskor csak adja meg számlázási adatait. Rendszeres együttműködéshez havi elszámolást is kínálunk.",
+          "Igen, céges ügyfeleink részére számlát állítunk ki (nem vagyunk áfaalanyok, ezért a számla áfa nélkül készül). Foglaláskor csak adja meg számlázási adatait. Rendszeres együttműködéshez havi elszámolást is kínálunk.",
       },
       {
         id: "10",
@@ -528,8 +519,13 @@ export const hu: Dictionary = {
     services: [
       { label: "Fuvar foglalása", href: "/#objednavka" },
       { label: "Járműparkunk", href: "/#vozovy-park" },
-      { label: "Reptéri transzferek", href: "/#cennik" },
-      { label: "Céges transzferek", href: "/#vozovy-park" },
+      { label: "Reptéri transzferek", href: "/taxi-letisko-kosice" },
+      { label: "Céges transzferek", href: "/sluzby-pre-firmy" },
+      { label: "Kassa – Budapest", href: "/transfer-kosice-budapest" },
+      { label: "Kassa – Krakkó", href: "/transfer-kosice-krakow" },
+      { label: "Kassa – Debrecen", href: "/transfer-kosice-debrecin" },
+      { label: "Kassa – Katowice", href: "/transfer-kosice-katowice" },
+      { label: "Kassa – Bécs", href: "/transfer-kosice-viedna" },
     ],
     infoTitle: "Információk",
     info: [

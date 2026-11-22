@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import Head from "next/head";
 import Image from "next/image";
 import { useTranslation } from "@/hooks/useTranslation";
-import { SITE_URL } from "@/locales";
+import { taxiServiceSchema, jsonLdScript } from "@/lib/schema";
 
 // Lazy load below-the-fold sections
 const BookingForm = dynamic(() => import("@/components/BookingForm").then((mod) => ({ default: mod.BookingForm })), {
@@ -53,74 +53,9 @@ export default function Home() {
   const { t } = useTranslation();
 
   const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    "@id": SITE_URL,
-    "name": "E-TAXI Košice",
-    "alternateName": "E-TAXI Košice - Taxislužba",
-    "description": t.jsonLd.description,
-    "image": `${SITE_URL}/og-image.png`,
-    "logo": `${SITE_URL}/etaxi_logo_svg.svg`,
-    "telephone": "+421911606206",
-    "email": "dispecing@e-taxike.sk",
-    "url": SITE_URL,
-    "priceRange": "€€",
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Košice",
-      "addressRegion": "Košický kraj",
-      "addressCountry": "SK"
-    },
-    "geo": {
-      "@type": "GeoCoordinates",
-      "latitude": "48.7164",
-      "longitude": "21.2611"
-    },
-    "areaServed": [
-    {
-      "@type": "City",
-      "name": "Košice"
-    },
-    {
-      "@type": "City",
-      "name": "Prešov"
-    },
-    {
-      "@type": "AdministrativeArea",
-      "name": "Košický kraj"
-    }],
-
-    "openingHoursSpecification": {
-      "@type": "OpeningHoursSpecification",
-      "dayOfWeek": [
-      "Monday",
-      "Tuesday",
-      "Wednesday",
-      "Thursday",
-      "Friday",
-      "Saturday",
-      "Sunday"],
-
-      "opens": "00:00",
-      "closes": "23:59"
-    },
-    "hasOfferCatalog": {
-      "@type": "OfferCatalog",
-      "name": t.jsonLd.offerCatalogName,
-      "itemListElement": t.jsonLd.offers.map((offer) => ({
-        "@type": "Offer",
-        "itemOffered": {
-          "@type": "Service",
-          "name": offer.name,
-          "description": offer.description
-        }
-      }))
-    },
-    "aggregateRating": {
-      "@type": "AggregateRating",
-      "ratingValue": "4.8",
-      "reviewCount": "127"
-    }
+    ...taxiServiceSchema(t.jsonLd.description, t.jsonLd.offers, t.jsonLd.offerCatalogName),
+    // Pôvodné hodnotenie ponechané bez zmeny.
+    aggregateRating: { "@type": "AggregateRating", ratingValue: "4.8", reviewCount: "127" },
   };
 
   return (
@@ -133,7 +68,7 @@ export default function Home() {
       <Head>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+          dangerouslySetInnerHTML={jsonLdScript(jsonLd)} />
       </Head>
       <Header />
       <main className="pt-16">

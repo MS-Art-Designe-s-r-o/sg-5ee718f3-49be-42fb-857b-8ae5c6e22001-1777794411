@@ -24,11 +24,11 @@ export const sk = {
 
   seo: {
     home: {
-      title: "E-TAXI Košice | Taxislužba 24/7 | Transfery Budapešť, Krakov, Viedeň",
+      title: "E-TAXI Košice | Taxislužba 24/7 | Transfery Budapešť, Debrecín, Krakov, Viedeň",
       description:
-        "Profesionálna taxislužba v Košiciach dostupná 24/7 ✓ Letiskové transfery Budapešť, Krakov, Viedeň ✓ Online objednávka ✓ Moderné vozidlá ✓ Dispečing +421 911 606 206",
+        "Profesionálna taxislužba v Košiciach dostupná 24/7 ✓ Letiskové transfery Budapešť, Debrecín, Krakov, Viedeň ✓ Online objednávka ✓ Moderné vozidlá ✓ Dispečing +421 911 606 206",
       keywords:
-        "taxi Košice, taxislužba Košice, taxi služba Košice, transfer letisko Budapešť, transfer Budapešť Košice, letiskový transfer Budapešť, transfer Krakov, transfer Viedeň, taxi na letisko, letiskové transfery, taxi 24/7 Košice, dispečing taxi Košice, objednať taxi Košice, expresný transfer letisko, medzinárodné transfery Košice",
+        "taxi Košice, taxislužba Košice, taxi služba Košice, transfer letisko Budapešť, transfer Budapešť Košice, letiskový transfer Budapešť, transfer Krakov, transfer Viedeň, taxi na letisko, letiskové transfery, taxi 24/7 Košice, dispečing taxi Košice, objednať taxi Košice, expresný transfer letisko, medzinárodné transfery Košice, transfer Debrecín, taxi Košice Debrecín",
     },
     pricing: {
       title: "Cenník taxislužby | E-TAXI Košice | Ceny za km a transfery na letisko",
@@ -55,7 +55,7 @@ export const sk = {
 
   jsonLd: {
     description:
-      "Profesionálna taxislužba v Košiciach dostupná 24/7. Letiskové transfery Budapešť, Krakov, Viedeň. Online objednávka a okamžité potvrdenie.",
+      "Profesionálna taxislužba v Košiciach dostupná 24/7. Letiskové transfery Budapešť, Debrecín, Krakov, Viedeň. Online objednávka a okamžité potvrdenie.",
     offerCatalogName: "Taxislužby a transfery",
     offers: [
       {
@@ -85,6 +85,8 @@ export const sk = {
       { label: "Recenzie", href: "/#recenzie" },
       { label: "FAQ", href: "/#faq" },
       { label: "Cenník", href: "/cennik" },
+      { label: "Pre firmy", href: "/sluzby-pre-firmy" },
+      { label: "Blog", href: "/#blog" },
     ],
     app: "Aplikácia",
     downloadApp: "Stiahnuť aplikáciu",
@@ -141,7 +143,7 @@ export const sk = {
     ecoBadge: "Ekologické",
     capacityLabel: "Kapacita:",
     capacityUnit: "osoby",
-    note: "Celkovo 14 vozidiel k dispozícii, všetky klimatizované, čisté a v dobrom technickom stave",
+    note: "Celkovo 5 vozidiel k dispozícii, všetky klimatizované, čisté a v dobrom technickom stave",
     vehicles: [
       {
         id: "1",
@@ -205,19 +207,6 @@ export const sk = {
         image: "/VW_Jetta.png",
         description: "Praktické vozidlo pre rodiny a väčšie skupiny",
       },
-      {
-        id: "6",
-        name: "Ďalšie vozidlá",
-        type: "van",
-        capacity: 4,
-        isEco: false,
-        features: [
-          { icon: "wind", label: "Klimatizácia" },
-          { icon: "baby", label: "Detská sedačka" },
-        ],
-        image: "/auta.png",
-        description: "Celkovo 14 vozidiel k dispozícii",
-      },
     ],
   },
 
@@ -245,8 +234,10 @@ export const sk = {
       { destination: "Košice - Letisko Košice", price: "od 18 EUR" },
       { destination: "Košice - Letisko Budapešť", price: "250 EUR" },
       { destination: "Košice - Letisko Krakov", price: "290 EUR" },
+      { destination: "Košice - Debrecín", price: "220 EUR" },
       { destination: "Košice - Bratislava", price: "390 EUR" },
       { destination: "Košice - Viedeň", price: "450 EUR" },
+      { destination: "Košice - Katowice", price: "350 EUR" },
     ],
     cta: {
       title: "Chcete si objednať jazdu?",
@@ -256,11 +247,11 @@ export const sk = {
 
   about: {
     title: "O nás",
-    subtitle: "Profesionálna taxislužba v Košiciach od roku 2015",
+    subtitle: "Profesionálna taxislužba v Košiciach od roku 2020",
     description:
       "E-TAXI Košice je moderná taxislužba, ktorá sa zameriava na spokojnosť zákazníkov, spoľahlivosť a ekologickú prepravu. Naším cieľom je poskytovať bezpečné, pohodlné a cenovo dostupné prepravné služby pre obyvateľov a návštevníkov Košíc.",
     stats: [
-      { value: "14", label: "Vozidiel" },
+      { value: "5", label: "Vozidiel" },
       { value: "6+", label: "Rokov na trhu" },
       { value: "15000+", label: "Spokojných zákazníkov" },
       { value: "24/7", label: "Dispečing" },
@@ -445,7 +436,7 @@ export const sk = {
         id: "6",
         question: "Ako sa počíta cena jazdy?",
         answer:
-          "Cena sa skladá z: nástupného poplatku (2 €, mimo centra mesta 0,75 €/km), kilometrovej sadzby (1,50 €/km) a prípadných prirážok (nočná, víkendová, batožina). Pre presný odhad použite náš online formulár alebo zavolajte.",
+          "Cena sa skladá z: štartovného (2 €; pri jazde mimo mesta sa pripočítava 0,75 €/km k štartu alebo cieľu podľa toho, čo je bližšie), kilometrovej sadzby (1,50 €/km) a prípadných prirážok (nočná, víkendová, batožina). Pre presný odhad použite náš online formulár alebo zavolajte.",
       },
       {
         id: "7",
@@ -463,7 +454,7 @@ export const sk = {
         id: "9",
         question: "Poskytujete faktúry pre firmy?",
         answer:
-          "Áno, pre firemných klientov vystavujeme faktúry s DPH. Pri objednávke stačí uviesť fakturačné údaje. Ponúkame aj mesačné vyúčtovanie pre pravidelnú spoluprácu.",
+          "Áno, pre firemných klientov vystavujeme faktúry (nie sme platcami DPH, preto sú vystavené bez DPH). Pri objednávke stačí uviesť fakturačné údaje. Ponúkame aj mesačné vyúčtovanie pre pravidelnú spoluprácu.",
       },
       {
         id: "10",
@@ -528,8 +519,13 @@ export const sk = {
     services: [
       { label: "Objednať jazdu", href: "/#objednavka" },
       { label: "Vozový park", href: "/#vozovy-park" },
-      { label: "Letiskové transfery", href: "/#cennik" },
-      { label: "Firemné transfery", href: "/#vozovy-park" },
+      { label: "Letiskové transfery", href: "/taxi-letisko-kosice" },
+      { label: "Firemné transfery", href: "/sluzby-pre-firmy" },
+      { label: "Košice – Budapešť", href: "/transfer-kosice-budapest" },
+      { label: "Košice – Krakov", href: "/transfer-kosice-krakow" },
+      { label: "Košice – Debrecín", href: "/transfer-kosice-debrecin" },
+      { label: "Košice – Katowice", href: "/transfer-kosice-katowice" },
+      { label: "Košice – Viedeň", href: "/transfer-kosice-viedna" },
     ],
     infoTitle: "Informácie",
     info: [

@@ -2,5 +2,57 @@
 User-agent: *
 Allow: /
 Disallow: /api/
+Disallow: /portal/
+
+# AI vyhľadávače a asistenti (povolené)
+User-agent: GPTBot
+Allow: /
+Disallow: /api/
+Disallow: /portal/
+
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /api/
+Disallow: /portal/
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /api/
+Disallow: /portal/
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /api/
+Disallow: /portal/
+
+User-agent: Claude-SearchBot
+Allow: /
+Disallow: /api/
+Disallow: /portal/
+
+User-agent: Claude-User
+Allow: /
+Disallow: /api/
+Disallow: /portal/
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /api/
+Disallow: /portal/
+
+User-agent: Perplexity-User
+Allow: /
+Disallow: /api/
+Disallow: /portal/
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /api/
+Disallow: /portal/
+
+User-agent: Applebot-Extended
+Allow: /
+Disallow: /api/
+Disallow: /portal/
 
 Sitemap: https://e-taxike.sk/sitemap.xml

@@ -24,11 +24,11 @@ export const de: Dictionary = {
 
   seo: {
     home: {
-      title: "E-TAXI Košice | Taxi 24/7 | Flughafentransfers Budapest, Krakau, Wien",
+      title: "E-TAXI Košice | Taxi 24/7 | Flughafentransfers Budapest, Debrecen, Krakau, Wien",
       description:
-        "Professioneller Taxidienst in Košice, rund um die Uhr verfügbar ✓ Flughafentransfers nach Budapest, Krakau, Wien ✓ Online-Buchung ✓ Moderne Fahrzeuge ✓ Zentrale +421 911 606 206",
+        "Professioneller Taxidienst in Košice, rund um die Uhr verfügbar ✓ Flughafentransfers nach Budapest, Debrecen, Krakau, Wien ✓ Online-Buchung ✓ Moderne Fahrzeuge ✓ Zentrale +421 911 606 206",
       keywords:
-        "Taxi Košice, Taxidienst Košice, Flughafentaxi Košice, Flughafentransfer Budapest, Transfer Budapest Košice, Flughafentransfer Krakau, Transfer Wien, Taxi zum Flughafen, Flughafentransfers, Taxi 24/7 Košice, Taxi Košice buchen, Express-Flughafentransfer, internationale Transfers Košice",
+        "Taxi Košice, Taxidienst Košice, Flughafentaxi Košice, Flughafentransfer Budapest, Transfer Budapest Košice, Flughafentransfer Krakau, Transfer Wien, Taxi zum Flughafen, Flughafentransfers, Taxi 24/7 Košice, Taxi Košice buchen, Express-Flughafentransfer, internationale Transfers Košice, Transfer Debrecen, Taxi Košice Debrecen",
     },
     pricing: {
       title: "Taxi-Preisliste | E-TAXI Košice | Preise pro km und Flughafentransfers",
@@ -55,7 +55,7 @@ export const de: Dictionary = {
 
   jsonLd: {
     description:
-      "Professioneller Taxidienst in Košice, rund um die Uhr verfügbar. Flughafentransfers nach Budapest, Krakau, Wien. Online-Buchung mit sofortiger Bestätigung.",
+      "Professioneller Taxidienst in Košice, rund um die Uhr verfügbar. Flughafentransfers nach Budapest, Debrecen, Krakau, Wien. Online-Buchung mit sofortiger Bestätigung.",
     offerCatalogName: "Taxidienste und Transfers",
     offers: [
       {
@@ -85,6 +85,8 @@ export const de: Dictionary = {
       { label: "Bewertungen", href: "/#recenzie" },
       { label: "FAQ", href: "/#faq" },
       { label: "Preisliste", href: "/cennik" },
+      { label: "Für Firmen", href: "/sluzby-pre-firmy" },
+      { label: "Blog", href: "/#blog" },
     ],
     app: "Mobile App",
     downloadApp: "App herunterladen",
@@ -141,7 +143,7 @@ export const de: Dictionary = {
     ecoBadge: "Umweltfreundlich",
     capacityLabel: "Kapazität:",
     capacityUnit: "Personen",
-    note: "Insgesamt 14 Fahrzeuge verfügbar, alle klimatisiert, sauber und in ausgezeichnetem technischem Zustand",
+    note: "Insgesamt 5 Fahrzeuge verfügbar, alle klimatisiert, sauber und in ausgezeichnetem technischem Zustand",
     vehicles: [
       {
         id: "1",
@@ -205,19 +207,6 @@ export const de: Dictionary = {
         image: "/VW_Jetta.png",
         description: "Praktisches Fahrzeug für Familien und größere Gruppen",
       },
-      {
-        id: "6",
-        name: "Weitere Fahrzeuge",
-        type: "van",
-        capacity: 4,
-        isEco: false,
-        features: [
-          { icon: "wind", label: "Klimaanlage" },
-          { icon: "baby", label: "Kindersitz" },
-        ],
-        image: "/auta.png",
-        description: "Insgesamt 14 Fahrzeuge verfügbar",
-      },
     ],
   },
 
@@ -245,8 +234,10 @@ export const de: Dictionary = {
       { destination: "Košice – Flughafen Košice", price: "ab 18 €" },
       { destination: "Košice – Flughafen Budapest", price: "250 €" },
       { destination: "Košice – Flughafen Krakau", price: "290 €" },
+      { destination: "Košice – Debrecen", price: "220 €" },
       { destination: "Košice – Bratislava", price: "390 €" },
       { destination: "Košice – Wien", price: "450 €" },
+      { destination: "Košice – Katowice", price: "350 €" },
     ],
     cta: {
       title: "Möchten Sie eine Fahrt buchen?",
@@ -256,11 +247,11 @@ export const de: Dictionary = {
 
   about: {
     title: "Über uns",
-    subtitle: "Professioneller Taxidienst in Košice seit 2015",
+    subtitle: "Professioneller Taxidienst in Košice seit 2020",
     description:
       "E-TAXI Košice ist ein moderner Taxidienst, der auf Kundenzufriedenheit, Zuverlässigkeit und umweltfreundliche Beförderung setzt. Unser Ziel ist es, sichere, bequeme und erschwingliche Beförderungsdienste für die Einwohner und Besucher von Košice anzubieten.",
     stats: [
-      { value: "14", label: "Fahrzeuge" },
+      { value: "5", label: "Fahrzeuge" },
       { value: "6+", label: "Jahre am Markt" },
       { value: "15000+", label: "Zufriedene Kunden" },
       { value: "24/7", label: "Zentrale" },
@@ -445,7 +436,7 @@ export const de: Dictionary = {
         id: "6",
         question: "Wie wird der Fahrpreis berechnet?",
         answer:
-          "Der Preis setzt sich zusammen aus: einer Grundgebühr (2 €; außerhalb der Innenstadt 0,75 €/km), einem Kilometertarif (1,50 €/km) und eventuellen Zuschlägen (nachts, am Wochenende, Gepäck). Für einen genauen Kostenvoranschlag nutzen Sie unser Online-Formular oder rufen Sie uns an.",
+          "Der Preis setzt sich zusammen aus: einer Grundgebühr (2 €; bei Fahrten außerhalb der Stadt kommen 0,75 €/km hinzu, gerechnet ab Start oder Ziel, je nachdem, was näher an der Stadt liegt), einem Kilometertarif (1,50 €/km) und eventuellen Zuschlägen (nachts, am Wochenende, Gepäck). Für einen genauen Kostenvoranschlag nutzen Sie unser Online-Formular oder rufen Sie uns an.",
       },
       {
         id: "7",
@@ -463,7 +454,7 @@ export const de: Dictionary = {
         id: "9",
         question: "Stellen Sie Rechnungen für Unternehmen aus?",
         answer:
-          "Ja, für Firmenkunden stellen wir Rechnungen mit MwSt. aus. Geben Sie bei der Buchung einfach Ihre Rechnungsdaten an. Wir bieten auch eine monatliche Abrechnung für regelmäßige Zusammenarbeit an.",
+          "Ja, für Firmenkunden stellen wir Rechnungen aus (wir sind kein Mehrwertsteuerzahler, daher ohne MwSt.). Geben Sie bei der Buchung einfach Ihre Rechnungsdaten an. Wir bieten auch eine monatliche Abrechnung für regelmäßige Zusammenarbeit an.",
       },
       {
         id: "10",
@@ -528,8 +519,13 @@ export const de: Dictionary = {
     services: [
       { label: "Fahrt buchen", href: "/#objednavka" },
       { label: "Fuhrpark", href: "/#vozovy-park" },
-      { label: "Flughafentransfers", href: "/#cennik" },
-      { label: "Firmentransfers", href: "/#vozovy-park" },
+      { label: "Flughafentransfers", href: "/taxi-letisko-kosice" },
+      { label: "Firmentransfers", href: "/sluzby-pre-firmy" },
+      { label: "Košice – Budapest", href: "/transfer-kosice-budapest" },
+      { label: "Košice – Krakau", href: "/transfer-kosice-krakow" },
+      { label: "Košice – Debrecen", href: "/transfer-kosice-debrecin" },
+      { label: "Košice – Katowice", href: "/transfer-kosice-katowice" },
+      { label: "Košice – Wien", href: "/transfer-kosice-viedna" },
     ],
     infoTitle: "Informationen",
     info: [

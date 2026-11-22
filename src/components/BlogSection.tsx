@@ -37,22 +37,6 @@ export function BlogSection() {
     };
   }, []);
 
-  // Ponechanie pôvodného Soro blogu (doterajšie príspevky)
-  useEffect(() => {
-    const existingScript = document.querySelector('script[src*="trysoro.com"]');
-    if (existingScript) existingScript.remove();
-
-    const script = document.createElement("script");
-    script.src = "https://app.trysoro.com/api/embed/72e345cc-26ab-4fa7-90c3-2a16001d07d4";
-    script.defer = true;
-    document.body.appendChild(script);
-
-    return () => {
-      const soroScript = document.querySelector('script[src*="trysoro.com"]');
-      if (soroScript) soroScript.remove();
-    };
-  }, []);
-
   const readMore = READ_MORE[locale] || READ_MORE.sk;
 
   return (
@@ -82,9 +66,6 @@ export function BlogSection() {
             </div>
           </div>
         )}
-
-        {/* Pôvodný Soro blog — doterajšie príspevky ostávajú zobrazené */}
-        <div id="soro-blog"></div>
       </div>
     </section>
   );

@@ -2,7 +2,7 @@
 //
 // Spustenie (z koreňa projektu):
 //   npx tsx scripts/sample-generate.ts <outDir>
-// Použije tests/fixtures/sablona-najom.docx a sablona-dispecing.docx, rovnaké
+// Použije tests/fixtures/sablona-najom.docx, sablona-dispecing.docx a sablona-dispecing-vodic.docx, rovnaké
 // buildTemplateData + renderDocx ako portál. Vytvorí viac variantov (FO bez
 // flotily, FO vo flotile, s.r.o. s vlastnou koncesiou).
 import { promises as fs } from "node:fs";
@@ -173,6 +173,7 @@ async function main() {
   }
   const najom = await fs.readFile(path.join(FIX, "sablona-najom.docx"));
   const disp = await fs.readFile(path.join(FIX, "sablona-dispecing.docx"));
+  const dispV = await fs.readFile(path.join(FIX, "sablona-dispecing-vodic.docx"));
   const varianty: [string, Buffer, SnapshotSource][] = [
     ["FO", najom, src("NAJOM", vodicFO, false, "NZ-2026-001")],
     ["FO-flotila", najom, src("NAJOM", vodicFO, true, "NZ-2026-002")],
@@ -181,6 +182,11 @@ async function main() {
     ["PO-koncesia", disp, src("DISPECING", vodicPO, false, "DS-2026-002")],
     ["SZCO-koncesia", najom, src("NAJOM", vodicSZCO, false, "NZ-2026-004")],
     ["SZCO-koncesia", disp, src("DISPECING", vodicSZCO, false, "DS-2026-003")],
+    // Dispečerská zmluva so zmluvnou stranou Partnerský vodič (nový vzor).
+    ["V-FO", dispV, src("DISPECING", vodicFO, false, "DS-2026-004")],
+    ["V-FO-flotila", dispV, src("DISPECING", vodicFO, true, "DS-2026-005")],
+    ["V-PO-koncesia", dispV, src("DISPECING", vodicPO, false, "DS-2026-006")],
+    ["V-SZCO-koncesia", dispV, src("DISPECING", vodicSZCO, false, "DS-2026-007")],
   ];
   await fs.mkdir(out, { recursive: true });
   for (const [nazov, tpl, s] of varianty) {
