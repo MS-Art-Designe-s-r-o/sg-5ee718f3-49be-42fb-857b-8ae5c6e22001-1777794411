@@ -260,6 +260,8 @@ export const sk = {
       { destination: "Košice - Bratislava", price: "390 EUR" },
       { destination: "Košice - Viedeň", price: "450 EUR" },
       { destination: "Košice - Katowice", price: "350 EUR" },
+      { destination: "Košice - Letisko Rzeszów", price: "270 EUR" },
+      { destination: "Košice - Letisko Poprad-Tatry", price: "170 EUR" },
     ],
     cta: {
       title: "Chcete si objednať jazdu?",

@@ -260,6 +260,8 @@ export const hu: Dictionary = {
       { destination: "Kassa – Pozsony", price: "390 €" },
       { destination: "Kassa – Bécs", price: "450 €" },
       { destination: "Kassa – Katowice", price: "350 €" },
+      { destination: "Kassa – Rzeszów repülőtér", price: "270 €" },
+      { destination: "Kassa – Poprád-Tátra repülőtér", price: "170 €" },
     ],
     cta: {
       title: "Szeretne fuvart foglalni?",

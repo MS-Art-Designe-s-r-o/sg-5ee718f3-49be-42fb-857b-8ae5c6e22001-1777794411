@@ -803,20 +803,21 @@ export const ROUTE_PAGES: LandingPageData[] = [
   {
     slug: "transfer-kosice-rzeszow",
     navLabel: "Transfer Košice – letisko Rzeszów",
-    seoTitle: "Taxi Košice – letisko Rzeszów (RZE) | Transfer 24/7 | E-TAXI",
+    seoTitle:
+      "Taxi Košice – letisko Rzeszów (RZE) 270 € | Transfer 24/7 | E-TAXI",
     seoDescription:
-      "Individuálna preprava z Košíc na letisko Rzeszów-Jasionka aj do Rzeszowa. Od dverí až pred terminál, 24/7, cena za auto vopred, platba kartou aj na faktúru.",
+      "Individuálna preprava z Košíc na letisko Rzeszów-Jasionka aj do Rzeszowa. Od dverí až pred terminál, 24/7, pevná cena 270 € za auto, platba kartou aj na faktúru.",
     keywords:
       "taxi Košice Rzeszów, transfer Košice Rzeszów, preprava Košice Rzeszów, airport transfer Košice Rzeszow, airporttransfer Rzeszów, letisko Rzeszów Jasionka transfer, individuálna preprava Rzeszów",
     h1: "Taxi a transfer Košice – letisko Rzeszów",
-    lead: "Súkromný transfer z Košíc na letisko Rzeszów-Jasionka, najbližšie poľské letisko k východnému Slovensku. Priamo, bez prestupov a v čase podľa vášho letu.",
+    lead: "Súkromný transfer z Košíc na letisko Rzeszów-Jasionka, najbližšie poľské letisko k východnému Slovensku. Priamo, bez prestupov a v čase podľa vášho letu, za pevnú cenu 270 € za auto.",
     serviceType: "Letiskový transfer",
-    priceLabel: "cena na vyžiadanie",
-    priceOnRequest: true,
+    price: "270",
+    priceLabel: "270 €",
     airportCode: "RZE",
     destinationName: "Letisko Rzeszów-Jasionka",
     facts: [
-      { label: "Cena", value: "na vyžiadanie, za auto" },
+      { label: "Cena", value: "270 € za auto" },
       { label: "Trasa", value: "Košice – letisko Rzeszów (RZE)" },
       { label: "Vzdialenosť", value: "cca 200 km" },
       { label: "Čas jazdy", value: "cca 3 – 3,5 hod." },
@@ -850,9 +851,9 @@ export const ROUTE_PAGES: LandingPageData[] = [
       {
         title: "Cena transferu Košice – Rzeszów",
         paragraphs: [
-          "Cenu transferu Košice – Rzeszów vám oznámime vopred podľa miesta vyzdvihnutia, vždy za celé auto, nie za osobu, a bez skrytých poplatkov. Zavolajte na " +
+          "Transfer Košice – letisko Rzeszów stojí 270 € za celé auto, nie za osobu. Cena je pevná, známa vopred a bez skrytých poplatkov. Objednať môžete na " +
             PHONE +
-            " alebo pošlite objednávku cez formulár a cenu vám potvrdíme ešte pred jazdou.",
+            " alebo cez online formulár.",
           "Platiť môžete kartou bez poplatku, v hotovosti alebo na faktúru. Nie sme platcami DPH.",
         ],
       },
@@ -869,9 +870,7 @@ export const ROUTE_PAGES: LandingPageData[] = [
       {
         question: "Koľko stojí taxi Košice – letisko Rzeszów?",
         answer:
-          "Cenu za auto vám potvrdíme vopred podľa miesta vyzdvihnutia. Zavolajte na " +
-          PHONE +
-          " alebo pošlite objednávku cez formulár.",
+          "Transfer Košice – letisko Rzeszów stojí 270 € za auto, nie za osobu. Cena je pevná a bez skrytých poplatkov.",
       },
       {
         question: "Ako dlho trvá cesta z Košíc do Rzeszowa?",
@@ -914,20 +913,20 @@ export const ROUTE_PAGES: LandingPageData[] = [
     slug: "transfer-kosice-poprad",
     navLabel: "Transfer Košice – letisko Poprad-Tatry",
     seoTitle:
-      "Taxi Košice – letisko Poprad-Tatry (TAT) | Transfer 24/7 | E-TAXI",
+      "Taxi Košice – letisko Poprad-Tatry (TAT) 170 € | Transfer 24/7 | E-TAXI",
     seoDescription:
-      "Individuálna preprava z Košíc na letisko Poprad-Tatry, do Popradu a Vysokých Tatier. Od dverí až pred terminál alebo hotel, 24/7, cena za auto vopred, platba kartou aj na faktúru.",
+      "Individuálna preprava z Košíc na letisko Poprad-Tatry, do Popradu a Vysokých Tatier. Od dverí až pred terminál alebo hotel, 24/7, pevná cena 170 € za auto, platba kartou aj na faktúru.",
     keywords:
       "taxi Košice Poprad, transfer Košice Poprad, preprava Košice Poprad, airport transfer Poprad Tatry, airporttransfer Poprad, letisko Poprad transfer, transfer Košice Vysoké Tatry, individuálna preprava Poprad",
     h1: "Taxi a transfer Košice – letisko Poprad-Tatry",
-    lead: "Súkromný transfer z Košíc na letisko Poprad-Tatry, do Popradu alebo priamo na hotel vo Vysokých Tatrách. Bez prestupov a v čase, ktorý si určíte.",
+    lead: "Súkromný transfer z Košíc na letisko Poprad-Tatry, do Popradu alebo priamo na hotel vo Vysokých Tatrách. Bez prestupov, v čase, ktorý si určíte, a za pevnú cenu 170 € za auto na letisko.",
     serviceType: "Letiskový transfer",
-    priceLabel: "cena na vyžiadanie",
-    priceOnRequest: true,
+    price: "170",
+    priceLabel: "170 €",
     airportCode: "TAT",
     destinationName: "Letisko Poprad-Tatry",
     facts: [
-      { label: "Cena", value: "na vyžiadanie, za auto" },
+      { label: "Cena", value: "170 € za auto" },
       { label: "Trasa", value: "Košice – letisko Poprad-Tatry (TAT)" },
       { label: "Vzdialenosť", value: "cca 120 km" },
       { label: "Čas jazdy", value: "cca 1 – 1,5 hod." },
@@ -960,9 +959,9 @@ export const ROUTE_PAGES: LandingPageData[] = [
       {
         title: "Cena transferu Košice – Poprad",
         paragraphs: [
-          "Cenu transferu vám oznámime vopred podľa miesta vyzdvihnutia a cieľa, vždy za celé auto a bez skrytých poplatkov. Pre orientáciu môžete použiť aj náš základný cenník. Zavolajte na " +
+          "Transfer Košice – letisko Poprad-Tatry stojí 170 € za celé auto, nie za osobu. Cena je pevná, známa vopred a bez skrytých poplatkov. Pri jazde priamo na hotel vo Vysokých Tatrách vám cenu potvrdíme pri objednávke na " +
             PHONE +
-            " alebo pošlite objednávku cez formulár a cenu potvrdíme ešte pred jazdou.",
+            " alebo cez online formulár.",
           "Platiť môžete kartou bez poplatku, v hotovosti alebo na faktúru. Nie sme platcami DPH.",
         ],
       },
@@ -979,9 +978,7 @@ export const ROUTE_PAGES: LandingPageData[] = [
       {
         question: "Koľko stojí taxi Košice – letisko Poprad?",
         answer:
-          "Cenu za auto vám potvrdíme vopred podľa miesta vyzdvihnutia a cieľa. Zavolajte na " +
-          PHONE +
-          " alebo pošlite objednávku cez formulár.",
+          "Transfer Košice – letisko Poprad-Tatry stojí 170 € za auto, nie za osobu. Cena je pevná a bez skrytých poplatkov.",
       },
       {
         question: "Ako dlho trvá cesta z Košíc na letisko Poprad-Tatry?",

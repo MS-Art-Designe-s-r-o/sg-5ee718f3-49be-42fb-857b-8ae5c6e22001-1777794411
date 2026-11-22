@@ -116,19 +116,19 @@ export const BENEFITS: Benefit[] = [
     icon: "sign",
     title: "Privítanie s menovkou",
     text: "Na požiadanie vás vodič počká v príletovej hale s tabuľkou s vaším menom.",
-    source: "new",
+    source: "peter",
   },
   {
     icon: "luggage",
     title: "Pomoc s batožinou",
     text: "Vodič vám pomôže s kuframi pri nástupe aj výstupe. Viac batožiny alebo lyže stačí uviesť v objednávke.",
-    source: "new",
+    source: "peter",
   },
   {
     icon: "map",
     title: "Zastávka po ceste",
     text: "Potrebujete cestou vyzdvihnúť ďalšieho cestujúceho alebo si oddýchnuť? Zastávku si dohodnete pri objednávke.",
-    source: "new",
+    source: "peter",
   },
 ];
 

@@ -260,6 +260,8 @@ export const en: Dictionary = {
       { destination: "Košice – Bratislava", price: "€390" },
       { destination: "Košice – Vienna", price: "€450" },
       { destination: "Košice – Katowice", price: "€350" },
+      { destination: "Košice – Rzeszów Airport", price: "€270" },
+      { destination: "Košice – Poprad-Tatry Airport", price: "€170" },
     ],
     cta: {
       title: "Want to book a ride?",
