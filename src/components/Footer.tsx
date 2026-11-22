@@ -15,7 +15,7 @@ export function Footer() {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center p-1">
-                <img src="/etaxi_logo_svg.svg" alt="Logo" className="w-full h-full object-contain" />
+                <img src="/etaxi_logo_svg.svg" alt={t.common.logoAlt} className="w-full h-full object-contain" />
               </div>
               <span className="font-display font-bold text-xl">E-TAXI Košice</span>
             </div>
@@ -26,7 +26,7 @@ export function Footer() {
             {/* Social Links */}
             <div className="flex gap-3">
               <a
-                href="https://facebook.com/etaxikosice"
+                href="https://www.facebook.com/Etaxike"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-primary-foreground/10 hover:bg-primary-foreground/20 rounded-lg flex items-center justify-center transition-colors"

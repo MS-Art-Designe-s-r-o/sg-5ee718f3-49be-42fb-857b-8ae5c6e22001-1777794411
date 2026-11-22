@@ -66,7 +66,7 @@ export function FleetSection() {
                 <div className="relative h-48 bg-muted">
                   <Image
                     src={vehicle.image}
-                    alt={vehicle.name}
+                    alt={vehicle.imageAlt || vehicle.name}
                     fill
                     loading="lazy"
                     className="object-cover"
@@ -102,7 +102,7 @@ export function FleetSection() {
                   </div>
 
                   {vehicle.description &&
-                <p className="text-sm text-muted-foreground italic mt-auto pt-2">{t.fleet.note}</p>
+                <p className="text-sm text-muted-foreground mt-auto pt-2">{vehicle.description}</p>
                 }
                 </CardContent>
               </Card>

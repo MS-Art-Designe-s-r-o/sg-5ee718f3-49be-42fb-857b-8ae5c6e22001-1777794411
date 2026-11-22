@@ -11,6 +11,7 @@ export const sk = {
   dateLocale: "sk-SK",
 
   common: {
+    logoAlt: "E-TAXI Košice – logo taxislužby",
     phone: "+421 911 606 206",
     phoneHref: "tel:+421911606206",
     email: "dispecing@e-taxike.sk",
@@ -79,13 +80,23 @@ export const sk = {
 
   header: {
     menu: [
-      { label: "Služby", href: "/#sluzby" },
-      { label: "Vozový park", href: "/#vozovy-park" },
-      { label: "O nás", href: "/#o-nas" },
-      { label: "Recenzie", href: "/#recenzie" },
+      {
+        label: "Taxislužba",
+        children: [
+          { label: "O nás", href: "/#o-nas" },
+          { label: "Vozový park", href: "/#vozovy-park" },
+          { label: "Recenzie", href: "/#recenzie" },
+        ],
+      },
+      {
+        label: "Ponuka",
+        children: [
+          { label: "Služby", href: "/#sluzby" },
+          { label: "Cenník", href: "/cennik" },
+          { label: "Pre firmy", href: "/sluzby-pre-firmy" },
+        ],
+      },
       { label: "FAQ", href: "/#faq" },
-      { label: "Cenník", href: "/cennik" },
-      { label: "Pre firmy", href: "/sluzby-pre-firmy" },
       { label: "Blog", href: "/#blog" },
     ],
     app: "Aplikácia",
@@ -93,6 +104,7 @@ export const sk = {
   },
 
   hero: {
+    imageAlt: "Taxi Košice – E-TAXI Košice, taxislužba 24/7",
     titlePrefix: "E-TAXI Košice –",
     word1: "rýchlo",
     word2: "spoľahlivo",
@@ -111,6 +123,7 @@ export const sk = {
 
   services: {
     title: "Naše služby",
+    businessLink: "Viac o službách pre firmy →",
     items: [
       {
         title: "Okamžitá preprava",
@@ -132,6 +145,10 @@ export const sk = {
         title: "Platba kartou",
         description: "V každom našom vozidle môžete platiť kartou. Žiadne starosti s hotovosťou.",
       },
+      {
+        title: "Hotely a firmy",
+        description: "Online webobjednávka, prehľad uskutočnených jázd a platba na faktúru. Pre hotely, firmy aj servisy.",
+      },
     ],
   },
 
@@ -147,16 +164,17 @@ export const sk = {
     vehicles: [
       {
         id: "1",
-        name: "VW Passat GTE",
-        type: "kombi",
+        name: "Tesla Model S",
+        type: "sedan",
         capacity: 4,
         isEco: true,
         features: [
           { icon: "wind", label: "Klimatizácia" },
-          { icon: "zap", label: "Ekologický" },
+          { icon: "zap", label: "Elektrické" },
         ],
-        image: "/VW_Kosice.PNG",
-        description: "Ekologické plug-in hybrid kombi s veľkým batožinovým priestorom",
+        image: "/tesla_model_s_letisko_kosice.webp",
+        imageAlt: "Tesla Model S – elektrické taxi E-TAXI Košice pred letiskom Košice, letiskový transfer",
+        description: "Prémiový elektrický sedan – tichá a plynulá jazda, ideálna na letiskové transfery a firemné jazdy",
       },
       {
         id: "2",
@@ -169,6 +187,7 @@ export const sk = {
           { icon: "baby", label: "Detská sedačka" },
         ],
         image: "/corolla_krakov.PNG",
+        imageAlt: "Toyota Corolla – taxi E-TAXI Košice, úsporný sedan pre mestskú dopravu aj transfery",
         description: "Spoľahlivý sedan s nízkou spotrebou",
       },
       {
@@ -182,6 +201,7 @@ export const sk = {
           { icon: "zap", label: "Elektrické" },
         ],
         image: "/tesla_Budapest.PNG",
+        imageAlt: "Tesla Model 3 – elektrické taxi v Košiciach, transfery Košice – Budapešť",
         description: "Prémiové elektrické vozidlo",
       },
       {
@@ -192,20 +212,22 @@ export const sk = {
         isEco: false,
         features: [{ icon: "wind", label: "Klimatizácia" }],
         image: "/VW_Golf_VII.png",
+        imageAlt: "VW Golf VII Variant – kombi taxi v Košiciach pre mestskú a medzimestskú dopravu",
         description: "Komfortné kombi pre mestskú aj medzimestkú dopravu",
       },
       {
         id: "5",
-        name: "VW Jetta",
-        type: "sedan",
+        name: "Škoda Superb III Combi",
+        type: "kombi",
         capacity: 4,
         isEco: false,
         features: [
           { icon: "wind", label: "Klimatizácia" },
           { icon: "baby", label: "Detská sedačka" },
         ],
-        image: "/VW_Jetta.png",
-        description: "Praktické vozidlo pre rodiny a väčšie skupiny",
+        image: "/skoda_superb_combi_hotel.webp",
+        imageAlt: "Škoda Superb III Combi – taxi pred hotelom DoubleTree by Hilton Košice, hotelové a firemné transfery",
+        description: "Priestranné kombi s veľkým batožinovým priestorom pre hotelových hostí, firmy a dlhšie trasy",
       },
     ],
   },
@@ -277,6 +299,16 @@ export const sk = {
         description: "Jasný cenník, bez skrytých poplatkov. Cenu môžete vidieť vopred v online objednávke.",
         icon: "Eye",
       },
+      {
+        title: "Inovácie",
+        description: "Digitálny dispečing, SMS a hlasové notifikácie o stave objednávky, sledovanie vozidla na mape, mobilná aplikácia a webobjednávka pre firmy a hotely.",
+        icon: "Lightbulb",
+      },
+      {
+        title: "Profesionalita",
+        description: "Skúsení vodiči, pravidelne čistené a udržiavané vozidlá, platba kartou v každom vozidle, faktúry a mesačné vyúčtovanie pre firmy, dispečing 24/7.",
+        icon: "Award",
+      },
     ],
     cta: {
       title: "Potrebujete taxík práve teraz?",
@@ -285,6 +317,7 @@ export const sk = {
   },
 
   partners: {
+    partnerAlt: "partner E-TAXI Košice",
     title: "Spolupracujeme a referencie",
     subtitle:
       "Za roky spoľahlivých jazd je pre nás najcennejšia dôvera košických firiem. Kliknutím na partnera sa otvorí jeho stránka v novom okne.",
@@ -338,6 +371,7 @@ export const sk = {
   },
 
   reviews: {
+    reviewAlt: "recenzia zákazníka E-TAXI Košice",
     title: "Recenzie zákazníkov",
     subtitle: "Prečítajte si, čo hovoria naši spokojní zákazníci",
     countSuffix: "recenzií",

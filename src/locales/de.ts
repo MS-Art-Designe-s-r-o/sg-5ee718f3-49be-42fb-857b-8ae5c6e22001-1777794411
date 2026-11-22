@@ -11,6 +11,7 @@ export const de: Dictionary = {
   dateLocale: "de-DE",
 
   common: {
+    logoAlt: "E-TAXI Košice – Logo des Taxidienstes",
     phone: "+421 911 606 206",
     phoneHref: "tel:+421911606206",
     email: "dispecing@e-taxike.sk",
@@ -79,13 +80,23 @@ export const de: Dictionary = {
 
   header: {
     menu: [
-      { label: "Leistungen", href: "/#sluzby" },
-      { label: "Fuhrpark", href: "/#vozovy-park" },
-      { label: "Über uns", href: "/#o-nas" },
-      { label: "Bewertungen", href: "/#recenzie" },
+      {
+        label: "Taxidienst",
+        children: [
+          { label: "Über uns", href: "/#o-nas" },
+          { label: "Fuhrpark", href: "/#vozovy-park" },
+          { label: "Bewertungen", href: "/#recenzie" },
+        ],
+      },
+      {
+        label: "Angebot",
+        children: [
+          { label: "Leistungen", href: "/#sluzby" },
+          { label: "Preisliste", href: "/cennik" },
+          { label: "Für Firmen", href: "/sluzby-pre-firmy" },
+        ],
+      },
       { label: "FAQ", href: "/#faq" },
-      { label: "Preisliste", href: "/cennik" },
-      { label: "Für Firmen", href: "/sluzby-pre-firmy" },
       { label: "Blog", href: "/#blog" },
     ],
     app: "Mobile App",
@@ -93,6 +104,7 @@ export const de: Dictionary = {
   },
 
   hero: {
+    imageAlt: "Taxi Košice – E-TAXI Košice, Taxidienst rund um die Uhr",
     titlePrefix: "E-TAXI Košice –",
     word1: "schnell",
     word2: "zuverlässig",
@@ -111,6 +123,7 @@ export const de: Dictionary = {
 
   services: {
     title: "Unsere Leistungen",
+    businessLink: "Mehr zu Firmenservices →",
     items: [
       {
         title: "Sofortfahrten",
@@ -132,6 +145,10 @@ export const de: Dictionary = {
         title: "Kartenzahlung",
         description: "In jedem unserer Fahrzeuge können Sie mit Karte zahlen. Keine Sorgen mit Bargeld.",
       },
+      {
+        title: "Hotels & Firmen",
+        description: "Online-Bestellung im Web, Übersicht der durchgeführten Fahrten und Zahlung auf Rechnung. Für Hotels, Firmen und Werkstätten.",
+      },
     ],
   },
 
@@ -147,16 +164,17 @@ export const de: Dictionary = {
     vehicles: [
       {
         id: "1",
-        name: "VW Passat GTE",
-        type: "kombi",
+        name: "Tesla Model S",
+        type: "sedan",
         capacity: 4,
         isEco: true,
         features: [
           { icon: "wind", label: "Klimaanlage" },
-          { icon: "zap", label: "Umweltfreundlich" },
+          { icon: "zap", label: "Elektrisch" },
         ],
-        image: "/VW_Kosice.PNG",
-        description: "Umweltfreundlicher Plug-in-Hybrid-Kombi mit großem Kofferraum",
+        image: "/tesla_model_s_letisko_kosice.webp",
+        imageAlt: "Tesla Model S – Elektrotaxi von E-TAXI Košice vor dem Flughafen Košice, Flughafentransfer",
+        description: "Premium-Elektrolimousine – leise und komfortabel, ideal für Flughafentransfers und Geschäftsreisen",
       },
       {
         id: "2",
@@ -169,6 +187,7 @@ export const de: Dictionary = {
           { icon: "baby", label: "Kindersitz" },
         ],
         image: "/corolla_krakov.PNG",
+        imageAlt: "Toyota Corolla – Taxi von E-TAXI Košice, sparsame Limousine für Stadtfahrten und Transfers",
         description: "Zuverlässige Limousine mit niedrigem Verbrauch",
       },
       {
@@ -182,6 +201,7 @@ export const de: Dictionary = {
           { icon: "zap", label: "Elektrisch" },
         ],
         image: "/tesla_Budapest.PNG",
+        imageAlt: "Tesla Model 3 – Elektrotaxi in Košice, Transfers Košice – Budapest",
         description: "Premium-Elektrofahrzeug",
       },
       {
@@ -192,20 +212,22 @@ export const de: Dictionary = {
         isEco: false,
         features: [{ icon: "wind", label: "Klimaanlage" }],
         image: "/VW_Golf_VII.png",
+        imageAlt: "VW Golf VII Variant – Kombi-Taxi in Košice für Stadt- und Überlandfahrten",
         description: "Komfortabler Kombi für Stadt- und Überlandfahrten",
       },
       {
         id: "5",
-        name: "VW Jetta",
-        type: "sedan",
+        name: "Škoda Superb III Combi",
+        type: "kombi",
         capacity: 4,
         isEco: false,
         features: [
           { icon: "wind", label: "Klimaanlage" },
           { icon: "baby", label: "Kindersitz" },
         ],
-        image: "/VW_Jetta.png",
-        description: "Praktisches Fahrzeug für Familien und größere Gruppen",
+        image: "/skoda_superb_combi_hotel.webp",
+        imageAlt: "Škoda Superb III Combi – Taxi vor dem Hotel DoubleTree by Hilton Košice, Hotel- und Firmentransfers",
+        description: "Geräumiger Kombi mit großem Kofferraum für Hotelgäste, Firmen und längere Strecken",
       },
     ],
   },
@@ -277,6 +299,16 @@ export const de: Dictionary = {
         description: "Klare Preisliste ohne versteckte Gebühren. Den Preis sehen Sie bei der Online-Buchung im Voraus.",
         icon: "Eye",
       },
+      {
+        title: "Innovation",
+        description: "Digitale Disposition, SMS- und Sprachbenachrichtigungen zum Auftrag, Live-Fahrzeugverfolgung auf der Karte, mobile App und Web-Bestellung für Firmen und Hotels.",
+        icon: "Lightbulb",
+      },
+      {
+        title: "Professionalität",
+        description: "Erfahrene Fahrer, regelmäßig gereinigte und gewartete Fahrzeuge, Kartenzahlung in jedem Fahrzeug, Rechnungen und Monatsabrechnung für Firmen, Zentrale rund um die Uhr.",
+        icon: "Award",
+      },
     ],
     cta: {
       title: "Brauchen Sie jetzt ein Taxi?",
@@ -285,6 +317,7 @@ export const de: Dictionary = {
   },
 
   partners: {
+    partnerAlt: "Partner von E-TAXI Košice",
     title: "Unsere Partner und Referenzen",
     subtitle:
       "Nach vielen Jahren zuverlässiger Fahrten schätzen wir vor allem das Vertrauen der Unternehmen in Košice. Ein Klick auf einen Partner öffnet dessen Website in einem neuen Fenster.",
@@ -338,6 +371,7 @@ export const de: Dictionary = {
   },
 
   reviews: {
+    reviewAlt: "Kundenbewertung von E-TAXI Košice",
     title: "Kundenbewertungen",
     subtitle: "Lesen Sie, was unsere zufriedenen Kunden über uns sagen",
     countSuffix: "Bewertungen",
