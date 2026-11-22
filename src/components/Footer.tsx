@@ -26,7 +26,7 @@ export function Footer() {
             {/* Social Links */}
             <div className="flex gap-3">
               <a
-                href="https://facebook.com/etaxikosice"
+                href="https://www.facebook.com/Etaxike"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 bg-primary-foreground/10 hover:bg-primary-foreground/20 rounded-lg flex items-center justify-center transition-colors"

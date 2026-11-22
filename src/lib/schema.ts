@@ -34,6 +34,7 @@ export function taxiServiceSchema(description: string, offers: { name: string; d
     email: BUSINESS.email,
     url: SITE_URL,
     foundingDate: BUSINESS.foundingDate,
+    sameAs: ["https://www.facebook.com/Etaxike"],
     priceRange: "€€",
     paymentAccepted: "Cash, Credit Card",
     currenciesAccepted: BUSINESS.currency,
