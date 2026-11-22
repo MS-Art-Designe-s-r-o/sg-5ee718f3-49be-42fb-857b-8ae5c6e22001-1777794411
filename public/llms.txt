@@ -18,6 +18,7 @@ Objednávka: online formulár na webe, mobilná aplikácia (App Store, Google Pl
 - [Košice – letisko Budapešť](https://e-taxike.sk/transfer-kosice-budapest): 250 €
 - [Košice – letisko Krakov](https://e-taxike.sk/transfer-kosice-krakow): 290 €
 - [Košice – Katowice](https://e-taxike.sk/transfer-kosice-katowice): 350 €
+- [Košice – Debrecín](https://e-taxike.sk/transfer-kosice-debrecin): 220 €
 - [Košice – Bratislava](https://e-taxike.sk/transfer-kosice-bratislava): 390 €
 - [Košice – Viedeň](https://e-taxike.sk/transfer-kosice-viedna): 450 €
 

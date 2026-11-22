@@ -228,6 +228,45 @@ export const LANDING_PAGES: LandingPageData[] = [
     related: ["transfer-kosice-krakow", "sluzby-pre-firmy", "transfer-kosice-budapest"],
   },
   {
+    slug: "transfer-kosice-debrecin",
+    navLabel: "Transfer Košice – Debrecín",
+    seoTitle: "Taxi Košice – Debrecín 220 € | Transfer E-TAXI Košice",
+    seoDescription:
+      "Transfer z Košíc do Debrecína za 220 €. Pevná cena, jazda približne 2 – 2,5 hod., dispečing 24/7, platba kartou. E-TAXI Košice od roku 2020.",
+    keywords: "taxi Košice Debrecín, transfer Košice Debrecín, Košice Debrecín taxi cena, letisko Debrecín transfer",
+    h1: "Transfer Košice – Debrecín",
+    lead: "Najkratší z našich zahraničných transferov: z Košíc do maďarského Debrecína za pevnú cenu 220 €, určenú vopred v aplikácii.",
+    serviceType: "Diaľkový transfer",
+    price: "220",
+    priceLabel: "220 €",
+    facts: [
+      { label: "Cena", value: "220 €" },
+      { label: "Trasa", value: "Košice – Debrecín" },
+      { label: "Čas jazdy", value: "2 – 2,5 hod." },
+    ],
+    sections: [
+      {
+        title: "Do Maďarska priamo na adresu",
+        paragraphs: [
+          "Z Košíc vás odvezieme do Debrecína na zvolenú adresu alebo na letisko. Trasu využívajú cestujúci aj firmy a pre pravidelné jazdy ponúkame mesačné vyúčtovanie.",
+          PHONE_NOTE,
+        ],
+      },
+      {
+        title: "Plánovanie cesty",
+        paragraphs: [
+          "Pri cestách do zahraničia odporúčame objednať aspoň deň vopred. Cena je za jazdu, nie za osobu, a platiť môžete aj kartou.",
+        ],
+      },
+    ],
+    faq: [
+      { question: "Koľko stojí taxi Košice – Debrecín?", answer: "Transfer Košice – Debrecín stojí 220 €." },
+      { question: "Ako dlho trvá jazda?", answer: "Jazda z Košíc do Debrecína trvá približne 2 až 2,5 hodiny." },
+      { question: "Je v cene DPH?", answer: "Nie sme platcami DPH, cena je konečná." },
+    ],
+    related: ["transfer-kosice-budapest", "transfer-kosice-katowice", "sluzby-pre-firmy"],
+  },
+  {
     slug: "transfer-kosice-viedna",
     navLabel: "Transfer Košice – Viedeň",
     seoTitle: "Taxi Košice – Viedeň 450 € | Transfer E-TAXI Košice",
