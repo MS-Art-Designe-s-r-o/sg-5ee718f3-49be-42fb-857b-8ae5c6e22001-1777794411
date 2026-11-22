@@ -1,4 +1,5 @@
 import dynamic from "next/dynamic";
+import { GOOGLE_RATING_FALLBACK } from "@/lib/business";
 import Link from "next/link";
 import { SEO } from "@/components/SEO";
 import { Header } from "@/components/Header";
@@ -56,8 +57,13 @@ export default function Home() {
 
   const jsonLd = {
     ...taxiServiceSchema(t.jsonLd.description, t.jsonLd.offers, t.jsonLd.offerCatalogName),
-    // Pôvodné hodnotenie ponechané bez zmeny.
-    aggregateRating: { "@type": "AggregateRating", ratingValue: "4.8", reviewCount: "127" },
+    // Hodnotenie z Google profilu (záloha v src/lib/business.ts, overené 22. 11. 2026).
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: String(GOOGLE_RATING_FALLBACK.rating),
+      reviewCount: String(GOOGLE_RATING_FALLBACK.total),
+      bestRating: "5",
+    },
   };
 
   return (

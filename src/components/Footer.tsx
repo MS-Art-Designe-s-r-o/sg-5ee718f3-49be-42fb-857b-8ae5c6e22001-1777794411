@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Phone, Mail, MapPin, Clock, Facebook, Instagram, MessageCircle } from "lucide-react";
+import { Phone, Mail, MapPin, Clock, Building2, Facebook, Instagram, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "@/hooks/useTranslation";
 
@@ -113,6 +113,12 @@ export function Footer() {
                 <div className="flex items-start gap-2 text-primary-foreground/80 text-sm">
                   <MapPin className="w-4 h-4 shrink-0 mt-0.5" />
                   <span>{t.footer.location}</span>
+                </div>
+              </li>
+              <li>
+                <div className="flex items-start gap-2 text-primary-foreground/80 text-sm">
+                  <Building2 className="w-4 h-4 shrink-0 mt-0.5" />
+                  <span>{t.footer.billing}</span>
                 </div>
               </li>
               <li>

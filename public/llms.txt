@@ -1,8 +1,10 @@
 # E-TAXI Košice
 
-> Taxislužba v Košiciach (Slovensko), činná od roku 2020. Dispečing 24/7, 5 vozidiel, mestská doprava, letiskové a diaľkové transfery, firemná preprava. Nie sme platcami DPH.
+> Taxislužba v Košiciach (Slovensko), činná od januára 2020 (E-TAXI Košice s.r.o.). Dispečing 24/7, 5 vozidiel, mestská doprava, letiskové a diaľkové transfery, firemná preprava. Nie sme platcami DPH.
 
-Kontakt: +421 911 606 206 · dispecing@e-taxike.sk · Košice, Slovensko
+Kontakt: +421 911 606 206 · dispecing@e-taxike.sk · kancelária: Stará prešovská cesta 6, 040 01 Košice
+Fakturačná a korešpondenčná adresa: E-TAXI Košice s.r.o., Jenisejská 45A, 040 12 Košice
+Google profil: https://maps.google.com/?cid=14310856793213865542 (hodnotenie 4,7 z 5, 153 recenzií k 22. 11. 2026)
 Objednávka: online formulár na webe, mobilná aplikácia (App Store, Google Play) alebo telefonicky. Platba kartou v každom vozidle. Konkrétnu cenu určuje aplikácia vopred.
 
 ## Hlavné stránky
@@ -21,9 +23,12 @@ Objednávka: online formulár na webe, mobilná aplikácia (App Store, Google Pl
 - [Košice – Debrecín](https://e-taxike.sk/transfer-kosice-debrecin): 220 €
 - [Košice – Bratislava](https://e-taxike.sk/transfer-kosice-bratislava): 390 €
 - [Košice – Viedeň](https://e-taxike.sk/transfer-kosice-viedna): 450 €
+- [Košice – letisko Rzeszów](https://e-taxike.sk/transfer-kosice-rzeszow): 270 €
+- [Košice – letisko Poprad-Tatry](https://e-taxike.sk/transfer-kosice-poprad): 170 €
+- [Prehľad letiskových transferov](https://e-taxike.sk/letiskove-transfery)
 
 ## Kľúčové fakty
-- Činnosť od roku 2020; vozový park: 5 vozidiel
+- Činnosť od januára 2020; vozový park: aktuálne 5 vozidiel
 - Nie sme platcami DPH; faktúry sa vystavujú bez DPH
 - Štartovné 2 €, pri jazde mimo mesta sa pripočítava 0,75 €/km; detské sedačky bezplatne po dohode pri objednávke
-- Jazyky webu: slovenčina, angličtina, nemčina, maďarčina (landing stránky a blog len po slovensky)
+- Jazyky webu: slovenčina, angličtina, nemčina, maďarčina; letiskové transfery aj po poľsky (/pl/…). Blog len po slovensky

@@ -5,10 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Star, ExternalLink, Quote } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 
-// Záložné hodnoty (ak Google API nie je nakonfigurované)
-const FALLBACK_PROFILE_URL = "https://share.google/h2KnVsH1yOKwyTuH4";
-const FALLBACK_RATING = 4.8;
-const FALLBACK_TOTAL = 250;
+import { GOOGLE_MAPS_URL, GOOGLE_RATING_FALLBACK } from "@/lib/business";
+
+// Záložné hodnoty (ak živé Google hodnotenie nie je k dispozícii) – src/lib/business.ts
+const FALLBACK_PROFILE_URL = GOOGLE_MAPS_URL;
+const FALLBACK_RATING = GOOGLE_RATING_FALLBACK.rating;
+const FALLBACK_TOTAL = GOOGLE_RATING_FALLBACK.total;
 
 type DisplayReview = {
   name: string;
@@ -63,7 +65,7 @@ export function ReviewsSection() {
   const rating = usingGoogle && live!.rating ? live!.rating : FALLBACK_RATING;
   const total = usingGoogle && live!.total ? live!.total : FALLBACK_TOTAL;
   const profileUrl = (usingGoogle && live!.profileUrl) || FALLBACK_PROFILE_URL;
-  const totalLabel = usingGoogle && live!.total ? String(total) : `${FALLBACK_TOTAL}+`;
+  const totalLabel = String(total);
 
   const reviews: DisplayReview[] = usingGoogle && live!.reviews?.length
     ? live!.reviews.map((r) => ({

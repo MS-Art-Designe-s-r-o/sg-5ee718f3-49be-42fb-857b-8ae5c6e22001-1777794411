@@ -1,15 +1,29 @@
 // Centrálne JSON-LD schémy (schema.org). Údaje musia súhlasiť s textami na webe.
 import { SITE_URL } from "@/locales";
+import { BILLING_ADDRESS, FLEET_SIZE, FOUNDING_DATE, GOOGLE_MAPS_URL, LEGAL_NAME, OFFICE_ADDRESS } from "@/lib/business";
 
 export const BUSINESS = {
   name: "E-TAXI Košice",
   phone: "+421911606206",
   email: "dispecing@e-taxike.sk",
-  foundingDate: "2020",
-  fleetSize: 5,
+  legalName: LEGAL_NAME,
+  foundingDate: FOUNDING_DATE,
+  fleetSize: FLEET_SIZE,
   startingFeePerKm: "0.75",
   currency: "EUR",
 } as const;
+
+/** Kancelária (adresa pre zákazníkov). */
+const OFFICE_POSTAL = { "@type": "PostalAddress", ...OFFICE_ADDRESS };
+/** Sídlo – fakturačná a korešpondenčná adresa (PostalAddress je podtyp ContactPoint). */
+const BILLING_CONTACT = {
+  "@type": "PostalAddress",
+  contactType: "billing",
+  name: LEGAL_NAME,
+  ...BILLING_ADDRESS,
+  telephone: "+421911606206",
+  email: "dispecing@e-taxike.sk",
+};
 
 export const BUSINESS_ID = `${SITE_URL}/#organization`;
 
@@ -33,12 +47,15 @@ export function taxiServiceSchema(description: string, offers: { name: string; d
     telephone: BUSINESS.phone,
     email: BUSINESS.email,
     url: SITE_URL,
+    legalName: BUSINESS.legalName,
     foundingDate: BUSINESS.foundingDate,
-    sameAs: ["https://www.facebook.com/Etaxike"],
+    sameAs: ["https://www.facebook.com/Etaxike", GOOGLE_MAPS_URL],
+    hasMap: GOOGLE_MAPS_URL,
+    contactPoint: BILLING_CONTACT,
     priceRange: "€€",
     paymentAccepted: "Cash, Credit Card",
     currenciesAccepted: BUSINESS.currency,
-    address: { "@type": "PostalAddress", addressLocality: "Košice", addressRegion: "Košický kraj", addressCountry: "SK" },
+    address: OFFICE_POSTAL,
     geo: { "@type": "GeoCoordinates", latitude: "48.7164", longitude: "21.2611" },
     areaServed: AREA_SERVED,
     openingHoursSpecification: {
@@ -65,13 +82,18 @@ export function businessNodeSchema() {
     "@type": ["TaxiService", "LocalBusiness"],
     "@id": BUSINESS_ID,
     name: BUSINESS.name,
+    legalName: BUSINESS.legalName,
     url: SITE_URL,
     telephone: BUSINESS.phone,
     email: BUSINESS.email,
     image: `${SITE_URL}/og-image.png`,
     priceRange: "€€",
     paymentAccepted: "Cash, Credit Card, Invoice",
-    address: { "@type": "PostalAddress", addressLocality: "Košice", addressRegion: "Košický kraj", addressCountry: "SK" },
+    address: OFFICE_POSTAL,
+    foundingDate: BUSINESS.foundingDate,
+    sameAs: ["https://www.facebook.com/Etaxike", GOOGLE_MAPS_URL],
+    hasMap: GOOGLE_MAPS_URL,
+    contactPoint: BILLING_CONTACT,
     geo: { "@type": "GeoCoordinates", latitude: "48.7164", longitude: "21.2611" },
     openingHoursSpecification: {
       "@type": "OpeningHoursSpecification",
