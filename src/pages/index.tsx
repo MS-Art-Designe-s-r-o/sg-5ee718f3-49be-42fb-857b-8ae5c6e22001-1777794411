@@ -9,6 +9,7 @@ import Head from "next/head";
 import Image from "next/image";
 import { useTranslation } from "@/hooks/useTranslation";
 import { taxiServiceSchema, jsonLdScript } from "@/lib/schema";
+import { BenefitsSection } from "@/components/BenefitsSection";
 
 // Lazy load below-the-fold sections
 const BookingForm = dynamic(() => import("@/components/BookingForm").then((mod) => ({ default: mod.BookingForm })), {
@@ -51,7 +52,7 @@ const serviceIcons = [Zap, Clock, Wine, Plane, CreditCard, Building2];
 const serviceIconColors = ["text-accent", "text-primary", "text-accent", "text-primary", "text-accent", "text-primary"];
 
 export default function Home() {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
 
   const jsonLd = {
     ...taxiServiceSchema(t.jsonLd.description, t.jsonLd.offers, t.jsonLd.offerCatalogName),
@@ -226,6 +227,14 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {locale === "sk" && (
+          <section className="py-16 sm:py-20">
+            <div className="container mx-auto px-4 max-w-5xl">
+              <BenefitsSection />
+            </div>
+          </section>
+        )}
 
         <FleetSection />
 

@@ -58,6 +58,30 @@ export function taxiServiceSchema(description: string, offers: { name: string; d
   };
 }
 
+/** Kompaktný uzol firmy pre podstránky (rovnaké @id ako na homepage). */
+export function businessNodeSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": ["TaxiService", "LocalBusiness"],
+    "@id": BUSINESS_ID,
+    name: BUSINESS.name,
+    url: SITE_URL,
+    telephone: BUSINESS.phone,
+    email: BUSINESS.email,
+    image: `${SITE_URL}/og-image.png`,
+    priceRange: "€€",
+    paymentAccepted: "Cash, Credit Card, Invoice",
+    address: { "@type": "PostalAddress", addressLocality: "Košice", addressRegion: "Košický kraj", addressCountry: "SK" },
+    geo: { "@type": "GeoCoordinates", latitude: "48.7164", longitude: "21.2611" },
+    openingHoursSpecification: {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+      opens: "00:00",
+      closes: "23:59",
+    },
+  };
+}
+
 export function faqPageSchema(items: { question: string; answer: string }[]) {
   return {
     "@context": "https://schema.org",
@@ -89,7 +113,7 @@ export function serviceSchema(opts: { name: string; description: string; url: st
     provider: { "@id": BUSINESS_ID },
     areaServed: (opts.areaServed ?? ["Košice"]).map((n) => ({ "@type": "Place", name: n })),
     ...(opts.price
-      ? { offers: { "@type": "Offer", price: opts.price, priceCurrency: BUSINESS.currency } }
+      ? { offers: { "@type": "Offer", price: opts.price, priceCurrency: BUSINESS.currency, url: opts.url, availability: "https://schema.org/InStock" } }
       : {}),
   };
 }

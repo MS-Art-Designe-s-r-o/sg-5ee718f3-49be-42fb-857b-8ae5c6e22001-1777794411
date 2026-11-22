@@ -7,17 +7,20 @@ import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { SITE_URL } from "@/locales";
 import { LANDING_PAGES, type LandingPageData } from "@/content/landing";
-import { breadcrumbSchema, faqPageSchema, jsonLdScript, serviceSchema } from "@/lib/schema";
+import { breadcrumbSchema, businessNodeSchema, faqPageSchema, jsonLdScript, serviceSchema } from "@/lib/schema";
+import { BenefitsSection, OrderStepsSection } from "@/components/BenefitsSection";
 
 export function LandingPage({ page }: { page: LandingPageData }) {
   const url = `${SITE_URL}/${page.slug}`;
   const schemas = [
+    businessNodeSchema(),
     serviceSchema({
       name: page.h1,
       description: page.seoDescription,
       url,
       serviceType: page.serviceType,
       price: page.price,
+      areaServed: page.destinationName ? ["Košice", page.destinationName] : undefined,
     }),
     faqPageSchema(page.faq),
     breadcrumbSchema([
@@ -25,6 +28,23 @@ export function LandingPage({ page }: { page: LandingPageData }) {
       { name: page.navLabel, url },
     ]),
   ];
+  const isRoute = Boolean(page.airportCode);
+  const [firstSection, ...restSections] = page.sections;
+  const renderSection = (s: LandingPageData["sections"][number]) => (
+    <section key={s.title}>
+      <h2 className="font-display font-bold text-2xl mb-4">{s.title}</h2>
+      {s.paragraphs.map((p, i) => (
+        <p key={i} className="text-muted-foreground leading-relaxed mb-3">{p}</p>
+      ))}
+      {s.bullets && (
+        <ul className="list-disc pl-6 space-y-1 text-muted-foreground">
+          {s.bullets.map((b) => (
+            <li key={b}>{b}</li>
+          ))}
+        </ul>
+      )}
+    </section>
+  );
   const related = page.related.map((s) => LANDING_PAGES.find((p) => p.slug === s)).filter(Boolean) as LandingPageData[];
 
   return (
@@ -71,14 +91,13 @@ export function LandingPage({ page }: { page: LandingPageData }) {
             ))}
           </dl>
 
-          {page.sections.map((s) => (
-            <section key={s.title}>
-              <h2 className="font-display font-bold text-2xl mb-4">{s.title}</h2>
-              {s.paragraphs.map((p, i) => (
-                <p key={i} className="text-muted-foreground leading-relaxed mb-3">{p}</p>
-              ))}
-            </section>
-          ))}
+          {firstSection && renderSection(firstSection)}
+
+          {isRoute && <BenefitsSection />}
+
+          {restSections.map(renderSection)}
+
+          {isRoute && <OrderStepsSection />}
 
           <section>
             <h2 className="font-display font-bold text-2xl mb-4">Časté otázky</h2>
@@ -93,6 +112,27 @@ export function LandingPage({ page }: { page: LandingPageData }) {
               ))}
             </div>
           </section>
+
+          {isRoute && (
+            <section className="rounded-xl bg-gradient-to-br from-[#282462] to-[#3b3690] text-white p-6 sm:p-8">
+              <h2 className="font-display font-bold text-2xl mb-2">Objednajte si transfer – {page.navLabel.replace(/^Transfer /, "")}</h2>
+              <p className="text-white/85 mb-5">
+                {page.priceOnRequest ? "Cenu za auto vám potvrdíme vopred." : `Pevná cena ${page.priceLabel} za auto.`} Jazdíme 24/7, vyzdvihneme vás pred domom alebo na zvolenom mieste.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Link href="/#objednavka">
+                  <Button size="lg" className="w-full sm:w-auto h-12 px-6 bg-yellow-400 hover:bg-yellow-500 text-primary font-display font-semibold">
+                    <Calendar className="w-5 h-5 mr-2" />Objednať transfer
+                  </Button>
+                </Link>
+                <a href="tel:+421911606206">
+                  <Button size="lg" className="w-full sm:w-auto h-12 px-6 bg-white hover:bg-white/90 text-primary font-display font-semibold">
+                    <Phone className="w-5 h-5 mr-2" /><span className="tabular-nums">+421 911 606 206</span>
+                  </Button>
+                </a>
+              </div>
+            </section>
+          )}
 
           <section>
             <h2 className="font-display font-bold text-2xl mb-4">Súvisiace služby</h2>

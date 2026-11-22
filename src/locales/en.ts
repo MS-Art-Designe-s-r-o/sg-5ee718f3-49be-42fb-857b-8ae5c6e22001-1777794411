@@ -560,6 +560,9 @@ export const en: Dictionary = {
       { label: "Košice – Debrecen", href: "/transfer-kosice-debrecin" },
       { label: "Košice – Katowice", href: "/transfer-kosice-katowice" },
       { label: "Košice – Vienna", href: "/transfer-kosice-viedna" },
+      { label: "Košice – Bratislava", href: "/transfer-kosice-bratislava" },
+      { label: "Košice – Rzeszów", href: "/transfer-kosice-rzeszow" },
+      { label: "Košice – Poprad-Tatry", href: "/transfer-kosice-poprad" },
     ],
     infoTitle: "Information",
     info: [

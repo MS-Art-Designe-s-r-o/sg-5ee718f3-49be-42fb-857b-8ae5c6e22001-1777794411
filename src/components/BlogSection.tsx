@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { withoutDuplicates } from "@/lib/blogDuplicates";
 import Link from "next/link";
 import { PostCard } from "@/components/blog/PostCard";
 import { useTranslation } from "@/hooks/useTranslation";
@@ -29,7 +30,7 @@ export function BlogSection() {
     fetch("/api/blog")
       .then((r) => (r.ok ? r.json() : { posts: [] }))
       .then((data) => {
-        if (active && Array.isArray(data?.posts)) setPosts(data.posts);
+        if (active && Array.isArray(data?.posts)) setPosts(withoutDuplicates(data.posts as BlogPost[]));
       })
       .catch(() => {});
     return () => {

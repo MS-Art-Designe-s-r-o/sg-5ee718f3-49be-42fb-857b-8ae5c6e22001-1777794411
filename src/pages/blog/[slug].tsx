@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { PostCard, formatDateSk, excerptOf, type PostCardData } from "@/components/blog/PostCard";
 import { MarkdownBlocks, parseBlocks, tocFrom, readingMinutes } from "@/components/blog/Markdown";
 import { getPost, listPosts, type BlogPost } from "@/lib/blogStore";
+import { blogDuplicateTarget, withoutDuplicates } from "@/lib/blogDuplicates";
 import { SITE_URL } from "@/locales";
 import { useTranslation } from "@/hooks/useTranslation";
 import { CalendarDays, Clock, ChevronRight, Phone, ListOrdered, HelpCircle, Car } from "lucide-react";
@@ -20,10 +21,12 @@ const abs = (u?: string) => (!u ? `${SITE_URL}/og-image.png` : /^https?:\/\//.te
 export const getServerSideProps: GetServerSideProps<Props> = async ({ params, locale, res }) => {
   const slug = String(params?.slug || "");
   if (locale && locale !== "sk") return { redirect: { destination: `/blog/${encodeURIComponent(slug)}`, permanent: false, locale: false } as never };
+  const duplicateOf = blogDuplicateTarget(slug);
+  if (duplicateOf) return { redirect: { destination: `/blog/${duplicateOf}`, statusCode: 301 } };
   const post = await getPost(slug);
   if (!post) return { notFound: true };
   if (post.slug !== slug) return { redirect: { destination: `/blog/${post.slug}`, permanent: true } };
-  const all = await listPosts();
+  const all = withoutDuplicates(await listPosts());
   const others = all.filter((p) => p.id !== post.id);
   const sameCat = others.filter((p) => p.category && p.category === post.category);
   const related = [...sameCat, ...others.filter((p) => !sameCat.includes(p))].slice(0, 3).map((p) => ({

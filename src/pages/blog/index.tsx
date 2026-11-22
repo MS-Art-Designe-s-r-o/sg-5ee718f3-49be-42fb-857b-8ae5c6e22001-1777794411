@@ -6,6 +6,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { PostCard, type PostCardData } from "@/components/blog/PostCard";
 import { listPosts } from "@/lib/blogStore";
+import { withoutDuplicates } from "@/lib/blogDuplicates";
 import { readingMinutes } from "@/components/blog/Markdown";
 import { SITE_URL } from "@/locales";
 import { ChevronRight } from "lucide-react";
@@ -14,7 +15,7 @@ type Props = { posts: PostCardData[] };
 
 export const getServerSideProps: GetServerSideProps<Props> = async ({ locale, res }) => {
   if (locale && locale !== "sk") return { redirect: { destination: "/blog", permanent: false, locale: false } as never };
-  const posts = (await listPosts()).map((p) => ({
+  const posts = withoutDuplicates(await listPosts()).map((p) => ({
     slug: p.slug, title: p.title, excerpt: p.excerpt ?? null, content: p.content.slice(0, 600), image: p.image ?? null,
     imageAlt: p.imageAlt ?? null, category: p.category ?? null, date: p.date, minutes: readingMinutes(p.content),
   }));

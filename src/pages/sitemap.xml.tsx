@@ -3,16 +3,17 @@ import type { GetServerSideProps } from "next";
 import { SITEMAP_BASE_ENTRIES } from "@/content/sitemapBase";
 import { listPosts, type BlogPost } from "@/lib/blogStore";
 import { SITE_URL } from "@/locales";
+import { withoutDuplicates } from "@/lib/blogDuplicates";
 import { LANDING_PAGES } from "@/content/landing";
 
-const LANDING_LASTMOD = "2026-11-20";
+const LANDING_LASTMOD = "2026-11-23";
 const esc = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 export const getServerSideProps: GetServerSideProps = async ({ res }) => {
-  const posts: BlogPost[] = await listPosts().catch(() => [] as BlogPost[]);
+  const posts: BlogPost[] = withoutDuplicates(await listPosts().catch(() => [] as BlogPost[]));
   const latest = posts.reduce((m, p) => ((p.updatedAt || p.date) > m ? p.updatedAt || p.date : m), "");
   const landing = LANDING_PAGES.map(
-    (p) => `  <url>\n    <loc>${SITE_URL}/${p.slug}</loc>\n    <lastmod>${LANDING_LASTMOD}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>${p.slug === "sluzby-pre-firmy" ? "0.8" : "0.7"}</priority>\n  </url>`,
+    (p) => `  <url>\n    <loc>${SITE_URL}/${p.slug}</loc>\n    <lastmod>${LANDING_LASTMOD}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>${p.slug === "sluzby-pre-firmy" || p.airportCode ? "0.8" : "0.7"}</priority>\n  </url>`,
   ).join("\n");
   const blog = [
     `  <url>\n    <loc>${SITE_URL}/blog</loc>${latest ? `\n    <lastmod>${latest.slice(0, 10)}</lastmod>` : ""}\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>`,

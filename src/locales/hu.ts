@@ -560,6 +560,9 @@ export const hu: Dictionary = {
       { label: "Kassa – Debrecen", href: "/transfer-kosice-debrecin" },
       { label: "Kassa – Katowice", href: "/transfer-kosice-katowice" },
       { label: "Kassa – Bécs", href: "/transfer-kosice-viedna" },
+      { label: "Kassa – Pozsony", href: "/transfer-kosice-bratislava" },
+      { label: "Kassa – Rzeszów", href: "/transfer-kosice-rzeszow" },
+      { label: "Kassa – Poprád-Tátra", href: "/transfer-kosice-poprad" },
     ],
     infoTitle: "Információk",
     info: [
