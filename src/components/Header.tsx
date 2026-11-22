@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Phone, Menu, X, Smartphone } from "lucide-react";
+import { Phone, Menu, X, Smartphone, ChevronDown } from "lucide-react";
 import { useTranslation } from "@/hooks/useTranslation";
 import { locales } from "@/locales";
 
@@ -68,27 +68,48 @@ export function Header() {
             }`}>
               <img
                 src="/etaxi_logo_svg.svg"
-                alt="E-TAXI Košice"
+                alt="E-TAXI Košice – logo taxislužby"
                 className="h-12 w-auto"
               />
             </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <nav className="hidden lg:flex items-center gap-8">
-            {menuItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`font-medium transition-colors ${
-                  isScrolled
-                    ? "text-[#282462] hover:text-accent"
-                    : "text-white hover:text-accent"
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
+          <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
+            {menuItems.map((item) => {
+              const linkClass = `font-medium whitespace-nowrap transition-colors ${
+                isScrolled ? "text-[#282462] hover:text-accent" : "text-white hover:text-accent"
+              }`;
+              if (!item.children) {
+                return (
+                  <Link key={item.label} href={item.href} className={linkClass}>
+                    {item.label}
+                  </Link>
+                );
+              }
+              return (
+                <div key={item.label} className="relative group">
+                  <button type="button" aria-haspopup="true" className={`${linkClass} flex items-center gap-1`}>
+                    {item.label}
+                    <ChevronDown className="h-4 w-4 transition-transform group-hover:rotate-180 group-focus-within:rotate-180" aria-hidden />
+                  </button>
+                  <div className="absolute left-0 top-full hidden pt-3 group-hover:block group-focus-within:block">
+                    <ul className="min-w-[200px] rounded-lg border border-border bg-white py-2 shadow-lg">
+                      {item.children.map((child) => (
+                        <li key={child.href}>
+                          <Link
+                            href={child.href}
+                            className="block whitespace-nowrap px-4 py-2 text-sm font-medium text-[#282462] hover:bg-muted hover:text-accent"
+                          >
+                            {child.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              );
+            })}
             <Link
               href="/#aplikacia"
               className={`font-medium transition-colors flex items-center gap-2 ${
@@ -145,20 +166,30 @@ export function Header() {
             isScrolled ? "border-border bg-white" : "border-white/20 bg-[#282462]"
           }`}>
             <nav className="py-4 space-y-1">
-              {menuItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`block px-4 py-3 font-medium transition-colors ${
-                    isScrolled
-                      ? "text-[#282462] hover:bg-muted"
-                      : "text-white hover:bg-white/10"
-                  }`}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  {item.label}
-                </Link>
-              ))}
+              {menuItems.map((item) => {
+                const mobClass = `block px-4 py-3 font-medium transition-colors ${
+                  isScrolled ? "text-[#282462] hover:bg-muted" : "text-white hover:bg-white/10"
+                }`;
+                if (!item.children) {
+                  return (
+                    <Link key={item.label} href={item.href} className={mobClass} onClick={() => setIsMobileMenuOpen(false)}>
+                      {item.label}
+                    </Link>
+                  );
+                }
+                return (
+                  <div key={item.label}>
+                    <div className={`px-4 pt-3 pb-1 text-xs font-semibold uppercase tracking-wide ${isScrolled ? "text-muted-foreground" : "text-white/60"}`}>
+                      {item.label}
+                    </div>
+                    {item.children.map((child) => (
+                      <Link key={child.href} href={child.href} className={`${mobClass} pl-8`} onClick={() => setIsMobileMenuOpen(false)}>
+                        {child.label}
+                      </Link>
+                    ))}
+                  </div>
+                );
+              })}
               <Link
                 href="/#aplikacia"
                 className={`flex items-center gap-2 px-4 py-3 font-medium transition-colors ${

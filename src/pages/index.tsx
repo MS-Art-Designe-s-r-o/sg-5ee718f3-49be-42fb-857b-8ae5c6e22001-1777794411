@@ -1,7 +1,8 @@
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { SEO } from "@/components/SEO";
 import { Header } from "@/components/Header";
-import { Phone, Calendar, Clock, Zap, Wine, Plane, CreditCard, Smartphone } from "lucide-react";
+import { Phone, Calendar, Clock, Zap, Wine, Plane, CreditCard, Smartphone, Building2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import Head from "next/head";
@@ -46,8 +47,8 @@ const Footer = dynamic(() => import("@/components/Footer").then((mod) => ({ defa
   loading: () => <div className="min-h-[300px] animate-pulse bg-primary/10" />
 });
 
-const serviceIcons = [Zap, Clock, Wine, Plane, CreditCard];
-const serviceIconColors = ["text-accent", "text-primary", "text-accent", "text-primary", "text-accent"];
+const serviceIcons = [Zap, Clock, Wine, Plane, CreditCard, Building2];
+const serviceIconColors = ["text-accent", "text-primary", "text-accent", "text-primary", "text-accent", "text-primary"];
 
 export default function Home() {
   const { t } = useTranslation();
@@ -76,7 +77,7 @@ export default function Home() {
           <div className="absolute inset-0 z-0">
             <Image
               src="/hero-bg3.png"
-              alt="E-TAXI Košice"
+              alt="Taxi Košice – E-TAXI Košice, taxislužba 24/7"
               fill
               priority
               quality={75}
@@ -192,6 +193,11 @@ export default function Home() {
                       <p className="text-muted-foreground">
                         {service.description}
                       </p>
+                      {idx === t.services.items.length - 1 && (
+                        <Link href="/sluzby-pre-firmy" className="inline-block mt-3 font-semibold text-primary hover:underline">
+                          {t.services.businessLink}
+                        </Link>
+                      )}
                     </CardContent>
                   </Card>
                 );

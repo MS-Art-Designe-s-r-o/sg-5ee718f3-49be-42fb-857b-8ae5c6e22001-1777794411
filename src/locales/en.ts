@@ -79,13 +79,23 @@ export const en: Dictionary = {
 
   header: {
     menu: [
-      { label: "Services", href: "/#sluzby" },
-      { label: "Our fleet", href: "/#vozovy-park" },
-      { label: "About us", href: "/#o-nas" },
-      { label: "Reviews", href: "/#recenzie" },
+      {
+        label: "Taxi service",
+        children: [
+          { label: "About us", href: "/#o-nas" },
+          { label: "Our fleet", href: "/#vozovy-park" },
+          { label: "Reviews", href: "/#recenzie" },
+        ],
+      },
+      {
+        label: "Offer",
+        children: [
+          { label: "Services", href: "/#sluzby" },
+          { label: "Price list", href: "/cennik" },
+          { label: "For business", href: "/sluzby-pre-firmy" },
+        ],
+      },
       { label: "FAQ", href: "/#faq" },
-      { label: "Price list", href: "/cennik" },
-      { label: "For business", href: "/sluzby-pre-firmy" },
       { label: "Blog", href: "/#blog" },
     ],
     app: "Mobile app",
@@ -111,6 +121,7 @@ export const en: Dictionary = {
 
   services: {
     title: "Our services",
+    businessLink: "More about business services →",
     items: [
       {
         title: "Instant rides",
@@ -132,6 +143,10 @@ export const en: Dictionary = {
         title: "Card payments",
         description: "Pay by card in every one of our vehicles. No need to worry about cash.",
       },
+      {
+        title: "Hotels & businesses",
+        description: "Online web ordering, an overview of completed rides and payment by invoice. For hotels, companies and service shops.",
+      },
     ],
   },
 
@@ -147,16 +162,17 @@ export const en: Dictionary = {
     vehicles: [
       {
         id: "1",
-        name: "VW Passat GTE",
-        type: "kombi",
+        name: "Tesla Model S",
+        type: "sedan",
         capacity: 4,
         isEco: true,
         features: [
           { icon: "wind", label: "Air conditioning" },
-          { icon: "zap", label: "Eco-friendly" },
+          { icon: "zap", label: "Electric" },
         ],
-        image: "/VW_Kosice.PNG",
-        description: "Eco-friendly plug-in hybrid estate with a large luggage compartment",
+        image: "/tesla_model_s_letisko_kosice.webp",
+        imageAlt: "Tesla Model S – E-TAXI Košice electric taxi in front of Košice Airport, airport transfer",
+        description: "Premium electric sedan – quiet, smooth ride, ideal for airport transfers and business trips",
       },
       {
         id: "2",
@@ -169,6 +185,7 @@ export const en: Dictionary = {
           { icon: "baby", label: "Child seat" },
         ],
         image: "/corolla_krakov.PNG",
+        imageAlt: "Toyota Corolla – E-TAXI Košice taxi, economical sedan for city rides and transfers",
         description: "A reliable sedan with low fuel consumption",
       },
       {
@@ -182,6 +199,7 @@ export const en: Dictionary = {
           { icon: "zap", label: "Electric" },
         ],
         image: "/tesla_Budapest.PNG",
+        imageAlt: "Tesla Model 3 – electric taxi in Košice, transfers Košice – Budapest",
         description: "A premium electric vehicle",
       },
       {
@@ -192,20 +210,22 @@ export const en: Dictionary = {
         isEco: false,
         features: [{ icon: "wind", label: "Air conditioning" }],
         image: "/VW_Golf_VII.png",
+        imageAlt: "VW Golf VII Variant – estate taxi in Košice for city and intercity rides",
         description: "A comfortable estate for city and intercity transport",
       },
       {
         id: "5",
-        name: "VW Jetta",
-        type: "sedan",
+        name: "Škoda Superb III Combi",
+        type: "kombi",
         capacity: 4,
         isEco: false,
         features: [
           { icon: "wind", label: "Air conditioning" },
           { icon: "baby", label: "Child seat" },
         ],
-        image: "/VW_Jetta.png",
-        description: "A practical vehicle for families and larger groups",
+        image: "/skoda_superb_combi_hotel.webp",
+        imageAlt: "Škoda Superb III Combi – taxi in front of the DoubleTree by Hilton Košice hotel, hotel and corporate transfers",
+        description: "Spacious estate with a large boot for hotel guests, businesses and longer routes",
       },
     ],
   },
@@ -276,6 +296,16 @@ export const en: Dictionary = {
         title: "Transparency",
         description: "A clear price list with no hidden fees. You can see the price in advance when booking online.",
         icon: "Eye",
+      },
+      {
+        title: "Innovation",
+        description: "Digital dispatching, SMS and voice notifications about your order, live vehicle tracking on the map, a mobile app and web ordering for businesses and hotels.",
+        icon: "Lightbulb",
+      },
+      {
+        title: "Professionalism",
+        description: "Experienced drivers, regularly cleaned and maintained vehicles, card payment in every car, invoices and monthly billing for businesses, 24/7 dispatch.",
+        icon: "Award",
       },
     ],
     cta: {

@@ -79,13 +79,23 @@ export const hu: Dictionary = {
 
   header: {
     menu: [
-      { label: "Szolgáltatások", href: "/#sluzby" },
-      { label: "Járműparkunk", href: "/#vozovy-park" },
-      { label: "Rólunk", href: "/#o-nas" },
-      { label: "Vélemények", href: "/#recenzie" },
+      {
+        label: "Taxiszolgálat",
+        children: [
+          { label: "Rólunk", href: "/#o-nas" },
+          { label: "Járműparkunk", href: "/#vozovy-park" },
+          { label: "Vélemények", href: "/#recenzie" },
+        ],
+      },
+      {
+        label: "Kínálat",
+        children: [
+          { label: "Szolgáltatások", href: "/#sluzby" },
+          { label: "Árlista", href: "/cennik" },
+          { label: "Cégeknek", href: "/sluzby-pre-firmy" },
+        ],
+      },
       { label: "GYIK", href: "/#faq" },
-      { label: "Árlista", href: "/cennik" },
-      { label: "Cégeknek", href: "/sluzby-pre-firmy" },
       { label: "Blog", href: "/#blog" },
     ],
     app: "Mobilalkalmazás",
@@ -111,6 +121,7 @@ export const hu: Dictionary = {
 
   services: {
     title: "Szolgáltatásaink",
+    businessLink: "Bővebben a céges szolgáltatásokról →",
     items: [
       {
         title: "Azonnali fuvarok",
@@ -132,6 +143,10 @@ export const hu: Dictionary = {
         title: "Bankkártyás fizetés",
         description: "Minden járművünkben fizethet kártyával. Semmi gond a készpénzzel.",
       },
+      {
+        title: "Szállodák és cégek",
+        description: "Online webes rendelés, a teljesített fuvarok áttekintése és fizetés számlára. Szállodáknak, cégeknek és szervizeknek.",
+      },
     ],
   },
 
@@ -147,16 +162,17 @@ export const hu: Dictionary = {
     vehicles: [
       {
         id: "1",
-        name: "VW Passat GTE",
-        type: "kombi",
+        name: "Tesla Model S",
+        type: "sedan",
         capacity: 4,
         isEco: true,
         features: [
           { icon: "wind", label: "Légkondicionálás" },
-          { icon: "zap", label: "Környezetbarát" },
+          { icon: "zap", label: "Elektromos" },
         ],
-        image: "/VW_Kosice.PNG",
-        description: "Környezetbarát plug-in hibrid kombi nagy csomagtérrel",
+        image: "/tesla_model_s_letisko_kosice.webp",
+        imageAlt: "Tesla Model S – E-TAXI Kassa elektromos taxi a kassai repülőtér előtt, reptéri transzfer",
+        description: "Prémium elektromos szedán – csendes, kényelmes utazás, ideális reptéri transzferekhez és üzleti utakhoz",
       },
       {
         id: "2",
@@ -169,6 +185,7 @@ export const hu: Dictionary = {
           { icon: "baby", label: "Gyerekülés" },
         ],
         image: "/corolla_krakov.PNG",
+        imageAlt: "Toyota Corolla – E-TAXI Kassa taxi, takarékos szedán városi fuvarokhoz és transzferekhez",
         description: "Megbízható szedán alacsony fogyasztással",
       },
       {
@@ -182,6 +199,7 @@ export const hu: Dictionary = {
           { icon: "zap", label: "Elektromos" },
         ],
         image: "/tesla_Budapest.PNG",
+        imageAlt: "Tesla Model 3 – elektromos taxi Kassán, transzferek Kassa – Budapest",
         description: "Prémium elektromos jármű",
       },
       {
@@ -192,20 +210,22 @@ export const hu: Dictionary = {
         isEco: false,
         features: [{ icon: "wind", label: "Légkondicionálás" }],
         image: "/VW_Golf_VII.png",
+        imageAlt: "VW Golf VII Variant – kombi taxi Kassán városi és városok közötti fuvarokhoz",
         description: "Kényelmes kombi városi és városközi közlekedéshez",
       },
       {
         id: "5",
-        name: "VW Jetta",
-        type: "sedan",
+        name: "Škoda Superb III Combi",
+        type: "kombi",
         capacity: 4,
         isEco: false,
         features: [
           { icon: "wind", label: "Légkondicionálás" },
           { icon: "baby", label: "Gyerekülés" },
         ],
-        image: "/VW_Jetta.png",
-        description: "Praktikus jármű családok és nagyobb csoportok számára",
+        image: "/skoda_superb_combi_hotel.webp",
+        imageAlt: "Škoda Superb III Combi – taxi a DoubleTree by Hilton Košice szálloda előtt, szállodai és céges transzferek",
+        description: "Tágas kombi nagy csomagtérrel szállodai vendégeknek, cégeknek és hosszabb utakra",
       },
     ],
   },
@@ -276,6 +296,16 @@ export const hu: Dictionary = {
         title: "Átláthatóság",
         description: "Világos árlista rejtett díjak nélkül. Az árat online foglaláskor előre látja.",
         icon: "Eye",
+      },
+      {
+        title: "Innováció",
+        description: "Digitális diszpécserközpont, SMS- és hangértesítések a megrendelésről, élő járműkövetés a térképen, mobilalkalmazás és webes rendelés cégeknek és szállodáknak.",
+        icon: "Lightbulb",
+      },
+      {
+        title: "Professzionalizmus",
+        description: "Tapasztalt sofőrök, rendszeresen tisztított és karbantartott járművek, kártyás fizetés minden autóban, számla és havi elszámolás cégeknek, 0–24 órás diszpécserközpont.",
+        icon: "Award",
       },
     ],
     cta: {

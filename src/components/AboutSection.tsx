@@ -1,4 +1,4 @@
-import { Shield, Leaf, ShieldCheck, Eye, Phone } from "lucide-react";
+import { Shield, Leaf, ShieldCheck, Eye, Phone, Lightbulb, Award } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
@@ -8,7 +8,9 @@ const iconMap = {
   Shield,
   Leaf,
   ShieldCheck,
-  Eye
+  Eye,
+  Lightbulb,
+  Award
 };
 
 export function AboutSection() {
