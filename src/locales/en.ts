@@ -24,11 +24,11 @@ export const en: Dictionary = {
 
   seo: {
     home: {
-      title: "E-TAXI Košice | 24/7 Taxi Service | Airport Transfers Budapest, Krakow, Vienna",
+      title: "E-TAXI Košice | 24/7 Taxi Service | Airport Transfers Budapest, Debrecen, Krakow, Vienna",
       description:
-        "Professional taxi service in Košice available 24/7 ✓ Airport transfers to Budapest, Krakow, Vienna ✓ Online booking ✓ Modern vehicles ✓ Dispatch +421 911 606 206",
+        "Professional taxi service in Košice available 24/7 ✓ Airport transfers to Budapest, Debrecen, Krakow, Vienna ✓ Online booking ✓ Modern vehicles ✓ Dispatch +421 911 606 206",
       keywords:
-        "taxi Košice, taxi service Košice, Košice airport taxi, airport transfer Budapest, transfer Budapest Košice, airport transfer Krakow, transfer Vienna, taxi to airport, airport transfers, 24/7 taxi Košice, book taxi Košice, express airport transfer, international transfers Košice",
+        "taxi Košice, taxi service Košice, Košice airport taxi, airport transfer Budapest, transfer Budapest Košice, airport transfer Krakow, transfer Vienna, taxi to airport, airport transfers, 24/7 taxi Košice, book taxi Košice, express airport transfer, international transfers Košice, transfer Debrecen, taxi Košice Debrecen",
     },
     pricing: {
       title: "Taxi Price List | E-TAXI Košice | Rates per km and Airport Transfers",
@@ -55,7 +55,7 @@ export const en: Dictionary = {
 
   jsonLd: {
     description:
-      "Professional taxi service in Košice available 24/7. Airport transfers to Budapest, Krakow, Vienna. Online booking with instant confirmation.",
+      "Professional taxi service in Košice available 24/7. Airport transfers to Budapest, Debrecen, Krakow, Vienna. Online booking with instant confirmation.",
     offerCatalogName: "Taxi services and transfers",
     offers: [
       {

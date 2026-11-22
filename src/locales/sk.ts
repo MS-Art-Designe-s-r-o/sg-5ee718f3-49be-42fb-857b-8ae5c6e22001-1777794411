@@ -24,11 +24,11 @@ export const sk = {
 
   seo: {
     home: {
-      title: "E-TAXI Košice | Taxislužba 24/7 | Transfery Budapešť, Krakov, Viedeň",
+      title: "E-TAXI Košice | Taxislužba 24/7 | Transfery Budapešť, Debrecín, Krakov, Viedeň",
       description:
-        "Profesionálna taxislužba v Košiciach dostupná 24/7 ✓ Letiskové transfery Budapešť, Krakov, Viedeň ✓ Online objednávka ✓ Moderné vozidlá ✓ Dispečing +421 911 606 206",
+        "Profesionálna taxislužba v Košiciach dostupná 24/7 ✓ Letiskové transfery Budapešť, Debrecín, Krakov, Viedeň ✓ Online objednávka ✓ Moderné vozidlá ✓ Dispečing +421 911 606 206",
       keywords:
-        "taxi Košice, taxislužba Košice, taxi služba Košice, transfer letisko Budapešť, transfer Budapešť Košice, letiskový transfer Budapešť, transfer Krakov, transfer Viedeň, taxi na letisko, letiskové transfery, taxi 24/7 Košice, dispečing taxi Košice, objednať taxi Košice, expresný transfer letisko, medzinárodné transfery Košice",
+        "taxi Košice, taxislužba Košice, taxi služba Košice, transfer letisko Budapešť, transfer Budapešť Košice, letiskový transfer Budapešť, transfer Krakov, transfer Viedeň, taxi na letisko, letiskové transfery, taxi 24/7 Košice, dispečing taxi Košice, objednať taxi Košice, expresný transfer letisko, medzinárodné transfery Košice, transfer Debrecín, taxi Košice Debrecín",
     },
     pricing: {
       title: "Cenník taxislužby | E-TAXI Košice | Ceny za km a transfery na letisko",
@@ -55,7 +55,7 @@ export const sk = {
 
   jsonLd: {
     description:
-      "Profesionálna taxislužba v Košiciach dostupná 24/7. Letiskové transfery Budapešť, Krakov, Viedeň. Online objednávka a okamžité potvrdenie.",
+      "Profesionálna taxislužba v Košiciach dostupná 24/7. Letiskové transfery Budapešť, Debrecín, Krakov, Viedeň. Online objednávka a okamžité potvrdenie.",
     offerCatalogName: "Taxislužby a transfery",
     offers: [
       {

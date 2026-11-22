@@ -24,11 +24,11 @@ export const hu: Dictionary = {
 
   seo: {
     home: {
-      title: "E-TAXI Kassa | Taxi 0–24 | Reptéri transzferek Budapest, Krakkó, Bécs",
+      title: "E-TAXI Kassa | Taxi 0–24 | Reptéri transzferek Budapest, Debrecen, Krakkó, Bécs",
       description:
-        "Professzionális taxiszolgálat Kassán, 0–24 órában elérhető ✓ Reptéri transzferek Budapestre, Krakkóba, Bécsbe ✓ Online foglalás ✓ Modern járművek ✓ Diszpécser +421 911 606 206",
+        "Professzionális taxiszolgálat Kassán, 0–24 órában elérhető ✓ Reptéri transzferek Budapestre, Debrecenbe, Krakkóba, Bécsbe ✓ Online foglalás ✓ Modern járművek ✓ Diszpécser +421 911 606 206",
       keywords:
-        "taxi Kassa, taxiszolgálat Kassa, kassai reptéri taxi, reptéri transzfer Budapest, transzfer Budapest Kassa, reptéri transzfer Krakkó, transzfer Bécs, taxi a reptérre, reptéri transzferek, taxi 0-24 Kassa, taxi foglalás Kassa, expressz reptéri transzfer, nemzetközi transzferek Kassa",
+        "taxi Kassa, taxiszolgálat Kassa, kassai reptéri taxi, reptéri transzfer Budapest, transzfer Budapest Kassa, reptéri transzfer Krakkó, transzfer Bécs, taxi a reptérre, reptéri transzferek, taxi 0-24 Kassa, taxi foglalás Kassa, expressz reptéri transzfer, nemzetközi transzferek Kassa, transzfer Debrecen, taxi Kassa Debrecen",
     },
     pricing: {
       title: "Taxi árlista | E-TAXI Kassa | Kilométerdíjak és reptéri transzferek",
@@ -55,7 +55,7 @@ export const hu: Dictionary = {
 
   jsonLd: {
     description:
-      "Professzionális taxiszolgálat Kassán, 0–24 órában elérhető. Reptéri transzferek Budapestre, Krakkóba, Bécsbe. Online foglalás azonnali visszaigazolással.",
+      "Professzionális taxiszolgálat Kassán, 0–24 órában elérhető. Reptéri transzferek Budapestre, Debrecenbe, Krakkóba, Bécsbe. Online foglalás azonnali visszaigazolással.",
     offerCatalogName: "Taxiszolgáltatások és transzferek",
     offers: [
       {
