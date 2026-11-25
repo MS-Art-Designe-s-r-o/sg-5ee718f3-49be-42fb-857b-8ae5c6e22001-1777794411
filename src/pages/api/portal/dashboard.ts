@@ -93,7 +93,7 @@ export default withErrorHandler(
           "FROM `Revenue` r JOIN `User` d ON d.`id` = r.`driverId` " +
           "WHERE r.`uhradene` = 0 AND (r.`isoRok`*100+r.`isoTyzden`) <= ? " +
           "GROUP BY r.`driverId`, d.`meno`, d.`priezvisko`, d.`volaciZnak` HAVING suma > 0 " +
-          "ORDER BY (d.`volaciZnak` IS NULL), d.`volaciZnak` ASC",
+          "ORDER BY (d.`volaciZnak` IS NULL), LEFT(d.`volaciZnak`, 1) ASC, CAST(SUBSTRING(d.`volaciZnak`, 2) AS UNSIGNED) ASC, d.`volaciZnak` ASC",
         [curKey]
       );
       response.neuhradeneDoTyzdna = {
@@ -117,7 +117,7 @@ export default withErrorHandler(
       const drivers = await query<{ id: number; meno: string; priezvisko: string; volaciZnak: string | null }>(
         "SELECT u.`id`, u.`meno`, u.`priezvisko`, u.`volaciZnak` FROM `User` u " +
           "JOIN `UserRole` ur ON ur.`userId` = u.`id` AND ur.`role` = 'VODIC' " +
-          "WHERE u.`aktivny` = 1 ORDER BY (u.`volaciZnak` IS NULL), u.`volaciZnak` ASC, u.`priezvisko` ASC"
+          "WHERE u.`aktivny` = 1 ORDER BY (u.`volaciZnak` IS NULL), LEFT(u.`volaciZnak`, 1) ASC, CAST(SUBSTRING(u.`volaciZnak`, 2) AS UNSIGNED) ASC, u.`volaciZnak` ASC, u.`priezvisko` ASC"
       );
       const shifts = await query<{ datum: string; driverId: number; vehicleId: number | null; typ: string; poplatokZaSmenu: number | null; poplatokUhradeny: number; d_meno: string; d_priezvisko: string; d_volaciZnak: string | null }>(
         "SELECT s.`datum`, s.`driverId`, s.`vehicleId`, s.`typ`, s.`poplatokZaSmenu`, s.`poplatokUhradeny`, " +
