@@ -32,7 +32,7 @@ export default withErrorHandler(
       const rows = await query<UserListRow>(
         "SELECT u.*, GROUP_CONCAT(ur.`role`) AS roles " +
           "FROM `User` u LEFT JOIN `UserRole` ur ON ur.`userId` = u.`id` " +
-          "GROUP BY u.`id` ORDER BY (u.`volaciZnak` IS NULL), u.`volaciZnak` ASC, u.`priezvisko` ASC"
+          "GROUP BY u.`id` ORDER BY (u.`volaciZnak` IS NULL), LEFT(u.`volaciZnak`, 1) ASC, CAST(SUBSTRING(u.`volaciZnak`, 2) AS UNSIGNED) ASC, u.`volaciZnak` ASC, u.`priezvisko` ASC"
       );
       return res.status(200).json({
         users: rows.map((u) => ({

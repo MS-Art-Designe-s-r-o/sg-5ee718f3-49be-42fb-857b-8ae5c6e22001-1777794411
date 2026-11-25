@@ -20,7 +20,7 @@ export default withErrorHandler(
         "FROM `User` u LEFT JOIN `UserRole` ur ON ur.`userId` = u.`id` " +
         "WHERE u.`aktivny` = 1 " +
         "GROUP BY u.`id` " +
-        "ORDER BY (u.`volaciZnak` IS NULL), u.`volaciZnak` ASC, u.`priezvisko` ASC"
+        "ORDER BY (u.`volaciZnak` IS NULL), LEFT(u.`volaciZnak`, 1) ASC, CAST(SUBSTRING(u.`volaciZnak`, 2) AS UNSIGNED) ASC, u.`volaciZnak` ASC, u.`priezvisko` ASC"
     );
 
     const kontakty = rows.map((u) => ({
