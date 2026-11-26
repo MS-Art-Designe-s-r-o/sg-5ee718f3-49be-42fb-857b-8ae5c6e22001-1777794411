@@ -98,19 +98,22 @@ Z webu: https://e-taxike.sk
 <html>
 <head>
   <meta charset="utf-8">
+  <meta name="color-scheme" content="light only">
+  <meta name="supported-color-schemes" content="light only">
   <style>
-    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #000000; background: #ffffff; }
+    a { color: #000000; }
     .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-    .header { background: #282462; color: white; padding: 20px; text-align: center; }
-    .content { background: #f9f9f9; padding: 20px; margin: 20px 0; }
-    .detail { margin: 10px 0; padding: 10px; background: white; border-left: 4px solid #282462; }
-    .label { font-weight: bold; color: #282462; }
-    .footer { text-align: center; color: #666; font-size: 12px; margin-top: 20px; }
-    ${priceEstimateOnly ? '.estimate-badge { background: #ff9500; color: white; padding: 10px; text-align: center; font-weight: bold; }' : ''}
+    .header { background: #ffffff; color: #000000; padding: 20px; text-align: center; border-bottom: 2px solid #000000; }
+    .content { background: #ffffff; padding: 20px; margin: 20px 0; }
+    .detail { margin: 10px 0; padding: 10px; background: #ffffff; color: #000000; border-left: 4px solid #000000; }
+    .label { font-weight: bold; color: #000000; }
+    .footer { text-align: center; color: #000000; font-size: 12px; margin-top: 20px; }
+    ${priceEstimateOnly ? '.estimate-badge { background: #ffffff; color: #000000; border: 2px solid #000000; padding: 10px; text-align: center; font-weight: bold; }' : ''}
   </style>
 </head>
-<body>
-  <div class="container">
+<body style="margin: 0; background-color: #ffffff; color: #000000;">
+  <div class="container" style="background-color: #ffffff; color: #000000;">
     <div class="header">
       <h2>🚕 E-TAXI Košice</h2>
       <p>${priceEstimateOnly ? 'Žiadosť o cenovú kalkuláciu' : 'Nová objednávka'}</p>
@@ -218,31 +221,34 @@ ${t.bookingEmail.sign}
 <html>
 <head>
   <meta charset="utf-8">
+  <meta name="color-scheme" content="light only">
+  <meta name="supported-color-schemes" content="light only">
   <style>
-    body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+    body { font-family: Arial, sans-serif; line-height: 1.6; color: #000000; background: #ffffff; }
+    a { color: #000000; }
     .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-    .header { background: #282462; color: white; padding: 20px; text-align: center; }
-    .content { background: #f9f9f9; padding: 20px; margin: 20px 0; }
-    .detail { margin: 10px 0; padding: 10px; background: white; border-left: 4px solid #ff9500; }
-    .label { font-weight: bold; color: #282462; }
-    .footer { text-align: center; color: #666; font-size: 12px; margin-top: 20px; border-top: 1px solid #ddd; padding-top: 20px; }
-    .contact { background: #282462; color: white; padding: 15px; text-align: center; margin-top: 20px; }
+    .header { background: #ffffff; color: #000000; padding: 20px; text-align: center; border-bottom: 2px solid #000000; }
+    .content { background: #ffffff; padding: 20px; margin: 20px 0; }
+    .detail { margin: 10px 0; padding: 10px; background: #ffffff; color: #000000; border-left: 4px solid #ff9500; }
+    .label { font-weight: bold; color: #000000; }
+    .footer { text-align: center; color: #000000; font-size: 12px; margin-top: 20px; border-top: 1px solid #ddd; padding-top: 20px; }
+    .contact { background: #ffffff; color: #000000; border: 2px solid #000000; padding: 15px; text-align: center; margin-top: 20px; }
   </style>
 </head>
-<body>
-  <div class="container">
+<body style="margin: 0; background-color: #ffffff; color: #000000;">
+  <div class="container" style="background-color: #ffffff; color: #000000;">
     <div class="header">
       <h2>🚕 E-TAXI Košice</h2>
       <p>${t.bookingEmail.headerSubtitle}</p>
     </div>
 
     <div style="padding: 20px; text-align: center;">
-      <h3 style="color: #282462;">${t.bookingEmail.receivedTitle}</h3>
+      <h3 style="color: #000000;">${t.bookingEmail.receivedTitle}</h3>
       <p>${t.bookingEmail.receivedText}</p>
     </div>
 
     <div class="content">
-      <h4 style="color: #282462; margin-bottom: 15px;">${t.bookingEmail.detailsTitleHtml}</h4>
+      <h4 style="color: #000000; margin-bottom: 15px;">${t.bookingEmail.detailsTitleHtml}</h4>
 
       <div class="detail">
         <span class="label">📍 ${t.bookingEmail.from}</span><br>
@@ -279,13 +285,13 @@ ${t.bookingEmail.sign}
         ${note}
       </div>` : ""}
 
-      ${priceEstimateOnly ? `<div style="background: #fff3cd; padding: 10px; margin: 10px 0; border-left: 4px solid #ff9500;">💰 ${t.bookingEmail.typeEstimate}</div>` : `<div style="background: #d4edda; padding: 10px; margin: 10px 0; border-left: 4px solid #28a745;">✅ ${t.bookingEmail.typeOrder}</div>`}
+      ${priceEstimateOnly ? `<div style="background: #ffffff; color: #000000; padding: 10px; margin: 10px 0; border-left: 4px solid #ff9500;">💰 ${t.bookingEmail.typeEstimate}</div>` : `<div style="background: #ffffff; color: #000000; padding: 10px; margin: 10px 0; border-left: 4px solid #28a745;">✅ ${t.bookingEmail.typeOrder}</div>`}
     </div>
 
     <div class="contact">
       <p style="margin: 5px 0;"><strong>${t.bookingEmail.changesTextHtml}</strong></p>
-      <p style="margin: 5px 0;">📞 <a href="tel:+421911606206" style="color: white;">+421 911 606 206</a></p>
-      <p style="margin: 5px 0;">📧 <a href="mailto:dispecing@e-taxike.sk" style="color: white;">dispecing@e-taxike.sk</a></p>
+      <p style="margin: 5px 0;">📞 <a href="tel:+421911606206" style="color: #000000;">+421 911 606 206</a></p>
+      <p style="margin: 5px 0;">📧 <a href="mailto:dispecing@e-taxike.sk" style="color: #000000;">dispecing@e-taxike.sk</a></p>
     </div>
 
     <div class="footer">
